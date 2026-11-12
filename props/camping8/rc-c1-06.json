@@ -1,0 +1,33 @@
+{
+ "cards": [
+  {
+   "author": "@松井佑太-y1t  ·  4 likes",
+   "avatar": "props/camping8/avatars/matsui.jpg",
+   "segs": [
+    {
+     "t": "Definitely a raccoon’s doing.",
+     "hl": true
+    }
+   ],
+   "at": 0.5,
+   "hlAt": 1.0,
+   "hlDur": 0.9,
+   "reply": false,
+   "note": "Translated from Japanese"
+  },
+  {
+   "author": "@kenyama",
+   "avatar": "props/camping8/avatars/ken.jpg",
+   "segs": [
+    {
+     "t": "Finding the handprints actually put my mind at ease 😂"
+    }
+   ],
+   "at": 2.0,
+   "hlAt": 9,
+   "hlDur": 1,
+   "reply": true,
+   "note": "Translated from Japanese"
+  }
+ ]
+}

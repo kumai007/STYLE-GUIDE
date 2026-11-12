@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en" data-resolution="landscape" data-composition-variables='[{"id": "location", "type": "string", "label": "Location", "default": "Ravenswood Asylum"}, {"id": "date", "type": "string", "label": "Date", "default": "11 NOV 2019"}, {"id": "detail", "type": "string", "label": "Detail", "default": "02:14 AM"}, {"id": "accent", "type": "color", "label": "Accent", "default": "#C1121F"}, {"id": "durationInFrames", "type": "number", "label": "Duration (frames @30fps)", "default": 90, "min": 2, "step": 1}]'>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1920, height=1080" />
+<script src="../../assets/overlays/gsap.min.js"></script>
+<link rel="stylesheet" href="lib/overlays.css" />
+<style>
+  #ls-box { position: absolute; left: 140px; top: 140px; border-left: 4px solid; padding-left: 22px; }
+  #ls-loc { font-family: var(--display); font-size: 58px; color: var(--ink); letter-spacing: 2px; text-transform: uppercase; text-shadow: var(--shadow); }
+  #ls-meta { font-family: var(--mono); font-size: 24px; color: var(--ink-dim); letter-spacing: 4px; margin-top: 6px; text-shadow: var(--shadow); }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="LocationStamp" data-start="0" data-duration="3.0" data-width="1920" data-height="1080" data-fps="30">
+  <div id="ls-fill" class="fill">
+    <div id="ls-box"><div id="ls-loc" data-var-text="location">Ravenswood Asylum</div><div id="ls-meta">11 NOV 2019 &middot; 02:14 AM</div></div>
+  </div>
+</div>
+<script src="lib/rm.js"></script>
+<script>
+  var $ = function (id) { return document.getElementById(id); };
+  RM.mount({
+    id: "LocationStamp", fps: 30, defaultFrames: 90,
+    init: function (P) {
+      $("ls-box").style.borderLeftColor = P.accent;
+      $("ls-loc").textContent = P.location;
+      $("ls-meta").textContent = [P.date, P.detail].filter(Boolean).join("   \u00b7   ");
+    },
+    apply: function (f, P, dur) {
+      var o = RM.envelope(f, dur, 10, 12), e = RM.enter(f, 30, 0), e2 = RM.enter(f, 30, 4);
+      $("ls-fill").style.opacity = o;
+      $("ls-box").style.opacity = e;
+      $("ls-box").style.transform = "translateX(" + (1 - e) * -18 + "px)";
+      $("ls-meta").style.opacity = e2;
+    }
+  });
+</script>
+</body>
+</html>

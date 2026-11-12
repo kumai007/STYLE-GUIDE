@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en" data-resolution="landscape"
+  data-composition-variables='[{"id":"text","type":"string","label":"Card text","default":"Case One"},{"id":"frames","type":"number","label":"Length in frames (30 fps)","default":135},{"id":"fps","type":"number","label":"fps","default":30}]'>
+<head>
+<meta charset="UTF-8" /><meta name="viewport" content="width=1920, height=1080" />
+<script src="assets/vendor/gsap-3.14.2.min.js"></script>
+<link rel="stylesheet" href="compositions/case-cards/lib/cc.css" />
+<style>
+  @font-face { font-family: "VCR OSD Mono"; src: url("assets/case-cards/fonts/vcr-osd-mono.ttf") format("truetype"); font-weight: 400; }
+  #nocturncasecard-stage { background: #000; }
+  #cc-body { align-items: center; justify-content: center; }
+  #cc-rule { width: 190px; height: 6px; background: #fff; box-shadow: 0 0 10px rgba(255,255,255,0.45); margin-bottom: 40px; }
+  #cc-text { font-family: "VCR OSD Mono", monospace; font-size: 180px; line-height: 1; color: #fff; letter-spacing: 10px;
+             text-shadow: 0 0 3px rgba(255,255,255,0.45); white-space: nowrap; }
+</style>
+</head>
+<body>
+<div id="nocturncasecard-stage" data-composition-id="NocturnCaseCard" data-start="0" data-duration="4.5" data-fps="30" data-width="1920" data-height="1080">
+  <div class="fit">
+    <div id="cc-body" class="af"><div id="cc-rule"></div><div id="cc-text"></div></div>
+  </div>
+</div>
+<script src="compositions/case-cards/lib/cc.js"></script>
+<script>
+  const P = CC.props({ text: "Case One", frames: 135, fps: 30 });
+  const { tween, ease, $ } = CC;
+  $("cc-text").textContent = P.text.toUpperCase();
+  function render(f) {
+    const fps = P.fps, frames = P.frames;
+    const a = 0.4 * fps, b = 0.9 * fps, c = Math.max(b, frames - 0.8 * fps), d = Math.max(b, frames - 0.3 * fps);
+    const o = f < b ? tween(f, [a, b], [0, 1], ease.ui) : tween(f, [c, d], [1, 0], ease.ui);
+    $("cc-body").style.opacity = o;
+  }
+  CC.clock("NocturnCaseCard", P.fps, P.frames, render);
+</script>
+</body></html>

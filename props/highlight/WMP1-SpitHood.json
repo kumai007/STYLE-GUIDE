@@ -1,0 +1,43 @@
+{
+ "image": "assets/highlight/wmp1-spithood.png",
+ "context": "website",
+ "page": "light",
+ "highlights": [
+  {
+   "label": "spit hood definition",
+   "x": 0.1825,
+   "y": 0.364,
+   "w": 0.6175,
+   "h": 0.034,
+   "startInSeconds": 1.6
+  }
+ ],
+ "durationInSeconds": null,
+ "crop": {
+  "x": 0.17,
+  "y": 0.24,
+  "w": 0.66,
+  "h": 0.594
+ },
+ "motionSeed": null,
+ "pageKind": "light",
+ "pageColor": "#ffffff",
+ "imageWidth": 2880,
+ "imageHeight": 1800,
+ "overrides": {
+  "motionIntensity": 1,
+  "perspective": 2200,
+  "rotateY": -7,
+  "rotateZ": -1.2,
+  "startScale": 1.02,
+  "endScale": 1.1,
+  "focusX": 0.5,
+  "focusY": 0.5,
+  "vignette": 0.3,
+  "cropDriftY": 0.1,
+  "focusInBlurPx": 16,
+  "backgroundColor": "#ffffff"
+ },
+ "fps": 29.97002997002997,
+ "durationInFrames": 240
+}

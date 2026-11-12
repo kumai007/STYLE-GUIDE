@@ -1,0 +1,80 @@
+<!doctype html>
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"image","type":"string","label":"Evidence frame (assets/kw/*.png; legacy highlights/*.png accepted)","default":"highlights/kw-c1-figure.png"},
+    {"id":"cx","type":"number","label":"Circle centre x (1920px space)","default":900,"step":1},
+    {"id":"cy","type":"number","label":"Circle centre y (1080px space)","default":520,"step":1},
+    {"id":"d","type":"number","label":"Circle diameter px","default":500,"step":1},
+    {"id":"drawAt","type":"number","label":"Seconds before the circle draws","default":0.6,"step":0.05,"unit":"s"},
+    {"id":"startScale","type":"number","label":"Push start scale","default":1.0,"step":0.01},
+    {"id":"endScale","type":"number","label":"Push end scale","default":1.12,"step":0.01},
+    {"id":"layer","type":"enum","label":"Layer","default":"all","options":[{"value":"all","label":"Frame + circle on black"},{"value":"image","label":"Frame only"},{"value":"circle","label":"Circle only, transparent"}]},
+    {"id":"durationInFrames","type":"number","label":"Length in frames @29.97","default":150,"step":1}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="assets/vendor/gsap-3.14.2.min.js"></script>
+    <script src="compositions/kw/lib/kw-common.js"></script>
+    <style>
+      * { box-sizing: border-box; }
+      html, body { margin: 0; width: 1920px; height: 1080px; overflow: hidden; background: transparent; }
+      #root { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; }
+      #kw-bg { position: absolute; inset: 0; background: #000; }
+      #kw-stage { position: absolute; inset: 0; opacity: 0; }
+      #kw-img { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; display: block; }
+      #kw-svg { position: absolute; left: 0; top: 0; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="kw-frame-circle" data-start="0" data-fps="30000/1001" data-width="1920" data-height="1080">
+      <div id="kw-bg"></div>
+      <div id="kw-stage">
+        <img id="kw-img" alt="" />
+        <svg id="kw-svg" width="1920" height="1080" viewBox="0 0 1920 1080">
+          <circle id="kw-ring" fill="none" stroke="#F10410" />
+        </svg>
+      </div>
+    </div>
+    <script>
+      (function () {
+        var v = window.__hyperframes.getVariables();
+        var fps = KW.NTSC;
+        var frames = KW.lengthInFrames(v, 150);
+        var span = frames / fps;
+        var layer = v.layer || "all";
+        var cx = +v.cx, cy = +v.cy, d = +v.d;
+        var drawAt = v.drawAt == null ? 0.6 : +v.drawAt;
+        var startScale = v.startScale == null ? 1 : +v.startScale;
+        var endScale = v.endScale == null ? 1.12 : +v.endScale;
+        var ease = KW.bezier(0.25, 0, 0.15, 1);
+
+        var root = document.getElementById("root");
+        root.setAttribute("data-duration", String(span));
+
+        if (layer === "circle") document.getElementById("kw-bg").style.display = "none";
+        var img = document.getElementById("kw-img");
+        if (layer === "circle") img.style.display = "none"; else img.src = KW.kwAsset(v.image);
+        var svg = document.getElementById("kw-svg");
+        if (layer === "image") svg.style.display = "none";
+
+        var r = d / 2, circ = 2 * Math.PI * r;
+        var ring = document.getElementById("kw-ring");
+        ring.setAttribute("cx", cx); ring.setAttribute("cy", cy); ring.setAttribute("r", r);
+        ring.setAttribute("stroke-width", d * 0.045);
+        ring.setAttribute("stroke-dasharray", circ);
+        ring.setAttribute("transform", "rotate(-90 " + cx + " " + cy + ")");
+
+        var tl = gsap.timeline({ paused: true });
+        tl.fromTo("#kw-stage", { scale: startScale, transformOrigin: cx + "px " + cy + "px" },
+          { scale: endScale, duration: span, ease: ease }, 0);
+        tl.fromTo("#kw-stage", { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "none" }, 0);
+        tl.fromTo("#kw-ring", { attr: { "stroke-dashoffset": circ } },
+          { attr: { "stroke-dashoffset": 0 }, duration: 0.7, ease: ease }, drawAt);
+        window.__timelines["kw-frame-circle"] = tl;
+      })();
+    </script>
+  </body>
+</html>

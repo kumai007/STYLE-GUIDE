@@ -1,0 +1,34 @@
+{
+ "image": "assets/highlight/novicewildcamper-channel-dark.png",
+ "context": "website",
+ "page": "dark",
+ "highlights": [],
+ "durationInSeconds": null,
+ "crop": {
+  "x": 0.175,
+  "y": 0.03,
+  "w": 0.55,
+  "h": 0.3426923076923077
+ },
+ "motionSeed": null,
+ "pageKind": "dark",
+ "pageColor": "#08080c",
+ "imageWidth": 2880,
+ "imageHeight": 2600,
+ "overrides": {
+  "motionIntensity": 1,
+  "perspective": 2200,
+  "rotateY": -7,
+  "rotateZ": -1.2,
+  "startScale": 1.02,
+  "endScale": 1.1,
+  "focusX": 0.5,
+  "focusY": 0.5,
+  "vignette": 0.3,
+  "cropDriftY": 0.54,
+  "focusInBlurPx": 18,
+  "backgroundColor": "#0f0f0f"
+ },
+ "fps": 29.97002997002997,
+ "durationInFrames": 193
+}

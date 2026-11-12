@@ -1,0 +1,7 @@
+.nplate { background: #0C0F0D; }
+.nplate .img { position: absolute; left: 0; top: 0; width: 100%; height: 100%; object-fit: cover; filter: saturate(0.55) contrast(1.05); }
+.nplate .forest { background: #14211A; mix-blend-mode: multiply; opacity: 0.55; }
+.nplate .dim { background: #0C0F0D; }
+.nplate .vig { background: radial-gradient(ellipse 75% 70% at 50% 50%, rgba(0,0,0,0) 35%, rgba(0,0,0,0.6) 100%); }
+@font-face { font-family: "VCR OSD Mono"; src: url("assets/case-cards/fonts/vcr-osd-mono.ttf") format("truetype"); font-weight: 400; }
+@font-face { font-family: "Nocturn Inter"; src: url("assets/case-cards/fonts/inter-latin-700-normal.woff2") format("woff2"); font-weight: 700; }

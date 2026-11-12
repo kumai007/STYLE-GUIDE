@@ -1,0 +1,48 @@
+{
+ "image": "assets/highlight/tribune-grid.png",
+ "context": "website",
+ "page": "light",
+ "highlights": [
+  {
+   "label": "Texas officials say the power grid will hold",
+   "x": 0.2021,
+   "y": 0.3017,
+   "w": 0.5722,
+   "h": 0.0589,
+   "startInSeconds": 0.4
+  },
+  {
+   "label": "through winter storm, but local outages are",
+   "x": 0.2021,
+   "y": 0.3506,
+   "w": 0.5875,
+   "h": 0.0589,
+   "startInSeconds": 1.9
+  },
+  {
+   "label": "likely",
+   "x": 0.2024,
+   "y": 0.3994,
+   "w": 0.0819,
+   "h": 0.05,
+   "startInSeconds": 3.3
+  }
+ ],
+ "durationInSeconds": null,
+ "crop": {
+  "x": 0.1258,
+  "y": 0.17,
+  "w": 0.745,
+  "h": 0.671
+ },
+ "motionSeed": "highlights/tribune-grid.png",
+ "pageKind": "light",
+ "pageColor": "#ffffff",
+ "imageWidth": 2880,
+ "imageHeight": 1800,
+ "overrides": {
+  "backgroundColor": "#ffffff"
+ },
+ "fps": 30,
+ "durationInFrames": 150
+}

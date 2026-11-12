@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en" data-resolution="landscape" data-composition-variables='[
+ {"id":"kicker","type":"string","label":"Kicker","default":"Case File"},
+ {"id":"title","type":"string","label":"Title","default":"The Missing Hours"},
+ {"id":"subtitle","type":"string","label":"Subtitle","default":"What the timeline actually shows"},
+ {"id":"accent","type":"color","label":"Accent","default":"#C1121F"},
+ {"id":"align","type":"enum","label":"Align","default":"center","options":[{"value":"center","label":"Center"},{"value":"left","label":"Left"}]},
+ {"id":"durationInFrames","type":"number","label":"Duration (frames @30fps)","default":90,"min":2,"step":1}
+]'>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1920, height=1080" />
+<script src="../../assets/overlays/gsap.min.js"></script>
+<link rel="stylesheet" href="lib/overlays.css" />
+<style>
+  #tc-fill { justify-content: center; }
+  #tc-box { text-align: center; }
+  #tc-kicker { font-family: var(--body); font-size: 26px; letter-spacing: 10px; font-weight: 600; text-transform: uppercase; text-shadow: var(--shadow); }
+  #tc-title { font-family: var(--display); font-size: 132px; line-height: 1.02; font-weight: 700; color: var(--ink); margin-top: 14px; text-transform: uppercase; text-shadow: var(--shadow); }
+  #tc-rule { height: 3px; margin-top: 22px; }
+  #tc-sub { font-family: var(--body); font-size: 30px; color: var(--ink-dim); margin-top: 20px; text-shadow: var(--shadow); }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="TitleCard" data-start="0" data-duration="3" data-width="1920" data-height="1080" data-fps="30">
+  <div id="tc-fill" class="fill">
+    <div id="tc-box">
+      <div id="tc-kicker" data-var-text="kicker">CASE FILE</div>
+      <div id="tc-title" data-var-text="title">The Missing Hours</div>
+      <div id="tc-rule"></div>
+      <div id="tc-sub" data-var-text="subtitle">What the timeline actually shows</div>
+    </div>
+  </div>
+</div>
+<script src="lib/rm.js"></script>
+<script>
+  var $ = function (id) { return document.getElementById(id); };
+  RM.mount({
+    id: "TitleCard", fps: 30, defaultFrames: 90,
+    init: function (P) {
+      var left = P.align === "left";
+      var fill = $("tc-fill");
+      fill.style.alignItems = left ? "flex-start" : "center";
+      fill.style.padding = left ? "0 0 0 140px" : "0";
+      $("tc-box").style.textAlign = left ? "left" : "center";
+      $("tc-kicker").textContent = P.kicker; $("tc-kicker").style.color = P.accent;
+      $("tc-title").textContent = P.title;
+      $("tc-rule").style.background = P.accent;
+      if (!left) { $("tc-rule").style.marginLeft = "auto"; $("tc-rule").style.marginRight = "auto"; }
+      $("tc-sub").textContent = P.subtitle;
+      if (!P.subtitle) $("tc-sub").style.display = "none";
+    },
+    apply: function (f, P, dur) {
+      var left = P.align === "left";
+      var o = RM.envelope(f, dur, 10, 12);
+      var e = RM.enter(f, 30, 0), e2 = RM.enter(f, 30, 4), e3 = RM.enter(f, 30, 8);
+      var fill = $("tc-fill");
+      fill.style.opacity = o;
+      fill.style.transform = "scale(" + RM.drift(f, dur) + ")";
+      $("tc-kicker").style.opacity = e;
+      $("tc-kicker").style.transform = "translateY(" + (1 - e) * 14 + "px)";
+      $("tc-title").style.letterSpacing = ((1 - e2) * 26 + 1) + "px";
+      $("tc-title").style.opacity = e2;
+      $("tc-rule").style.width = e3 * (left ? 320 : 220) + "px";
+      $("tc-sub").style.opacity = e3;
+      $("tc-sub").style.transform = "translateY(" + (1 - e3) * 10 + "px)";
+    }
+  });
+</script>
+</body>
+</html>

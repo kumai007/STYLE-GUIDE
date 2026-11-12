@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en" data-resolution="landscape"
+  data-composition-variables='[{"id":"text","type":"string","label":"Names (split on & / and for captions)","default":"Philly & Keely"},{"id":"frames","type":"number","label":"Length in frames (30 fps)","default":120},{"id":"fps","type":"number","label":"fps","default":30},{"id":"image","type":"string","label":"First still (path or data URI)","default":""},{"id":"image2","type":"string","label":"Second still (optional)","default":""}]'>
+<head>
+<meta charset="UTF-8" /><meta name="viewport" content="width=1920, height=1080" />
+<script src="assets/vendor/gsap-3.14.2.min.js"></script>
+<link rel="stylesheet" href="compositions/case-cards/lib/cc.css" />
+<style> #stage { background: #000; } </style>
+</head>
+<body>
+<div id="stage" data-composition-id="HCE-Couple" data-start="0" data-duration="4" data-fps="30" data-width="1920" data-height="1080">
+  <div class="fit" id="fit"></div>
+</div>
+<script src="compositions/case-cards/lib/cc.js"></script>
+<script src="compositions/case-cards/lib/hce.js"></script>
+<script>
+  const P = CC.props({ text: "Philly & Keely", frames: 120, fps: 30, image: "", image2: "" });
+  const { tween, ease, $ } = CC, H = CC.hce, FACE = "50% 35%";
+  const two = !!(P.image && P.image2);
+  const parts = P.text.split(/\s*&\s*|\s+and\s+/i).map((s) => s.trim()).filter(Boolean);
+  const caps = two && parts.length === 2 ? parts : [];
+  const [W, Hh] = two ? [500, 620] : [900, 560];
+  const B = Math.round(Math.max(10, W * 0.035));
+  const left = two ? 960 - (2 * (W + 2 * B) + 70) / 2 : 960 - (W + 2 * B) / 2;
+  const plate = H.plate(P.image, { dim: 0.6, flat: 0.5, blur: 14 }), marks = H.cropMarks(), head = H.heading(P.text, 64);
+  const p1 = P.image ? H.print(P.image, W, Hh, { rot: two ? -1.5 : -0.8, pos: FACE, caption: caps[0] }) : null;
+  const p2 = two ? H.print(P.image2, W, Hh, { rot: 1.2, pos: FACE, caption: caps[1] }) : null;
+  $("fit").innerHTML = plate.html + '<div id="card" style="' + H.AF + '">' + marks.html + '<div id="push" style="' + H.AF + '">' +
+    (p1 ? '<div style="position:absolute;left:' + left + 'px;top:80px">' + p1.html + '</div>' : '') +
+    (p2 ? '<div style="position:absolute;left:' + (left + W + 2 * B + 70) + 'px;top:96px">' + p2.html + '</div>' : '') + '</div>' +
+    '<div style="position:absolute;left:130px;bottom:96px;text-shadow:0 2px 14px rgba(0,0,0,0.75)">' + head.html + '</div></div>';
+  function render(f) {
+    const fps = P.fps, frames = P.frames, c = H.useCard(f, fps, frames);
+    const q1 = tween(f, [0.1 * fps, 1.0 * fps], [0, 1], ease.enter), q2 = tween(f, [0.5 * fps, 1.4 * fps], [0, 1], ease.enter);
+    const name = tween(f, [1.0 * fps, (1.0 + H.M.reveal) * fps], [0, 1], ease.measured);
+    plate.set(f, c.p, fps, frames);
+    $("card").style.opacity = String(c.o);
+    marks.set(q1);
+    $("push").style.transform = "scale(" + (1 + 0.04 * c.p).toFixed(4) + ")";
+    if (p1) p1.set(q1); if (p2) p2.set(q2);
+    head.set(name);
+  }
+  CC.clock("HCE-Couple", P.fps, P.frames, render);
+</script>
+</body></html>

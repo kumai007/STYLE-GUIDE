@@ -1,0 +1,64 @@
+{
+ "image": "assets/highlight/sample-comments.png",
+ "context": "comment",
+ "page": "dark",
+ "highlights": [
+  {
+   "label": "he was speaking Spanish",
+   "x": 0.068,
+   "y": 0.336,
+   "w": 0.662,
+   "h": 0.044,
+   "startInSeconds": 0.65,
+   "color": "#e8102b"
+  },
+  {
+   "label": "he said some other stuff about his home",
+   "x": 0.068,
+   "y": 0.505,
+   "w": 0.298,
+   "h": 0.044,
+   "startInSeconds": 5.25,
+   "color": "#e8102b"
+  }
+ ],
+ "durationInSeconds": null,
+ "crop": null,
+ "motionSeed": null,
+ "pageKind": "dark",
+ "pageColor": "#101010",
+ "imageWidth": 1920,
+ "imageHeight": 1080,
+ "overrides": {
+  "blurPx": 8,
+  "glow": 46,
+  "barRadius": 8,
+  "bloom": 0.25,
+  "vignette": 0.62,
+  "highlights": [
+   {
+    "label": "he was speaking Spanish",
+    "x": 0.068,
+    "y": 0.336,
+    "w": 0.662,
+    "h": 0.044,
+    "startInSeconds": 0.65,
+    "durationInSeconds": null,
+    "color": "#e8102b"
+   },
+   {
+    "label": "he said some other stuff about his home",
+    "x": 0.068,
+    "y": 0.505,
+    "w": 0.298,
+    "h": 0.044,
+    "startInSeconds": 5.25,
+    "durationInSeconds": null,
+    "color": "#e8102b"
+   }
+  ],
+  "backgroundColor": "#000000"
+ },
+ "fps": 30,
+ "durationInFrames": 240
+}

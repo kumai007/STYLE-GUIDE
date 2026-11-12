@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en" data-resolution="landscape" data-composition-variables='[{"id": "number", "type": "string", "label": "Number", "default": "01"}, {"id": "label", "type": "string", "label": "Label", "default": "Case"}, {"id": "title", "type": "string", "label": "Title", "default": "Nobody Came Back"}, {"id": "accent", "type": "color", "label": "Accent", "default": "#C1121F"}, {"id": "durationInFrames", "type": "number", "label": "Duration (frames @30fps)", "default": 75, "min": 2, "step": 1}]'>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1920, height=1080" />
+<script src="../../assets/overlays/gsap.min.js"></script>
+<link rel="stylesheet" href="lib/overlays.css" />
+<style>
+  #cc-fill { justify-content: center; align-items: center; }
+  #cc-row { display: flex; align-items: baseline; gap: 28px; }
+  #cc-num { font-family: var(--display); font-size: 260px; line-height: 0.86; text-shadow: var(--shadow); }
+  #cc-label { font-family: var(--body); font-size: 24px; letter-spacing: 9px; font-weight: 600; color: var(--ink-dim); text-transform: uppercase; text-shadow: var(--shadow); }
+  #cc-title { font-family: var(--display); font-size: 76px; color: var(--ink); margin-top: 8px; max-width: 1100px; text-transform: uppercase; text-shadow: var(--shadow); }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="CaseCard" data-start="0" data-duration="2.5" data-width="1920" data-height="1080" data-fps="30">
+  <div id="cc-fill" class="fill"><div id="cc-row">
+    <div id="cc-num" data-var-text="number">01</div>
+    <div><div id="cc-label" data-var-text="label">Case</div><div id="cc-title" data-var-text="title">Nobody Came Back</div></div>
+  </div></div>
+</div>
+<script src="lib/rm.js"></script>
+<script>
+  var $ = function (id) { return document.getElementById(id); };
+  RM.mount({
+    id: "CaseCard", fps: 30, defaultFrames: 75,
+    init: function (P) {
+      $("cc-num").textContent = P.number; $("cc-num").style.color = P.accent;
+      $("cc-label").textContent = P.label; $("cc-title").textContent = P.title;
+    },
+    apply: function (f, P, dur) {
+      var o = RM.envelope(f, dur, 10, 12), e = RM.enter(f, 30, 0), e2 = RM.enter(f, 30, 8);
+      var jitter = f < 12 ? (RM.rand(f) - 0.5) * (1 - f / 12) * 18 : 0;
+      $("cc-fill").style.opacity = o;
+      $("cc-num").style.transform = "translateX(" + jitter + "px) scale(" + (0.9 + e * 0.1) + ")";
+      $("cc-num").style.opacity = e;
+      $("cc-label").style.opacity = e2;
+      $("cc-title").style.opacity = e2;
+      $("cc-title").style.letterSpacing = ((1 - e2) * 12 + 1) + "px";
+    }
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+{
+ "image": "assets/highlight/c3-dungavel-irc.png",
+ "context": "website",
+ "page": "light",
+ "highlights": [],
+ "durationInSeconds": null,
+ "crop": {
+  "x": 0,
+  "y": 0.06,
+  "w": 1,
+  "h": 0.8438
+ },
+ "motionSeed": null,
+ "pageKind": "light",
+ "pageColor": "#3c3834",
+ "imageWidth": 2500,
+ "imageHeight": 1667,
+ "overrides": {
+  "motionIntensity": 1,
+  "perspective": 2400,
+  "rotateY": -4,
+  "rotateZ": -0.6,
+  "startScale": 1.03,
+  "endScale": 1.1,
+  "focusX": 0.5,
+  "focusY": 0.5,
+  "vignette": 0.44,
+  "cropDriftY": 0.07,
+  "focusInSeconds": 0.32,
+  "focusInBlurPx": 15,
+  "backgroundColor": "#0b0d10"
+ },
+ "fps": 29.97002997002997,
+ "durationInFrames": 188
+}

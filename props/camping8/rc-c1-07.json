@@ -1,0 +1,46 @@
+{
+ "cards": [
+  {
+   "author": "@我寿丸  ·  June 2021",
+   "avatar": "props/camping8/avatars/gajumaru.jpg",
+   "segs": [
+    {
+     "t": "What on earth was it?"
+    }
+   ],
+   "at": 0.5,
+   "hlAt": 99,
+   "hlDur": 1,
+   "reply": false,
+   "note": "Translated from Japanese"
+  },
+  {
+   "author": "@kenyama",
+   "avatar": "props/camping8/avatars/ken.jpg",
+   "segs": [
+    {
+     "t": "The raccoon theory seems to be strong. But "
+    },
+    {
+     "t": "could it reach the pop-up",
+     "hl": true
+    },
+    {
+     "t": "…? And the sound like "
+    },
+    {
+     "t": "human footsteps",
+     "hl": true
+    },
+    {
+     "t": "??? It’s a mystery."
+    }
+   ],
+   "at": 3.0,
+   "hlAt": 4.4,
+   "hlDur": 1.3,
+   "reply": true,
+   "note": "Translated from Japanese"
+  }
+ ]
+}

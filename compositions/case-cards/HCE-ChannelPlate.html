@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en" data-resolution="landscape"
+  data-composition-variables='[{"id":"text","type":"string","label":"unused","default":"Channel"},{"id":"sub","type":"string","label":"Mono source line (optional)","default":""},{"id":"frames","type":"number","label":"Length in frames (30 fps)","default":180},{"id":"fps","type":"number","label":"fps","default":30},{"id":"image","type":"string","label":"Channel page screenshot (path or data URI)","default":""},{"id":"imageWidth","type":"number","label":"image px width","default":1920},{"id":"imageHeight","type":"number","label":"image px height","default":1080}]'>
+<head>
+<meta charset="UTF-8" /><meta name="viewport" content="width=1920, height=1080" />
+<script src="assets/vendor/gsap-3.14.2.min.js"></script>
+<link rel="stylesheet" href="compositions/case-cards/lib/cc.css" />
+<style>
+  #stage { background: #000; }
+  #persp { background: #0E1013; perspective: 2200px; }
+  #spin { transform: rotateY(-7deg); rotate: -1.2deg; }
+  #over { scale: 1.06; }
+  #shot { position: absolute; display: block; max-width: none; filter: saturate(0.7) contrast(1.05) brightness(0.9); }
+  #grad { background: linear-gradient(0deg, rgba(14,16,19,0.75) 0%, rgba(14,16,19,0) 26%); }
+  #subl { position: absolute; left: 120px; bottom: 96px; display: flex; align-items: center; gap: 16px; }
+</style>
+</head>
+<body>
+<div id="stage" data-composition-id="HCE-ChannelPlate" data-start="0" data-duration="6" data-fps="30" data-width="1920" data-height="1080">
+  <div class="fit"><div class="af" id="top">
+    <div id="persp" class="af"><div id="spin" class="af"><div id="over" class="af"><img id="shot" alt="" /></div></div></div>
+    <div id="grad" class="af"></div>
+  </div></div>
+</div>
+<script src="compositions/case-cards/lib/cc.js"></script>
+<script src="compositions/case-cards/lib/hce.js"></script>
+<script>
+  const P = CC.props({ text: "Channel", sub: "", frames: 180, fps: 30, image: "", imageWidth: 1920, imageHeight: 1080 });
+  const { tween, ease, $ } = CC, H = CC.hce;
+  const WIDTH = 1920, HEIGHT = 1080;
+  if (P.image) $("shot").src = P.image; else $("shot").style.display = "none";
+  const marks = H.cropMarks(), grain = H.grain(0.05);
+  $("top").insertAdjacentHTML("beforeend", H.paper(0.22) + H.vignette(0.4) + marks.html +
+    (P.sub ? '<div id="subl"><div style="width:10px;height:10px;background:' + H.C.amber + '"></div><div style="' + H.FONT.mono +
+      'font-size:24px;letter-spacing:0.14em;color:' + H.C.paper + ';white-space:nowrap">' + H.esc(P.sub.toUpperCase()) + '</div></div>' : "") + grain.html);
+  function render(f) {
+    const fps = P.fps, frames = P.frames, W = P.imageWidth || 1920, Hh = P.imageHeight || 1080;
+    const p = tween(f, [0, Math.max(frames - 1, 1)], [0, 1], ease.sine);
+    const drift = Math.min(0.85, (0.45 / 6.8) * (frames / fps));
+    const cw = 0.84, ch = (cw * W * 9) / 16 / Hh;
+    const cx = 0.16, cy = (0.038 * W) / Hh + drift * ch * p;
+    const over = 1.06;
+    const ex = { x: cx + cw / 2 - (cw * over) / 2, y: cy + ch / 2 - (ch * over) / 2, w: cw * over, h: ch * over };
+    const s = Math.max(WIDTH / (ex.w * W), HEIGHT / (ex.h * Hh));
+    const left = WIDTH / 2 - s * (ex.x + ex.w / 2) * W, top = HEIGHT / 2 - s * (ex.y + ex.h / 2) * Hh;
+    const blur = tween(f, [0, 0.8 * fps], [12, 0], ease.measured);
+    const m = tween(f, [0.4 * fps, 1.4 * fps], [0, 1], ease.ui);
+    const img = $("shot");
+    img.style.left = left + "px"; img.style.top = top + "px"; img.style.width = s * W + "px"; img.style.height = s * Hh + "px";
+    $("persp").style.filter = blur > 0.05 ? "blur(" + blur + "px)" : "none";
+    $("spin").style.scale = String(1.02 + 0.08 * p);
+    marks.set(m); if (P.sub) $("subl").style.opacity = String(m);
+    grain.set(f);
+  }
+  CC.clock("HCE-ChannelPlate", P.fps, P.frames, render);
+</script>
+</body></html>

@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en" data-resolution="landscape"
+  data-composition-variables='[{"id":"text","type":"string","label":"Number word","default":"Seven"},{"id":"sub","type":"string","label":"Line under it","default":"of eight went out alone"},{"id":"frames","type":"number","label":"Length in frames (30 fps)","default":150},{"id":"fps","type":"number","label":"fps","default":30},{"id":"image","type":"string","label":"Case still (path or data URI)","default":""},{"id":"imageWidth","type":"number","label":"image px width","default":1920},{"id":"imageHeight","type":"number","label":"image px height","default":1080},{"id":"data","type":"object","label":"{accent:true} = red rule","default":{}}]'>
+<head>
+<meta charset="UTF-8" /><meta name="viewport" content="width=1920, height=1080" />
+<script src="assets/vendor/gsap-3.14.2.min.js"></script>
+<link rel="stylesheet" href="compositions/case-cards/lib/cc.css" />
+<style> #stage { background: #000; } </style>
+</head>
+<body>
+<div id="stage" data-composition-id="HCE-Stakes" data-start="0" data-duration="5" data-fps="30" data-width="1920" data-height="1080">
+  <div class="fit" id="fit"></div>
+</div>
+<script src="compositions/case-cards/lib/cc.js"></script>
+<script src="compositions/case-cards/lib/hce.js"></script>
+<script>
+  const P = CC.props({ text: "Seven", sub: "of eight went out alone", frames: 150, fps: 30, image: "", imageWidth: 1920, imageHeight: 1080, data: {} });
+  const { tween, ease, $ } = CC, H = CC.hce, D = P.data || {};
+  const t = P.text.toUpperCase().trim();
+  const fs = Math.min(330, 1560 / Math.max(0.56 * t.length, 1));
+  const X = 130, T = 690 - fs * 0.86;
+  const acc = D.accent ? H.C.red : null;
+  const plate = H.plate(P.image, { dim: 0.8, flat: 0.35 }), marks = H.cropMarks();
+  const sub = P.sub ? H.rise('<div style="' + H.FONT.body + 'font-weight:400;font-size:46px;letter-spacing:0.02em;color:' + H.C.paper + ';white-space:nowrap">' + H.esc(P.sub) + '</div>',
+                             "position:absolute;left:" + (X + 8) + "px;top:760px;") : null;
+  const fill = P.image ? "background-image:url('" + P.image.replace(/'/g, "%27") + "');-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-stroke:1.5px rgba(220,215,203,0.4);"
+                       : "color:" + H.C.paper + ";";
+  $("fit").innerHTML = plate.html + '<div id="card" style="' + H.AF + '">' + marks.html +
+    '<div id="word" style="position:absolute;left:' + X + 'px;top:' + T + 'px;' + H.FONT.condensed + 'font-weight:700;font-size:' + fs + 'px;line-height:1;letter-spacing:0.02em;white-space:nowrap;' + fill + '">' + H.esc(t) + '</div>' +
+    '<div style="position:absolute;left:' + (X + 8) + 'px;top:726px;display:flex;align-items:center;gap:18px"><div id="sq" style="width:12px;height:12px;background:' + (acc || H.C.amber) + '"></div>' +
+    '<div id="rule" style="height:2px;background:' + (acc || H.C.slate) + '"></div></div>' + (sub ? sub.html : "") + '</div>';
+  function render(f) {
+    const fps = P.fps, frames = P.frames, c = H.useCard(f, fps, frames);
+    const focus = tween(f, [0.2 * fps, (0.2 + H.M.reveal) * fps], [0, 1], ease.measured);
+    const rule = tween(f, [0.6 * fps, (0.6 + H.M.draw) * fps], [0, 1], ease.ui);
+    const line = tween(f, [0.9 * fps, (0.9 + H.M.reveal) * fps], [0, 1], ease.measured);
+    plate.set(f, c.p, fps, frames);
+    $("card").style.opacity = String(c.o);
+    marks.set(line);
+    const w = $("word").style;
+    if (P.image) {
+      const iw = P.imageWidth || 1920, ih = P.imageHeight || 1080;
+      const k = 1.02 * (1 + (H.M.pushPctPerSec / 100) * (frames / fps) * c.p);
+      const s = Math.max(1920 / iw, 1080 / ih) * k, bw = iw * s, bh = ih * s;
+      w.backgroundSize = bw.toFixed(1) + "px " + bh.toFixed(1) + "px";
+      w.backgroundPosition = (960 - bw / 2 - X).toFixed(1) + "px " + (540 - bh / 2 - T).toFixed(1) + "px";
+    }
+    w.opacity = String(Math.min(1, focus * 1.15));
+    const flt = (P.image ? "brightness(2.1) saturate(0.7) contrast(1.12)" : "") + (focus < 0.995 ? " blur(" + (8 * (1 - focus)).toFixed(2) + "px)" : "");
+    w.filter = flt.trim() || "none";
+    $("sq").style.opacity = rule > 0 ? "1" : "0";
+    $("rule").style.width = 520 * rule + "px";
+    if (sub) sub.set(line);
+  }
+  CC.clock("HCE-Stakes", P.fps, P.frames, render);
+</script>
+</body></html>

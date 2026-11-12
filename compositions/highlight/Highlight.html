@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en"
+  data-composition-variables='[
+    {"id":"image","type":"string","label":"Screenshot (Remotion path, e.g. highlights/yt-comments.png)","default":"highlights/yt-comments.png"},
+    {"id":"context","type":"string","label":"comment | website | document","default":"comment"},
+    {"id":"page","type":"string","label":"auto | dark | light","default":"auto"},
+    {"id":"motionSeed","type":"string","label":"auto | seed | empty for fixed angle","default":"auto"},
+    {"id":"fps","type":"number","label":"fps (also pass --fps to render)","default":30},
+    {"id":"durationInFrames","type":"number","label":"Length in frames (0 = automatic)","default":0},
+    {"id":"durationInSeconds","type":"number","label":"Length in seconds (0 = automatic)","default":0},
+    {"id":"imageWidth","type":"number","label":"Screenshot width px (baked by prepare)","default":1920},
+    {"id":"imageHeight","type":"number","label":"Screenshot height px (baked by prepare)","default":1080},
+    {"id":"pageKind","type":"string","label":"measured dark|light (baked by prepare)","default":"dark"},
+    {"id":"pageColor","type":"string","label":"measured page colour (baked by prepare)","default":""},
+    {"id":"highlights","type":"string","label":"Highlights: JSON array or array","default":"[{\"label\":\"@NAC7292 - you did the right thing!\",\"x\":0.1125,\"y\":0.5593,\"w\":0.0938,\"h\":0.0028,\"startInSeconds\":0.9}]"},
+    {"id":"crop","type":"string","label":"Crop {x,y,w,h} fractions, JSON or empty","default":""},
+    {"id":"overrides","type":"string","label":"Overrides object, JSON or empty","default":""}
+  ]'>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1920, height=1080" />
+<script src="assets/vendor/gsap-3.14.2.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; }
+  #root { position: relative; width: 1920px; height: 1080px; overflow: hidden; }
+  .fill { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; }
+  .plate { position: absolute; }
+  .plate img { display: block; width: 100%; height: 100%; }
+  .bars { position: absolute; inset: 0; isolation: isolate; }
+  .bar { position: absolute; display: none; }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="Highlight" data-start="0" data-width="1920" data-height="1080">
+  <div id="stage" class="fill"></div>
+  <div id="vig" class="fill"></div>
+</div>
+<script src="lib/highlight-engine.js"></script>
+<script>
+(function () {
+  var E = window.HighlightEngine;
+  var W = 1920, H = 1080;
+  var v = (window.__hyperframes && window.__hyperframes.getVariables && window.__hyperframes.getVariables()) || {};
+  function jv(x, dflt) {
+    if (x == null || x === "") return dflt;
+    if (typeof x === "string") { try { return JSON.parse(x); } catch (e) { return dflt; } }
+    return x;
+  }
+  var nz = function (x) { return x == null || x === 0 || x === "" ? null : x; };
+  var p = {
+    image: v.image || "highlights/yt-comments.png",
+    context: v.context || "comment",
+    page: v.page || "auto",
+    motionSeed: v.motionSeed === "" ? null : (v.motionSeed === undefined ? "auto" : v.motionSeed),
+    fps: v.fps || 30,
+    durationInFrames: nz(v.durationInFrames),
+    durationInSeconds: nz(v.durationInSeconds),
+    imageWidth: v.imageWidth || W, imageHeight: v.imageHeight || H,
+    pageKind: v.pageKind || "dark", pageColor: v.pageColor || null,
+    highlights: jv(v.highlights, []),
+    crop: jv(v.crop, null),
+    overrides: jv(v.overrides, {})
+  };
+  var len = E.resolveLength(p), fps = len.fps, frames = len.frames;
+  var r = E.resolveHighlight(p);
+  var src = "assets/highlight/" + p.image.split("/").pop();
+
+  // ---- DOM: three plate copies (blur base, sharp, bloom) inside one 3D camera ----
+  function mkPlate() {
+    var d = document.createElement("div"); d.className = "plate";
+    var im = document.createElement("img"); im.src = src; im.decoding = "sync"; d.appendChild(im);
+    var g = document.createElement("div"); g.className = "bars";
+    g.style.mixBlendMode = r.blendMode;
+    var bars = r.highlights.map(function (h) {
+      var b = document.createElement("div"); b.className = "bar";
+      b.style.left = h.x * 100 + "%"; b.style.top = h.y * 100 + "%"; b.style.height = h.h * 100 + "%";
+      b.style.background = h.color; b.style.borderRadius = r.barRadius + "px";
+      if (r.glow > 0) b.style.boxShadow = "0 0 " + r.glow + "px " + r.glow / 4.6 + "px " + h.color;
+      g.appendChild(b); return b;
+    });
+    d.appendChild(g);
+    return { el: d, bars: bars };
+  }
+  function mkLayer(parent) { var l = document.createElement("div"); l.className = "fill"; parent.appendChild(l); return l; }
+
+  var stage = document.getElementById("stage");
+  stage.style.background = r.backgroundColor;
+  var persp = mkLayer(stage), cam = mkLayer(persp);
+  cam.style.transformStyle = "preserve-3d";
+  var soft = r.blurPx > 0;
+  var layers = [];
+  if (soft) { var l1 = mkLayer(cam); l1.style.filter = "blur(" + r.blurPx + "px)"; layers.push({ l: l1, p: mkPlate() }); }
+  var l2 = mkLayer(cam); layers.push({ l: l2, p: mkPlate(), sharp: true });
+  if (r.bloom > 0) { var l3 = mkLayer(cam); l3.style.filter = "blur(16px) brightness(1.15)"; l3.style.mixBlendMode = "screen"; l3.style.opacity = r.bloom; layers.push({ l: l3, p: mkPlate() }); }
+  layers.forEach(function (x) { x.l.appendChild(x.p.el); });
+  var vig = document.getElementById("vig");
+  if (r.vignette > 0) vig.style.background = "radial-gradient(ellipse 78% 72% at 50% 50%, rgba(0,0,0,0) 40%, rgba(0,0,0," + r.vignette + ") 100%)";
+
+  // ---- camera (Highlights.tsx) ----
+  var fixed = { rotateX: [r.rotateX, r.rotateX], rotateY: [r.rotateY, r.rotateY], rotateZ: [r.rotateZ, r.rotateZ], scale: [r.startScale, r.endScale], panX: [r.panX, r.panX], panY: [r.panY, r.panY], perspective: r.perspective };
+  var motion = r.motionPreset ? E.PRESETS[r.motionPreset]
+    : r.motionSeed ? E.randomMotion(r.motionSeed === "auto" ? p.image : r.motionSeed, r.motionIntensity) : fixed;
+  var procedural = !!(r.motionPreset || r.motionSeed);
+  var overscan = procedural ? E.overscanFor(motion) : 1.06;
+  var MOTION = E.bezier(0.37, 0, 0.63, 1), FOCUS = E.bezier(0.22, 1, 0.36, 1), WIPE = E.bezier(0.65, 0, 0.35, 1);
+  var base = r.crop || { x: 0, y: 0, w: 1, h: 1 };
+  var first = r.highlights[0] || null;
+  var fx = r.focusX != null ? r.focusX : (first ? first.x + first.w / 2 : 0.5);
+  var fy = r.focusY != null ? r.focusY : (first ? first.y + first.h / 2 : 0.5);
+
+  function draw(frame) {
+    var progress = E.clamp01(frames > 1 ? frame / (frames - 1) : 0);
+    var t = procedural ? MOTION(progress) : progress;
+    var at = function (a) { return a[0] + (a[1] - a[0]) * t; };
+    var framed = { x: base.x + r.cropDriftX * base.w * progress, y: base.y + r.cropDriftY * base.h * progress, w: base.w, h: base.h };
+    var L = E.layoutPlate(E.expandCrop(framed, overscan), r.imageWidth, r.imageHeight, W, H);
+    var cx = (L.left + fx * L.plateWidth) / W * 100, cy = (L.top + fy * L.plateHeight) / H * 100;
+    var mask = "radial-gradient(ellipse " + r.focusRadiusX + "% " + r.focusRadiusY + "% at " + cx + "% " + cy + "%, #000 0%, #000 " + r.focusSoftness + "%, transparent 100%)";
+    var fb = 0;
+    if (r.focusInSeconds > 0 && r.focusInBlurPx > 0) { var q = E.clamp01(frame / (r.focusInSeconds * fps)); fb = r.focusInBlurPx + (0 - r.focusInBlurPx) * FOCUS(q); }
+    persp.style.perspective = motion.perspective + "px";
+    persp.style.filter = fb > 0.05 ? "blur(" + fb + "px)" : "none";
+    cam.style.scale = String(at(motion.scale));
+    cam.style.rotate = at(motion.rotateZ) + "deg";
+    cam.style.translate = at(motion.panX) * 100 + "% " + at(motion.panY) * 100 + "%";
+    cam.style.transform = "rotateX(" + at(motion.rotateX) + "deg) rotateY(" + at(motion.rotateY) + "deg)";
+    var plateScreenW = L.plateWidth * overscan;
+    layers.forEach(function (x) {
+      x.l.style.scale = String(overscan);
+      if (x.sharp && soft) { x.l.style.webkitMaskImage = mask; x.l.style.maskImage = mask; }
+      var e = x.p.el.style; e.left = L.left + "px"; e.top = L.top + "px"; e.width = L.plateWidth + "px"; e.height = L.plateHeight + "px";
+      x.p.bars.forEach(function (b, i) {
+        var h = r.highlights[i];
+        var dur = h.durationInSeconds != null ? h.durationInSeconds : r.wipeBaseSeconds + (h.w * plateScreenW) / r.wipePxPerSecond;
+        var s = h.startInSeconds * fps, e2 = s + dur * fps;
+        var pr = WIPE(E.clamp01((frame - s) / (e2 - s)));
+        if (pr <= 0) { b.style.display = "none"; return; }
+        b.style.display = "block"; b.style.width = h.w * pr * 100 + "%";
+      });
+    });
+  }
+
+  window.__highlightDebug = { frames: frames, fps: fps, overscan: overscan, vars: v };
+  draw(0);
+  window.__timelines = window.__timelines || {};
+  var tl = gsap.timeline({ paused: true });
+  var proxy = { t: 0 };
+  tl.to(proxy, { t: frames / fps, duration: frames / fps, ease: "none", onUpdate: function () {
+    draw(Math.min(frames - 1, Math.round(proxy.t * fps)));
+  } }, 0);
+  window.__timelines["Highlight"] = tl;
+})();
+</script>
+</body>
+</html>

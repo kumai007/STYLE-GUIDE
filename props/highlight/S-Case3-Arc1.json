@@ -1,0 +1,35 @@
+{
+ "image": "assets/highlight/c3-dungavel-house.png",
+ "context": "website",
+ "page": "light",
+ "highlights": [],
+ "durationInSeconds": null,
+ "crop": {
+  "x": 0,
+  "y": 0.045,
+  "w": 1,
+  "h": 0.879
+ },
+ "motionSeed": null,
+ "pageKind": "light",
+ "pageColor": "#ecf0f8",
+ "imageWidth": 2499,
+ "imageHeight": 1599,
+ "overrides": {
+  "motionIntensity": 1,
+  "perspective": 2400,
+  "rotateY": -4,
+  "rotateZ": -0.6,
+  "startScale": 1.03,
+  "endScale": 1.11,
+  "focusX": 0.5,
+  "focusY": 0.5,
+  "vignette": 0.44,
+  "cropDriftY": 0.08,
+  "focusInSeconds": 0.32,
+  "focusInBlurPx": 15,
+  "backgroundColor": "#0b0d10"
+ },
+ "fps": 29.97002997002997,
+ "durationInFrames": 214
+}

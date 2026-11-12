@@ -1,0 +1,40 @@
+{
+ "image": "assets/highlight/yt-comments.png",
+ "context": "comment",
+ "page": "dark",
+ "highlights": [
+  {
+   "label": "@NAC7292 â€” you did the right thing!",
+   "x": 0.1125,
+   "y": 0.5593,
+   "w": 0.0938,
+   "h": 0.0028,
+   "startInSeconds": 0.9
+  },
+  {
+   "label": "@jazzycool2950 â€” You did the right thing.",
+   "x": 0.2958,
+   "y": 0.5806,
+   "w": 0.0948,
+   "h": 0.0028,
+   "startInSeconds": 3.6
+  }
+ ],
+ "durationInSeconds": null,
+ "crop": {
+  "x": 0.002,
+  "y": 0.5279,
+  "w": 0.636,
+  "h": 0.0872
+ },
+ "motionSeed": "highlights/yt-comments.png",
+ "pageKind": "dark",
+ "pageColor": "#101010",
+ "imageWidth": 1920,
+ "imageHeight": 7877,
+ "overrides": {
+  "backgroundColor": "#0f0f0f"
+ },
+ "fps": 30,
+ "durationInFrames": 195
+}

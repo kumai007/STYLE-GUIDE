@@ -1,0 +1,247 @@
+<!doctype html>
+<!--
+  HookIntro: port of graphics/templates/src/presets/hook/HookIntro.tsx (Remotion), 1920x1080 @ 60 fps, opaque, silent.
+  title card -> 3D window montage (one window per clip) -> hook line -> red "Subscribe." line.
+  Length = (210 + 100 x clips + 450) / 60 s, set from the clip count at load (Remotion's calculateMetadata).
+  Everything visible is a pure function of timeline time: renderAt(t), called from the hf-seek event and from
+  the paused timeline's tween (same function, idempotent).
+  Render: npx --yes hyperframes@0.8.210 render -c compositions/hook-intro/hook-intro.html --variables-file props/hook-intro/hook-ps.json -o out/hook-intro/hook-ps.mp4 --workers 2
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"clips","type":"array","label":"Clips: {src,label,aspect}, src relative to assets/hook-intro/","default":[
+      {"src":"hook-ps/00.mp4","label":"MANHUNT","aspect":1.3333},
+      {"src":"hook-ps/01.mp4","label":"CONDEMNED 2: BLOODSHOT","aspect":1.7778},
+      {"src":"hook-ps/02.mp4","label":"RESIDENT EVIL SURVIVOR","aspect":1.7778},
+      {"src":"hook-ps/03.mp4","label":"SILENT HILL: DOWNPOUR","aspect":1.7778},
+      {"src":"hook-ps/04.mp4","label":"SEAMAN","aspect":1.3333},
+      {"src":"hook-ps/05.mp4","label":"D","aspect":1.3333}]},
+    {"id":"kicker","type":"string","label":"Kicker","default":"2 HOURS OF"},
+    {"id":"title","type":"string","label":"Title","default":"THE MOST DISTURBING"},
+    {"id":"accent","type":"string","label":"Red accent line","default":"PS GAMES"},
+    {"id":"tag","type":"string","label":"Italic tag","default":"EVER MADE"},
+    {"id":"hook","type":"array","label":"Hook line, one entry per word","default":["These","are","the","most","disturbing","PlayStation","games","ever","made."]},
+    {"id":"hookAccent","type":"number","label":"Index of the red hook word","default":4,"min":0,"step":1},
+    {"id":"cta","type":"string","label":"Red subscribe word","default":"Subscribe."},
+    {"id":"ctaRest","type":"string","label":"Subscribe line, rest","default":"There&apos;s more where these came from."}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="assets/vendor/gsap-3.14.2.min.js"></script>
+    <style>
+      @font-face {
+        font-family: "Hook Helvetica";
+        src: url("assets/hook-intro/fonts/Helvetica-Bold.ttf") format("truetype");
+        font-weight: 700;
+      }
+      @font-face {
+        font-family: "Hook DIN";
+        src: url("assets/hook-intro/fonts/Bahnschrift.ttf") format("truetype");
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; width: 1920px; height: 1080px; overflow: hidden; background: #000; }
+      #root {
+        position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: hidden; background: #000;
+        font-family: "Hook Helvetica", Helvetica, Arial, sans-serif; color: #fff;
+      }
+      .layer { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; }
+      #set { background: radial-gradient(ellipse 85% 38% at 50% 55%, #0e0e0f 0%, #070708 40%, #020202 75%, #000 100%); opacity: 0; }
+      #title-card { background: #000; opacity: 0; }
+      .tc { position: absolute; left: 0; right: 0; text-align: center; line-height: 1; white-space: nowrap; }
+      #tc-kicker { top: 394px; font-size: 39px; }
+      #tc-title { top: 455px; font-size: 92px; }
+      #tc-accent { top: 565px; font-size: 92px; color: #d62027; }
+      #tc-tag { top: 674px; font-size: 41px; font-style: italic; }
+      #montage { perspective: 1500px; perspective-origin: 50% 47%; opacity: 0; }
+      .win { position: absolute; display: none; }
+      .face {
+        position: relative; width: 100%; height: 100%; overflow: hidden; background: #000;
+        box-shadow: 0 24px 70px rgba(0, 0, 0, 0.9); outline: 1.5px solid rgba(255, 255, 255, 0.16);
+      }
+      .face video, .face img { position: absolute; left: 0; top: 0; width: 100%; height: 100%; object-fit: cover; }
+      .shade { position: absolute; left: 0; top: 0; width: 100%; height: 100%; background: #000; opacity: 0; }
+      .name {
+        position: absolute; white-space: nowrap; font-family: "Hook DIN", sans-serif;
+        font-variation-settings: "wdth" 75, "wght" 500; font-size: 28px; letter-spacing: 0.14em; color: #ededed;
+      }
+      #hook { opacity: 0; font-size: 103px; line-height: 116px; }
+      #hook-lines { position: absolute; left: 0; right: 0; top: 419px; text-align: center; }
+      #hook-lines .w { opacity: 0; }
+      #hook-lines .w.accent { color: #d62027; }
+      #cta { opacity: 0; }
+      #cta-line { position: absolute; left: 0; right: 0; top: 511px; text-align: center; font-size: 51px; line-height: 1; white-space: nowrap; }
+      #cta-line .red { color: #d62027; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="hook-intro" data-start="0" data-duration="21" data-fps="60" data-width="1920" data-height="1080">
+      <div id="set" class="layer" data-layout-ignore></div>
+      <div id="title-card" class="layer">
+        <div id="tc-kicker" class="tc" data-var-text="kicker">2 HOURS OF</div>
+        <div id="tc-title" class="tc" data-var-text="title">THE MOST DISTURBING</div>
+        <div id="tc-accent" class="tc" data-var-text="accent">PS GAMES</div>
+        <div id="tc-tag" class="tc" data-var-text="tag">EVER MADE</div>
+      </div>
+      <div id="montage" class="layer" data-layout-allow-overflow></div>
+      <div id="hook" class="layer"><div id="hook-lines"></div></div>
+      <div id="cta" class="layer">
+        <div id="cta-line"><span class="red" data-var-text="cta">Subscribe.</span> <span data-var-text="ctaRest">There's more where these came from.</span></div>
+      </div>
+    </div>
+    <script>
+(function () {
+  "use strict";
+  var V = window.__hyperframes.getVariables();
+  var FPS = 60, W = 1920, H = 1080;
+  var TITLE = 210, P = 100, TAIL = 450;
+  var clips = V.clips || [];
+  var N = clips.length;
+  var END = TITLE + N * P + TAIL;
+  var root = document.getElementById("root");
+  root.setAttribute("data-duration", String(END / FPS));
+
+  // ---- easing (Remotion Easing.bezier) ----
+  function bezier(x1, y1, x2, y2) {
+    function A(a, b) { return 1 - 3 * b + 3 * a; }
+    function B(a, b) { return 3 * b - 6 * a; }
+    function C(a) { return 3 * a; }
+    function calc(t, a, b) { return ((A(a, b) * t + B(a, b)) * t + C(a)) * t; }
+    function slope(t, a, b) { return 3 * A(a, b) * t * t + 2 * B(a, b) * t + C(a); }
+    return function (x) {
+      if (x <= 0) return 0;
+      if (x >= 1) return 1;
+      var t = x, i;
+      for (i = 0; i < 8; i++) {
+        var s = slope(t, x1, x2);
+        if (s === 0) break;
+        t -= (calc(t, x1, x2) - x) / s;
+      }
+      var lo = 0, hi = 1;
+      t = Math.min(1, Math.max(0, t));
+      for (i = 0; i < 40; i++) {
+        var v = calc(t, x1, x2) - x;
+        if (Math.abs(v) < 1e-12) break;
+        if (v > 0) hi = t; else lo = t;
+        t = (lo + hi) / 2;
+      }
+      return calc(t, y1, y2);
+    };
+  }
+  var easeOut = bezier(0.22, 1, 0.36, 1);
+  var easeInOut = bezier(0.45, 0, 0.55, 1);
+  function clamp01(x) { return x < 0 ? 0 : x > 1 ? 1 : x; }
+  function lerp(x, a0, a1, b0, b1) { return b0 + (b1 - b0) * clamp01((x - a0) / (a1 - a0)); } // clamped interpolate
+  function ramp(f, a, b, ease) { return (ease || easeOut)(clamp01((f - a) / (b - a))); }
+  function fade(f, a, i, b, o) { return Math.min(ramp(f, a, a + i), 1 - ramp(f, b - o, b, easeInOut)); }
+
+  // ---- montage geometry ----
+  var PERSP = 1500, GAP = 1.3 * PERSP, XW = 560, CX = 290, YW = 27, TURN = 17, U0 = P / 2;
+  function cubic(x) { return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; }
+  function camPos(u) { var x = (u - U0) / P, n = Math.floor(x); return n + cubic(x - n); }
+  function side(k) { return k % 2 === 0 ? -1 : 1; }
+
+  // ---- build DOM from variables ----
+  var $ = function (id) { return document.getElementById(id); };
+  var montage = $("montage");
+  var wins = clips.map(function (c, k) {
+    var aspect = c.aspect || 16 / 9;
+    var h = 432 * Math.sqrt(16 / 9 / aspect), w = h * aspect;
+    var s = side(k);
+    var tPlay = (TITLE + U0 + (k - 1) * P) / FPS;           // s: the window's clip starts playing
+    var el = document.createElement("div");
+    el.className = "win"; el.id = "win-" + k;
+    el.style.left = (W / 2 - w / 2) + "px"; el.style.top = (H * 0.47 - h / 2) + "px";
+    el.style.width = w + "px"; el.style.height = h + "px";
+    var src = "assets/hook-intro/" + c.src;
+    var poster = src.replace(/\.[^.\/]+$/, ".first.png");
+    el.innerHTML =
+      '<div class="face">' +
+        '<img id="poster-' + k + '" src="' + poster + '" alt="">' +
+        '<video id="vid-' + k + '" class="clip" muted playsinline data-start="' + tPlay + '" data-duration="' + (164 / FPS) + '" data-track-index="' + (k + 1) + '" src="' + src + '"></video>' +
+        '<div class="shade" id="shade-' + k + '"></div>' +
+      '</div>' +
+      '<div class="name" id="name-' + k + '" style="top:' + (h + 16) + 'px;' + (s < 0 ? "left" : "right") + ':0"></div>';
+    el.querySelector(".name").textContent = c.label;
+    montage.appendChild(el);
+    return { el: el, face: el.querySelector(".face"), poster: el.querySelector("img"), shade: el.querySelector(".shade"),
+             name: el.querySelector(".name"), k: k, w: w, h: h, s: s, tPlay: tPlay };
+  });
+
+  // hook line: words on the reference's rhythm
+  var hook = V.hook || [], acc = V.hookAccent;
+  var at = [2];
+  for (var i = 1; i < hook.length; i++) at.push(at[i - 1] + (i === acc ? 50 : i > acc + 2 ? 12 : i % 2 ? 15 : 17));
+  var hookLines = $("hook-lines");
+  var wordEls = [];
+  [hook.slice(0, acc + 1), hook.slice(acc + 1)].forEach(function (ws) {
+    var line = document.createElement("div");
+    ws.forEach(function (word) {
+      var sp = document.createElement("span");
+      sp.className = "w" + (wordEls.length === acc ? " accent" : "");
+      sp.textContent = word + " ";
+      wordEls.push(sp); line.appendChild(sp);
+    });
+    hookLines.appendChild(line);
+  });
+
+  var elSet = $("set"), elTitle = $("title-card"), elHook = $("hook"), elCta = $("cta");
+
+  function renderAt(t) {
+    var f = Math.round(t * FPS * 1e6) / 1e6;
+    var m0 = TITLE, h0 = m0 + N * P, c0 = h0 + 295;
+    // dark set
+    elSet.style.opacity = f < m0 ? 0 : Math.min(ramp(f, m0, m0 + 30), 1 - ramp(f, END - 30, END - 4, easeInOut));
+    // title card
+    if (f < m0) { elTitle.style.display = "block"; elTitle.style.opacity = fade(f, 12, 20, 194, 16); }
+    else elTitle.style.display = "none";
+    // montage
+    var showM = f >= m0 && f < h0 + 20;
+    montage.style.display = showM ? "block" : "none";
+    if (showM) {
+      var u = f - m0;
+      montage.style.opacity = ramp(u, 0, 30);
+      var c = camPos(u), n = Math.floor(c);
+      var camX = CX * (side(n) + (side(n + 1) - side(n)) * (c - n));
+      wins.forEach(function (o) {
+        var d = 1 + (o.k - c) * (GAP / PERSP);
+        if (d > 3.4 || d < 0.2) { o.el.style.display = "none"; return; }
+        var fog = d <= 2.3 ? lerp(d, 1, 2.3, 1, 0.42) : lerp(d, 2.3, 3.4, 0.42, 0);
+        var appear = lerp(d, 2.6, 3.4, 1, 0);
+        o.el.style.display = "block";
+        o.el.style.opacity = appear;
+        o.el.style.zIndex = Math.round(1000 - d * 100);
+        o.el.style.transform = "translate3d(" + (o.s * XW - camX) + "px," + YW + "px," + ((1 - d) * PERSP) + "px) rotateY(" + (-o.s * TURN) + "deg)";
+        o.shade.style.opacity = 1 - fog;
+        var g = Math.round(255 * fog);
+        o.face.style.outlineColor = "rgba(" + g + "," + g + "," + g + ",0.16)";
+        o.name.style.opacity = fog;
+        o.poster.style.display = (u - (U0 + (o.k - 1) * P)) < 0 ? "block" : "none";
+      });
+    }
+    // hook line
+    var showH = f >= h0 && f < c0;
+    elHook.style.display = showH ? "block" : "none";
+    if (showH) {
+      var hf = f - h0;
+      elHook.style.opacity = 1 - ramp(hf, 260, 268, easeInOut);
+      for (var j = 0; j < wordEls.length; j++) wordEls[j].style.opacity = ramp(hf, at[j], at[j] + 9);
+    }
+    // subscribe line
+    if (f >= c0) { elCta.style.display = "block"; elCta.style.opacity = fade(f - c0, 0, 10, 123, 10); }
+    else elCta.style.display = "none";
+  }
+
+  window.__timelines = window.__timelines || {};
+  var tl = gsap.timeline({ paused: true });
+  var proxy = { t: 0 };
+  tl.to(proxy, { t: END / FPS, duration: END / FPS, ease: "none", onUpdate: function () { renderAt(proxy.t); } }, 0);
+  window.__timelines["hook-intro"] = tl;
+  window.addEventListener("hf-seek", function (e) { renderAt(e.detail.time); });
+  renderAt(0);
+})();
+    </script>
+  </body>
+</html>

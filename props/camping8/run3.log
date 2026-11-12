@@ -1,0 +1,58 @@
+[INFO] [Compiler] Embedded local font file: assets/place-map/fonts/inter-latin-700-normal.woff2 (24 KB → data URI)
+[INFO] [Compiler] Embedded local font file: assets/place-map/fonts/vcr-osd-mono.ttf (74 KB → data URI)
+[INFO] [Compiler] Embedded local font file: assets/place-map/fonts/georgia.ttf (215 KB → data URI)
+[hyperframes] browserGpuMode probe → hardware (WebGL renderer vendor="Google Inc. (Intel)" renderer="ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)")
+[BrowserManager] Browser launched (HeadlessChrome/152.0.7977.30, screenshot, gl=--use-gl=angle --use-angle=d3d11, headlessShell=true, platform=win32)
+[BrowserManager] Browser launched (HeadlessChrome/152.0.7977.30, screenshot, gl=--use-gl=angle --use-angle=d3d11, headlessShell=true, platform=win32)
+[initSession:screenshot] page.goto start (1ms)
+[initSession:screenshot] page.goto start (0ms)
+[initSession:screenshot] page.goto complete (601ms)
+[initSession:screenshot] page.goto complete (595ms)
+[initSession:screenshot] GSAP proxy flush complete (611ms)
+[initSession:screenshot] GSAP proxy flush complete (606ms)
+[HyperFrames] render runtime fps {"canonicalFps":30,"source":"render-options","rawFpsSource":"render-options","rawFps":30}
+[HyperFrames] render runtime fps {"canonicalFps":30,"source":"render-options","rawFpsSource":"render-options","rawFps":30}
+[initSession:screenshot] pollHfReady complete (720ms)
+[initSession:screenshot] pollHfReady complete (731ms)
+[initSession:screenshot] pollSubCompositionTimelines complete (ready) (722ms)
+[initSession:screenshot] applyVideoMetadataHints complete (722ms)
+[initSession:screenshot] pollSubCompositionTimelines complete (ready) (734ms)
+[initSession:screenshot] applyVideoMetadataHints complete (734ms)
+[initSession:screenshot] media + fonts + tailwind ready (725ms)
+[initSession:screenshot] media + fonts + tailwind ready (735ms)
+[initSession:screenshot] static-frame dedup: disabled (eligible) (731ms)
+[initSession:screenshot] static-frame dedup: disabled (eligible) (742ms)
+[INFO] [Compiler] Embedded local font file: assets/place-map/fonts/inter-latin-700-normal.woff2 (24 KB → data URI)
+[INFO] [Compiler] Embedded local font file: assets/place-map/fonts/vcr-osd-mono.ttf (74 KB → data URI)
+[INFO] [Compiler] Embedded local font file: assets/place-map/fonts/georgia.ttf (215 KB → data URI)
+[hyperframes] browserGpuMode probe → hardware (WebGL renderer vendor="Google Inc. (Intel)" renderer="ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)")
+[BrowserManager] Browser launched (HeadlessChrome/152.0.7977.30, screenshot, gl=--use-gl=angle --use-angle=d3d11, headlessShell=true, platform=win32)
+[BrowserManager] Browser launched (HeadlessChrome/152.0.7977.30, screenshot, gl=--use-gl=angle --use-angle=d3d11, headlessShell=true, platform=win32)
+[initSession:screenshot] page.goto start (0ms)
+[initSession:screenshot] page.goto start (0ms)
+[initSession:screenshot] page.goto complete (611ms)
+[initSession:screenshot] page.goto complete (598ms)
+[initSession:screenshot] GSAP proxy flush complete (623ms)
+[initSession:screenshot] GSAP proxy flush complete (611ms)
+[HyperFrames] render runtime fps {"canonicalFps":30,"source":"render-options","rawFpsSource":"render-options","rawFps":30}
+[HyperFrames] render runtime fps {"canonicalFps":30,"source":"render-options","rawFpsSource":"render-options","rawFps":30}
+[initSession:screenshot] pollHfReady complete (718ms)
+[initSession:screenshot] pollHfReady complete (741ms)
+[initSession:screenshot] pollSubCompositionTimelines complete (ready) (720ms)
+[initSession:screenshot] applyVideoMetadataHints complete (720ms)
+[initSession:screenshot] pollSubCompositionTimelines complete (ready) (743ms)
+[initSession:screenshot] applyVideoMetadataHints complete (743ms)
+[initSession:screenshot] media + fonts + tailwind ready (723ms)
+[initSession:screenshot] media + fonts + tailwind ready (745ms)
+[initSession:screenshot] static-frame dedup: disabled (eligible) (729ms)
+[initSession:screenshot] static-frame dedup: disabled (eligible) (751ms)
+   57.4 MB · 6.7s video · rendered in 26.6s
+video,yuva444p12le,30000/1001,200
+   46.0 MB · 7.2s video · rendered in 25.5s
+video,yuva444p12le,30000/1001,215
+   102.3 MB · 9.2s video · rendered in 34.9s
+video,yuva444p12le,30000/1001,275
+   36.2 MB · 5.0s video · rendered in 25.6s
+video,yuva444p12le,30000/1001,150
+   122.8 MB · 12.5s video · rendered in 41.2s
+video,yuva444p12le,30000/1001,375

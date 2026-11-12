@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en" data-resolution="landscape"
+  data-composition-variables='[{"id":"text","type":"string","label":"Number word","default":"Seven"},{"id":"sub","type":"string","label":"Line under it","default":"of eight went out alone"},{"id":"frames","type":"number","label":"Length in frames (30 fps)","default":150},{"id":"fps","type":"number","label":"fps","default":30},{"id":"image","type":"string","label":"Backdrop still (path or data URI)","default":""},{"id":"data","type":"object","label":"{accent: bool}","default":{}}]'>
+<head>
+<meta charset="UTF-8" /><meta name="viewport" content="width=1920, height=1080" />
+<script src="assets/vendor/gsap-3.14.2.min.js"></script>
+<link rel="stylesheet" href="compositions/case-cards/lib/cc.css" />
+<link rel="stylesheet" href="compositions/case-cards/lib/nocturn.css" />
+<style>
+  #stage { background: #000; }
+  #body { align-items: center; justify-content: center; }
+  #mask { overflow: hidden; height: 300px; display: flex; align-items: flex-end; }
+  #big { font-family: "Nocturn Inter", sans-serif; font-weight: 700; font-size: 280px; line-height: 1; color: #E9E6E8; letter-spacing: 24px; white-space: nowrap; }
+  #rule { height: 4px; margin-top: 34px; }
+  #sub { margin-top: 30px; font-family: "VCR OSD Mono", monospace; font-size: 48px; letter-spacing: 6px; color: #E9E6E8; white-space: nowrap; min-height: 52px; }
+</style>
+</head>
+<body>
+<div id="stage" data-composition-id="NocturnStakes" data-start="0" data-duration="5" data-fps="30" data-width="1920" data-height="1080">
+  <div class="fit">
+    <div id="plate" class="af nplate"><img id="img" class="img" alt="" /><div class="af forest"></div><div id="dim" class="af dim"></div><div class="af vig"></div></div>
+    <div id="body" class="af"><div id="mask"><div id="big"></div></div><div id="rule"></div><div id="sub"></div></div>
+  </div>
+</div>
+<script src="compositions/case-cards/lib/cc.js"></script>
+<script src="compositions/case-cards/lib/nocturn.js"></script>
+<script>
+  const P = CC.props({ text: "Seven", sub: "of eight went out alone", frames: 150, fps: 30, image: "", data: {} });
+  const { tween, ease, typeOn, $ } = CC, N = CC.nocturn;
+  $("big").textContent = P.text.toUpperCase();
+  $("dim").style.opacity = 0.62;
+  $("rule").style.background = P.data && P.data.accent ? N.palette.red : N.palette.greyGreen;
+  if (P.image) $("img").src = P.image; else $("img").style.display = "none";
+  const setGrain = N.grain($("plate"));
+  function render(f) {
+    const fps = P.fps, frames = P.frames, c = N.card(f, fps, frames);
+    const push = 1 + (0.6 / 100) * (frames / fps) * c.p, d = N.drift(f, fps);
+    $("img").style.transform = "translate(" + d[0] + "px," + d[1] + "px) scale(" + 1.03 * push + ")";
+    setGrain(f);
+    const rise = tween(f, [0.15 * fps, 0.75 * fps], [1, 0], ease.enter);
+    const chars = typeOn(f, 0.6 * fps, P.sub.length, 1.2);
+    const rule = tween(f, [0.45 * fps, 0.45 * fps + 33], [0, 1], ease.ui);
+    $("body").style.opacity = c.o;
+    $("big").style.transform = "translateY(" + rise * 105 + "%)";
+    $("rule").style.width = 520 * rule + "px";
+    $("sub").textContent = P.sub.toUpperCase().slice(0, chars);
+  }
+  CC.clock("NocturnStakes", P.fps, P.frames, render);
+</script>
+</body></html>

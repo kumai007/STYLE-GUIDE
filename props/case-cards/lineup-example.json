@@ -1,0 +1,62 @@
+{
+ "text": "",
+ "frames": 150,
+ "data": {
+  "names": [
+   "Chase Newlun",
+   "English Woodsman",
+   "Sort Of Interesting",
+   "Under The Weather",
+   "Welcome 2 The Woods UK",
+   "Truesdale TV",
+   "Campin' With Champion"
+  ],
+  "at": [
+   0.3,
+   0.6,
+   0.9,
+   1.2,
+   1.5,
+   1.8,
+   2.1
+  ],
+  "dip": 0.6
+ },
+ "images": [
+  {
+   "src": "assets/case-cards/we-couple-PD.jpg",
+   "w": 1000,
+   "h": 1000
+  },
+  {
+   "src": "assets/case-cards/we-couple-PD-2.jpg",
+   "w": 1000,
+   "h": 1000
+  },
+  {
+   "src": "assets/case-cards/we-couple-PD.jpg",
+   "w": 1000,
+   "h": 1000
+  },
+  {
+   "src": "assets/case-cards/we-couple-PD-2.jpg",
+   "w": 1000,
+   "h": 1000
+  },
+  {
+   "src": "assets/case-cards/we-couple-PD.jpg",
+   "w": 1000,
+   "h": 1000
+  },
+  {
+   "src": "assets/case-cards/we-couple-PD-2.jpg",
+   "w": 1000,
+   "h": 1000
+  },
+  {
+   "src": "assets/case-cards/we-couple-PD.jpg",
+   "w": 1000,
+   "h": 1000
+  }
+ ]
+}

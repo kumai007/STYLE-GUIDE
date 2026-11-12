@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en"
+  data-composition-variables='[
+    {"id":"cards","type":"string","label":"Cards: JSON array of {author,avatar,segs:[{t,hl?}],at,hlAt,hlDur,height?} (seconds, absolute incl. lead). Empty = Case 5 defaults","default":""},
+    {"id":"accent","type":"string","label":"Wipe colour","default":"#a30c1d"},
+    {"id":"lead","type":"number","label":"Seconds of nothing at the head (drift start)","default":0.6},
+    {"id":"fps","type":"number","label":"fps (also pass --fps to render)","default":29.97002997},
+    {"id":"durationInFrames","type":"number","label":"Length in frames","default":200},
+    {"id":"colRight","type":"number","label":"px from right edge","default":84},
+    {"id":"colWidth","type":"number","label":"card width px","default":1000},
+    {"id":"stackBottom","type":"number","label":"px from bottom to lowest card","default":76},
+    {"id":"gap","type":"number","label":"gap between cards px","default":14},
+    {"id":"drift","type":"number","label":"final upward drift px (negative = up)","default":-22}
+  ]'>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1920, height=1080" />
+<script src="assets/vendor/gsap-3.14.2.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  @font-face { font-family: "Inter RC"; src: url("assets/highlight-extra/fonts/inter-variable-opsz-wght.ttf") format("truetype"); font-weight: 100 900; font-style: normal; font-variation-settings: "opsz" 14; }
+  html, body { font-optical-sizing: none; font-variation-settings: "opsz" 14; width: 1920px; height: 1080px; overflow: hidden; background: transparent; }
+  #root { position: relative; width: 1920px; height: 1080px; overflow: hidden; background: transparent; }
+  #stack { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; }
+  .card, .card * { font-optical-sizing: none; font-variation-settings: "opsz" 14; }
+  .card { position: absolute; display: flex; gap: 18px; padding: 22px 26px; border-radius: 16px;
+    background-color: rgba(9,9,11,0.82); border: 1px solid rgba(255,255,255,0.10);
+    box-shadow: 0 18px 46px rgba(0,0,0,0.55); visibility: hidden; opacity: 0; }
+  .av { flex: 0 0 auto; width: 50px; height: 50px; border-radius: 25px; background-color: rgba(255,255,255,0.14);
+    color: rgba(255,255,255,0.82); font-family: "Inter RC", sans-serif; font-size: 24px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center; }
+  .body { flex: 1; min-width: 0; }
+  .au { font-family: "Inter RC", sans-serif; font-size: 25px; font-weight: 500; color: rgba(255,255,255,0.52);
+    margin-bottom: 9px; letter-spacing: 0.1px; }
+  .tx { font-family: "Inter RC", sans-serif; font-size: 34px; font-weight: 400; line-height: 1.42; color: rgba(255,255,255,0.95); }
+  .av img { width:50px; height:50px; border-radius:25px; object-fit:cover; display:block; }
+  .tr { font-family: "Inter RC", sans-serif; font-size: 20px; font-weight: 400; color: rgba(255,255,255,0.40); margin-top: 8px; letter-spacing: 0.2px; }
+  .rp { font-family: "Inter RC", sans-serif; color: #a30c1d; }
+  .hl { -webkit-box-decoration-break: clone; box-decoration-break: clone; padding: 2px 3px; border-radius: 3px; }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="RisingComments" data-start="0" data-width="1920" data-height="1080">
+  <div id="stack"></div>
+</div>
+<script>
+(function () {
+  var v = (window.__hyperframes && window.__hyperframes.getVariables && window.__hyperframes.getVariables()) || {};
+  var LEAD0 = 0.6;
+  var DEFAULT_CARDS = [
+    { author: "@chrisnolan-d8w", avatar: "C", at: LEAD0 + 0.45, hlAt: LEAD0 + 1.25, hlDur: 1.0, height: 189,
+      segs: [{ t: "Um yeah, " }, { t: "no way in hell", hl: true }, { t: " I would spend the night in that area. It looks like a setting for a horror movie." }] },
+    { author: "@CasstromSweden", avatar: "L", at: LEAD0 + 2.45, hlAt: LEAD0 + 3.15, hlDur: 1.6, height: 236,
+      segs: [{ t: "The mist, the isolation, and " }, { t: "what happened there (I looked it up - terrible)", hl: true }, { t: ", are all enough for the brain to say “this is not a good idea”." }] }
+  ];
+  function jv(x, d) { if (x == null || x === "") return d; if (typeof x === "string") { try { return JSON.parse(x); } catch (e) { return d; } } return x; }
+  var CARDS = jv(v.cards, DEFAULT_CARDS);
+  var ACCENT = v.accent || "#a30c1d", LEAD = v.lead != null ? v.lead : LEAD0;
+  var fps = v.fps || 30000 / 1001, frames = v.durationInFrames || 200;
+  var COL_RIGHT = v.colRight != null ? v.colRight : 84, COL_WIDTH = v.colWidth || 1000;
+  var STACK_BOTTOM = v.stackBottom != null ? v.stackBottom : 76, GAP = v.gap != null ? v.gap : 14;
+  var DRIFT = v.drift != null ? v.drift : -22;
+
+  // cubic-bezier easing (same maths as Remotion Easing.bezier)
+  function bezier(x1, y1, x2, y2) {
+    function cx(t) { return 3 * x1 * t * (1 - t) * (1 - t) + 3 * x2 * t * t * (1 - t) + t * t * t; }
+    function cy(t) { return 3 * y1 * t * (1 - t) * (1 - t) + 3 * y2 * t * t * (1 - t) + t * t * t; }
+    return function (x) {
+      if (x <= 0) return 0; if (x >= 1) return 1;
+      var lo = 0, hi = 1, t = x;
+      for (var i = 0; i < 40; i++) { var d = cx(t) - x; if (Math.abs(d) < 1e-9) break; if (d > 0) hi = t; else lo = t; t = (lo + hi) / 2; }
+      return cy(t);
+    };
+  }
+  var clamp01 = function (x) { return x < 0 ? 0 : x > 1 ? 1 : x; };
+  var ARRIVE = bezier(0.16, 0.9, 0.24, 1), WIPE = bezier(0.65, 0, 0.35, 1);
+
+  var stack = document.getElementById("stack");
+  var els = CARDS.map(function (c) {
+    var d = document.createElement("div"); d.className = "card";
+    d.style.right = COL_RIGHT + "px"; d.style.width = (c.reply ? COL_WIDTH - 70 : COL_WIDTH) + "px";
+    var av = document.createElement("div"); av.className = "av"; if (/^(props|assets|http|data:)/.test(c.avatar)) { var im = document.createElement("img"); im.src = c.avatar; av.appendChild(im); } else av.textContent = c.avatar; d.appendChild(av);
+    var b = document.createElement("div"); b.className = "body";
+    var au = document.createElement("div"); au.className = "au"; au.textContent = c.author; b.appendChild(au);
+    var tx = document.createElement("div"); tx.className = "tx";
+    var hls = [];
+    c.segs.forEach(function (s) {
+      var sp = document.createElement("span"); sp.textContent = s.t;
+      if (s.hl) { sp.className = "hl"; hls.push(sp); }
+      tx.appendChild(sp);
+    });
+    b.appendChild(tx); if (c.note) { var nt = document.createElement("div"); nt.className = "tr"; nt.textContent = c.note; b.appendChild(nt); } d.appendChild(b); stack.appendChild(d);
+    return { el: d, hls: hls };
+  });
+  // heights: use the supplied (measured) value, otherwise measure the laid-out card
+  var heights = CARDS.map(function (c, i) {
+    return c.height != null ? c.height : els[i].el.offsetHeight;
+  });
+  var arrive = function (c, frame) { return ARRIVE(clamp01((frame - c.at * fps) / (0.46 * fps))); };
+
+  function draw(frame) {
+    var dr = DRIFT * clamp01((frame - LEAD * fps) / (frames - LEAD * fps));
+    stack.style.transform = "translateY(" + dr + "px)";
+    CARDS.forEach(function (c, i) {
+      var e = arrive(c, frame), el = els[i].el;
+      if (e <= 0) { el.style.visibility = "hidden"; return; }
+      var bottom = STACK_BOTTOM;
+      for (var j = i + 1; j < CARDS.length; j++) bottom += (heights[j] + GAP) * arrive(CARDS[j], frame);
+      el.style.visibility = "visible"; el.style.opacity = String(e);
+      el.style.bottom = bottom + "px"; el.style.transform = "translateY(" + (58 * (1 - e)) + "px)";
+      var w = WIPE(clamp01((frame - c.hlAt * fps) / (c.hlDur * fps))) * 100;
+      els[i].hls.forEach(function (sp) { sp.style.background = "linear-gradient(90deg, " + ACCENT + " 0 " + w + "%, rgba(0,0,0,0) " + w + "% 100%)"; });
+    });
+  }
+  window.__rcDebug = { fps: fps, frames: frames, heights: heights };
+  draw(0);
+  window.__timelines = window.__timelines || {};
+  var tl = gsap.timeline({ paused: true }), proxy = { t: 0 };
+  tl.to(proxy, { t: frames / fps, duration: frames / fps, ease: "none", onUpdate: function () { draw(Math.min(frames - 1, Math.round(proxy.t * fps))); } }, 0);
+  window.__timelines["RisingComments"] = tl;
+})();
+</script>
+</body>
+</html>

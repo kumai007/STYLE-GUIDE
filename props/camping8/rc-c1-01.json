@@ -1,0 +1,25 @@
+{
+ "cards": [
+  {
+   "author": "@トオル鷹山  ·  206 likes",
+   "avatar": "props/camping8/avatars/toru.jpg",
+   "segs": [
+    {
+     "t": "With it this bright inside, I feel like they’d be "
+    },
+    {
+     "t": "completely visible from outside",
+     "hl": true
+    },
+    {
+     "t": "…"
+    }
+   ],
+   "at": 0.5,
+   "hlAt": 1.4,
+   "hlDur": 1.3,
+   "reply": false,
+   "note": "Translated from Japanese"
+  }
+ ]
+}

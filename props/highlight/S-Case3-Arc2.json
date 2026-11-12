@@ -1,0 +1,34 @@
+{
+ "image": "assets/highlight/c3-dungavel-lodge.png",
+ "context": "website",
+ "page": "light",
+ "highlights": [],
+ "durationInSeconds": null,
+ "crop": {
+  "x": 0,
+  "y": 0.096,
+  "w": 1,
+  "h": 0.904
+ },
+ "motionSeed": null,
+ "pageKind": "light",
+ "pageColor": "#ffffff",
+ "imageWidth": 1525,
+ "imageHeight": 949,
+ "overrides": {
+  "motionIntensity": 1,
+  "perspective": 2600,
+  "rotateY": -2.5,
+  "rotateZ": -0.35,
+  "startScale": 1.03,
+  "focusX": 0.5,
+  "focusY": 0.5,
+  "vignette": 0.46,
+  "cropDriftY": 0.04,
+  "focusInSeconds": 0.28,
+  "focusInBlurPx": 12,
+  "backgroundColor": "#0b0d10"
+ },
+ "fps": 29.97002997002997,
+ "durationInFrames": 120
+}

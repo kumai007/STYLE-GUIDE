@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en"
+  data-composition-variables='[
+    {"id":"image","type":"string","label":"Screenshot file name under assets/highlight-extra/ (path prefixes ignored)","default":"yt-comments.png"},
+    {"id":"crop","type":"string","label":"Crop {x,y,w,h} fractions as JSON, or empty for full image","default":"{\"x\":0.002,\"y\":0.5279,\"w\":0.636,\"h\":0.0872}"},
+    {"id":"imageWidth","type":"number","label":"Screenshot width px (must match the file)","default":1920},
+    {"id":"imageHeight","type":"number","label":"Screenshot height px (must match the file)","default":7877}
+  ]'>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1920, height=1080" />
+<script src="assets/vendor/gsap-3.14.2.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1920px; height: 1080px; overflow: hidden; background: #000; }
+  #root { position: relative; width: 1920px; height: 1080px; overflow: hidden; background: #000; }
+  #plate { position: absolute; }
+  #plate img { display: block; width: 100%; height: 100%; object-fit: fill; }
+  .vl, .hl { position: absolute; }
+  .lab { position: absolute; padding: 2px 5px; background-color: rgba(0,0,0,0.85); font-family: "Courier New", monospace; font-size: 20px; line-height: 1; }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="HighlightsGrid" data-start="0" data-width="1920" data-height="1080">
+  <div id="plate"><img id="img" alt="" /></div>
+  <div id="grid"></div>
+</div>
+<script>
+(function () {
+  var v = (window.__hyperframes && window.__hyperframes.getVariables && window.__hyperframes.getVariables()) || {};
+  var W = 1920, H = 1080;
+  function jv(x, d) { if (x == null || x === "") return d; if (typeof x === "string") { try { return JSON.parse(x); } catch (e) { return d; } } return x; }
+  var crop = jv(v.crop, { x: 0, y: 0, w: 1, h: 1 });
+  var iw = v.imageWidth || W, ih = v.imageHeight || H;
+  var name = String(v.image || "yt-comments.png").split("/").pop();
+  // layoutPlate (framing.ts)
+  var scale = Math.max(W / (crop.w * iw), H / (crop.h * ih));
+  var L = { plateWidth: scale * iw, plateHeight: scale * ih, left: W / 2 - scale * (crop.x + crop.w / 2) * iw, top: H / 2 - scale * (crop.y + crop.h / 2) * ih };
+  var plate = document.getElementById("plate"), img = document.getElementById("img");
+  img.decoding = "sync"; img.src = "assets/highlight-extra/" + name;
+  plate.style.left = L.left + "px"; plate.style.top = L.top + "px"; plate.style.width = L.plateWidth + "px"; plate.style.height = L.plateHeight + "px";
+  var toX = function (pct) { return ((pct / 100) * W - L.left) / L.plateWidth; };
+  var toY = function (pct) { return ((pct / 100) * H - L.top) / L.plateHeight; };
+  var g = document.getElementById("grid");
+  function add(cls, css, text, color) {
+    var d = document.createElement("div"); d.className = cls; d.style.cssText = css;
+    if (text != null) { d.textContent = text; d.style.color = color; }
+    g.appendChild(d);
+  }
+  for (var i = 0; i <= 20; i++) {
+    var pct = i * 5, major = pct % 10 === 0, col = major ? "rgba(255,0,90,0.8)" : "rgba(0,255,255,0.28)", wd = major ? 2 : 1;
+    add("vl", "left:" + pct + "%;top:0;bottom:0;width:" + wd + "px;background-color:" + col);
+    add("hl", "top:" + pct + "%;left:0;right:0;height:" + wd + "px;background-color:" + col);
+    add("lab", "left:" + pct + "%;top:4px", toX(pct).toFixed(4), "#0ff");
+    add("lab", "top:" + pct + "%;left:4px", toY(pct).toFixed(4), "#ff0");
+  }
+  window.__timelines = window.__timelines || {};
+  var tl = gsap.timeline({ paused: true });
+  tl.to({ t: 0 }, { t: 1, duration: 1 / 30, ease: "none" }, 0);
+  window.__timelines["HighlightsGrid"] = tl;
+})();
+</script>
+</body>
+</html>

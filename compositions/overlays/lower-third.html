@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en" data-resolution="landscape" data-composition-variables='[{"id": "name", "type": "string", "label": "Name", "default": "Marcus Chen"}, {"id": "role", "type": "string", "label": "Role", "default": "Urban Explorer"}, {"id": "accent", "type": "color", "label": "Accent", "default": "#C1121F"}, {"id": "durationInFrames", "type": "number", "label": "Duration (frames @30fps)", "default": 105, "min": 2, "step": 1}]'>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1920, height=1080" />
+<script src="../../assets/overlays/gsap.min.js"></script>
+<link rel="stylesheet" href="lib/overlays.css" />
+<style>
+  #lt-fill { justify-content: flex-end; align-items: flex-start; }
+  #lt-wrap { margin: 0 0 148px 140px; display: flex; align-items: stretch; }
+  #lt-bar { width: 6px; }
+  #lt-plate { background: rgba(11,11,12,0.82); padding: 18px 34px 20px 26px; backdrop-filter: blur(2px); }
+  #lt-name { font-family: var(--display); font-size: 54px; color: var(--ink); letter-spacing: 1px; text-transform: uppercase; }
+  #lt-role { font-family: var(--body); font-size: 24px; color: var(--ink-dim); letter-spacing: 3px; margin-top: 4px; text-transform: uppercase; }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="LowerThird" data-start="0" data-duration="3.5" data-width="1920" data-height="1080" data-fps="30">
+  <div id="lt-fill" class="fill"><div id="lt-wrap">
+    <div id="lt-bar"></div>
+    <div id="lt-plate"><div id="lt-name" data-var-text="name">Marcus Chen</div><div id="lt-role" data-var-text="role">Urban Explorer</div></div>
+  </div></div>
+</div>
+<script src="lib/rm.js"></script>
+<script>
+  var $ = function (id) { return document.getElementById(id); };
+  RM.mount({
+    id: "LowerThird", fps: 30, defaultFrames: 105,
+    init: function (P) {
+      $("lt-bar").style.background = P.accent;
+      $("lt-name").textContent = P.name; $("lt-role").textContent = P.role;
+      if (!P.role) $("lt-role").style.display = "none";
+    },
+    apply: function (f, P, dur) {
+      var o = RM.envelope(f, dur, 10, 12), e = RM.enter(f, 30, 0), e2 = RM.enter(f, 30, 4);
+      $("lt-fill").style.opacity = o;
+      $("lt-wrap").style.clipPath = "inset(0 " + (1 - e) * 100 + "% 0 0)";
+      $("lt-role").style.opacity = e2;
+    }
+  });
+</script>
+</body>
+</html>

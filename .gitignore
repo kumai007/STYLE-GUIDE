@@ -1,0 +1,29 @@
+# Render output (cloud renders go to Google Drive, not git)
+renders/
+out/
+*.mov
+*.webm
+
+# Dependencies and caches
+node_modules/
+cache/
+.hf-tmp/
+
+# HyperFrames local state, history and snapshots (machine-specific)
+.hyperframes/
+
+# Secrets: never commit these
+.env
+.env.*
+rclone.conf
+*.conf
+*.pem
+*.key
+
+# Local Claude settings
+.claude/settings.local.json
+
+# OS junk
+Thumbs.db
+.DS_Store
+desktop.ini

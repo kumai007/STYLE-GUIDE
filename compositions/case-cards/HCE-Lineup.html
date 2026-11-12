@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en" data-resolution="landscape"
+  data-composition-variables='[{"id":"text","type":"string","label":"unused","default":""},{"id":"frames","type":"number","label":"Length in frames (30 fps)","default":150},{"id":"fps","type":"number","label":"fps","default":30},{"id":"image","type":"string","label":"Still 1 (if no images)","default":""},{"id":"image2","type":"string","label":"Still 2 (if no images)","default":""},{"id":"images","type":"object","label":"[{src,w,h}] face stills in order","default":[]},{"id":"data","type":"object","label":"{names:[], at:[s], dip:s}","default":{"names":["Chase Newlun","English Woodsman","Sort Of Interesting","Under The Weather","Welcome 2 The Woods UK","Truesdale TV","Campin&#39; With Champion"]}}]'>
+<head>
+<meta charset="UTF-8" /><meta name="viewport" content="width=1920, height=1080" />
+<script src="assets/vendor/gsap-3.14.2.min.js"></script>
+<link rel="stylesheet" href="compositions/case-cards/lib/cc.css" />
+<style> #stage { background: #000; } </style>
+</head>
+<body>
+<div id="stage" data-composition-id="HCE-Lineup" data-start="0" data-duration="5" data-fps="30" data-width="1920" data-height="1080">
+  <div class="fit" id="fit"></div>
+</div>
+<script src="compositions/case-cards/lib/cc.js"></script>
+<script src="compositions/case-cards/lib/hce.js"></script>
+<script>
+  const P = CC.props({ text: "", frames: 150, fps: 30, image: "", image2: "", images: [], data: {} });
+  const { tween, ease, mix, list, str, num, $ } = CC, H = CC.hce, D = P.data || {};
+  const imgs = list(P.images, []);
+  const tiles = imgs.length ? imgs.map((i) => i.src) : [P.image, P.image2].filter((x) => !!x);
+  const names = list(D.names, []);
+  const n = tiles.length, first = n <= 4 ? n : Math.ceil(n / 2);
+  const rows = n <= 4 ? [n] : [first, n - first];
+  const cols = Math.max(...rows, 1), CG = 56, RG = 44;
+  const W = Math.min(270, (1440 - (cols - 1) * CG) / cols), Hh = W * 1.2, B = Math.round(Math.max(10, W * 0.035));
+  const PH = Hh + 2 * B + 44;
+  const y0 = 540 - (rows.length * PH + (rows.length - 1) * RG) / 2;
+  const plate = H.plate(tiles[0], { dim: 0.5, flat: 0.55, blur: 14 }), grain = H.grain();
+  const prints = tiles.map((src, i) => {
+    const r = i < first ? 0 : 1, c = r ? i - first : i, inRow = rows[r];
+    const x = 960 - (inRow * (W + 2 * B) + (inRow - 1) * CG) / 2 + c * (W + 2 * B + CG), y = y0 + r * (PH + RG);
+    const at = list(D.at, []), t0 = (at[i] !== undefined ? at[i] : 0.35 + 0.3 * i) * P.fps;
+    const pr = H.print(src, W, Hh, { rot: (((i * 37) % 7) - 3) * 0.5, pos: "50% 35%", caption: String(i + 1).padStart(2, "0") + "  " + str(names[i]) });
+    pr.x = x; pr.y = y; pr.t0 = t0; return pr;
+  });
+  $("fit").innerHTML = plate.html + '<div style="' + H.AF + 'perspective:2200px"><div id="table" style="' + H.AF + 'transform-origin:50% 50%">' +
+    prints.map((p) => '<div style="position:absolute;left:' + p.x + 'px;top:' + p.y + 'px">' + p.html + '</div>').join("") + '</div></div>' +
+    H.vignette() + grain.html + '<div id="black" style="' + H.AF + 'background:#000"></div>';
+  function render(f) {
+    const fps = P.fps, frames = P.frames;
+    const dip = Math.min(num(D.dip, 0.6) * fps, frames / 3), end = Math.max(frames - dip, 1);
+    const p = tween(f, [0, end], [0, 1], ease.sine);
+    plate.set(f, p, fps, frames);
+    $("table").style.transform = "scale(" + mix(p, [0, 1], [0.94, 1.04]) + ") rotateX(" + mix(p, [0, 1], [6, 2]) + "deg) rotateY(" + mix(p, [0, 1], [-6, 4]) + "deg)";
+    prints.forEach((pr) => pr.set(tween(f, [pr.t0, pr.t0 + 0.8 * fps], [0, 1], ease.enter)));
+    grain.set(f);
+    $("black").style.opacity = String(Math.max(tween(f, [end, frames - 1], [0, 1], ease.ui), tween(f, [0, 0.5 * fps], [1, 0], ease.ui)));
+  }
+  CC.clock("HCE-Lineup", P.fps, P.frames, render);
+</script>
+</body></html>

@@ -1,0 +1,52 @@
+{
+ "clips": [
+  {
+   "src": "hook-ps/00.mp4",
+   "label": "MANHUNT",
+   "aspect": 1.3333
+  },
+  {
+   "src": "hook-ps/01.mp4",
+   "label": "CONDEMNED 2: BLOODSHOT",
+   "aspect": 1.7778
+  },
+  {
+   "src": "hook-ps/02.mp4",
+   "label": "RESIDENT EVIL SURVIVOR",
+   "aspect": 1.7778
+  },
+  {
+   "src": "hook-ps/03.mp4",
+   "label": "SILENT HILL: DOWNPOUR",
+   "aspect": 1.7778
+  },
+  {
+   "src": "hook-ps/04.mp4",
+   "label": "SEAMAN",
+   "aspect": 1.3333
+  },
+  {
+   "src": "hook-ps/05.mp4",
+   "label": "D",
+   "aspect": 1.3333
+  }
+ ],
+ "kicker": "2 HOURS OF",
+ "title": "THE MOST DISTURBING",
+ "accent": "PS GAMES",
+ "tag": "EVER MADE",
+ "hook": [
+  "These",
+  "are",
+  "the",
+  "most",
+  "disturbing",
+  "PlayStation",
+  "games",
+  "ever",
+  "made."
+ ],
+ "hookAccent": 4,
+ "cta": "Subscribe.",
+ "ctaRest": "There's more where these came from."
+}

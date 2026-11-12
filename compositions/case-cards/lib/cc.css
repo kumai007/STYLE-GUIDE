@@ -1,0 +1,6 @@
+/* case-cards shared base: Remotion's render-page rules + AbsoluteFill */
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; width: 1920px; height: 1080px; overflow: hidden; background: transparent; }
+.af { position: absolute; left: 0; top: 0; right: 0; bottom: 0; display: flex; flex-direction: column; }
+.fit { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: hidden; }
+.card-root { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: hidden; }

@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en" data-resolution="landscape"
+  data-composition-variables='[{"id":"text","type":"string","label":"unused","default":""},{"id":"frames","type":"number","label":"Length in frames (30 fps)","default":90},{"id":"fps","type":"number","label":"fps","default":30},{"id":"image","type":"string","label":"Case still under the trace (optional)","default":""},{"id":"data","type":"object","label":"{peaks:[0..1 x ~120]} (cvw/audio_peaks.py)","default":{"peaks":[]}}]'>
+<head>
+<meta charset="UTF-8" /><meta name="viewport" content="width=1920, height=1080" />
+<script src="assets/vendor/gsap-3.14.2.min.js"></script>
+<link rel="stylesheet" href="compositions/case-cards/lib/cc.css" />
+<style> #stage { background: #000; } </style>
+</head>
+<body>
+<div id="stage" data-composition-id="HCE-AudioTrace" data-start="0" data-duration="3" data-fps="30" data-width="1920" data-height="1080">
+  <div class="fit" id="fit"></div>
+</div>
+<script src="compositions/case-cards/lib/cc.js"></script>
+<script src="compositions/case-cards/lib/hce.js"></script>
+<script>
+  const P = CC.props({ text: "", frames: 90, fps: 30, image: "", data: { peaks: [] } });
+  const { tween, ease, list, num, $ } = CC, H = CC.hce, D = P.data || {};
+  const peaks = list(D.peaks, []).map((v) => Math.max(0, Math.min(1, num(v, 0))));
+  const L = 260, R = 1660, Y = 540, BH = 150;
+  const n = peaks.length, step = n ? (R - L) / n : 0, bw = Math.max(Math.min(step * 0.55, 6), 2);
+  const plate = H.plate(P.image, { dim: 0.88, flat: 0.5 });
+  let bars = "";
+  peaks.forEach((v, i) => { bars += '<rect id="b' + i + '" x="' + (L + i * step + (step - bw) / 2) + '" width="' + bw + '" rx="' + bw / 2 + '"/>'; });
+  $("fit").innerHTML = plate.html + '<div id="card" style="' + H.AF + '"><svg width="1920" height="1080"><defs><filter id="hceglow" x="-20%" y="-50%" width="140%" height="200%">' +
+    '<feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>' +
+    '<rect id="line" x="' + L + '" y="' + (Y - 0.5) + '" height="1" fill="' + H.C.signal + '" opacity="0.5"/><g filter="url(#hceglow)">' + bars + '</g></svg></div>';
+  function render(f) {
+    const fps = P.fps, frames = P.frames, c = H.useCard(f, fps, frames);
+    const grow = tween(f, [0.1 * fps, 0.7 * fps], [0, 1], ease.enter);
+    const head = tween(f, [0.3 * fps, Math.max(frames - 0.4 * fps, 0.3 * fps + 1)], [0, 1], ease.clock);
+    const at = Math.floor(head * n);
+    plate.set(f, c.p, fps, frames);
+    $("card").style.opacity = String(c.o);
+    $("line").setAttribute("width", (R - L) * grow);
+    peaks.forEach((v, i) => {
+      const h = Math.max(v * BH * grow, 1.5), e = $("b" + i), played = i <= at && head > 0;
+      e.setAttribute("y", Y - h); e.setAttribute("height", h * 2);
+      e.setAttribute("fill", i === at ? "#E07A6E" : H.C.signal);
+      e.setAttribute("opacity", played ? (i === at ? 1 : 0.92) : 0.2);
+    });
+  }
+  CC.clock("HCE-AudioTrace", P.fps, P.frames, render);
+</script>
+</body></html>

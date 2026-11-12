@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en" data-resolution="landscape"
+  data-composition-variables='[{"id":"text","type":"string","label":"Date / fact / REWIND text","default":"DECEMBER 2025"},{"id":"frames","type":"number","label":"Length in frames (30 fps)","default":100},{"id":"fps","type":"number","label":"fps","default":30},{"id":"data","type":"object","label":"{mode: date | label | rewind} (label and rewind render as transparent mov)","default":{"mode":"date"}}]'>
+<head>
+<meta charset="UTF-8" /><meta name="viewport" content="width=1920, height=1080" />
+<script src="assets/vendor/gsap-3.14.2.min.js"></script>
+<link rel="stylesheet" href="compositions/case-cards/lib/cc.css" />
+<style>
+  @font-face { font-family: "VCR OSD Mono"; src: url("assets/case-cards/fonts/vcr-osd-mono.ttf") format("truetype"); font-weight: 400; }
+  .vcr { font-family: "VCR OSD Mono", monospace; color: #fff; white-space: pre; }
+  #date { background: #000; justify-content: center; align-items: center; }
+  #dt { font-size: 112px; letter-spacing: 4px; text-shadow: 0 0 8px rgba(255,255,255,0.85), 0 0 22px rgba(255,255,255,0.4), 0 2px 3px rgba(0,0,0,0.9); }
+  #label { }
+  #lt { position: absolute; left: 96px; bottom: 96px; font-size: 60px; letter-spacing: 3px; text-shadow: 0 0 6px rgba(255,255,255,0.3), 0 2px 4px rgba(0,0,0,0.85), 0 0 14px rgba(0,0,0,0.55); }
+  #rw { position: absolute; left: 90px; top: 70px; display: flex; align-items: center; gap: 22px; font-size: 64px; text-shadow: 0 0 6px rgba(255,255,255,0.3), 0 2px 4px rgba(0,0,0,0.85), 0 0 14px rgba(0,0,0,0.55); }
+  #rw svg { filter: drop-shadow(0 0 6px rgba(255,255,255,0.8)); }
+</style>
+</head>
+<body>
+<div id="stage" data-composition-id="NocturnVcr" data-start="0" data-duration="3.3333" data-fps="30" data-width="1920" data-height="1080">
+  <div class="fit">
+    <div id="date" class="af"><div id="dt" class="vcr"><span id="d1"></span><span id="dc">_</span><span id="d2" style="opacity:0"></span></div></div>
+    <div id="label" class="af"><div id="lt" class="vcr"><span id="l1"></span><span id="lc">_</span></div></div>
+    <div id="rew" class="af"><div id="rw" class="vcr"><svg id="arrows" width="74" height="44" viewBox="0 0 74 44"><polygon points="37,0 37,44 0,22" fill="#fff"/><polygon points="74,0 74,44 37,22" fill="#fff"/></svg><span id="rt"></span></div></div>
+  </div>
+</div>
+<script src="compositions/case-cards/lib/cc.js"></script>
+<script>
+  const P = CC.props({ text: "DECEMBER 2025", frames: 100, fps: 30, data: { mode: "date" } });
+  const { tween, ease, fade, typeOn, random, $ } = CC;
+  const mode = (P.data && P.data.mode) || "label", text = P.text;
+  ["date", "label", "rew"].forEach(function (k) { $(k).style.display = { date: "date", label: "label", rew: "rewind" }[k] === mode ? "flex" : "none"; });
+  $("rt").textContent = text || "REWIND";
+  function render(f) {
+    const fps = P.fps, frames = P.frames, per = 0.06 * fps;
+    const flicker = 0.94 + 0.06 * random("fl-" + Math.floor(f + 1e-6));
+    if (mode === "rewind") {
+      const on = Math.floor(f / (0.5 * fps)) % 2 === 0;
+      $("rew").style.opacity = fade(f, frames, 2, 3);
+      $("rw").style.opacity = flicker;
+      $("arrows").style.opacity = on ? 1 : 0.25;
+      return;
+    }
+    const n = typeOn(f, 0.15 * fps, text.length, per);
+    const typing = n < text.length, cursor = typing || Math.floor(f / (0.4 * fps)) % 2 === 0;
+    const out = tween(f, [frames - 0.35 * fps, frames], [1, 0], ease.ui);
+    if (mode === "date") {
+      $("dt").style.opacity = out * flicker;
+      $("d1").textContent = text.slice(0, n); $("d2").textContent = text.slice(n);
+      $("dc").style.opacity = cursor && f < frames - 0.35 * fps ? 1 : 0;
+    } else {
+      $("label").style.opacity = out; $("lt").style.opacity = flicker;
+      $("l1").textContent = text.slice(0, n); $("lc").style.opacity = cursor ? 1 : 0;
+    }
+  }
+  CC.clock("NocturnVcr", P.fps, P.frames, render);
+</script>
+</body></html>

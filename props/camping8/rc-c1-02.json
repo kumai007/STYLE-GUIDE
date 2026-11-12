@@ -1,0 +1,46 @@
+{
+ "cards": [
+  {
+   "author": "@nishuiii  ·  66 likes",
+   "avatar": "props/camping8/avatars/nishuiii.jpg",
+   "segs": [
+    {
+     "t": "The scariest part is the line “"
+    },
+    {
+     "t": "I didn’t hear it leave.",
+     "hl": true
+    },
+    {
+     "t": "”"
+    }
+   ],
+   "at": 0.5,
+   "hlAt": 1.3,
+   "hlDur": 1.0,
+   "reply": false,
+   "note": "Translated from Japanese"
+  },
+  {
+   "author": "@kenyama  ·  14 likes",
+   "avatar": "props/camping8/avatars/ken.jpg",
+   "segs": [
+    {
+     "t": "I was scared because I thought it was "
+    },
+    {
+     "t": "just standing there the whole time",
+     "hl": true
+    },
+    {
+     "t": "."
+    }
+   ],
+   "at": 2.3,
+   "hlAt": 3.1,
+   "hlDur": 1.2,
+   "reply": true,
+   "note": "Translated from Japanese"
+  }
+ ]
+}

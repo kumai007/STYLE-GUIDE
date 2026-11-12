@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en" data-resolution="landscape"
+  data-composition-variables='[{"id":"text","type":"string","label":"unused","default":""},{"id":"frames","type":"number","label":"Length in frames (30 fps)","default":150},{"id":"fps","type":"number","label":"fps","default":30},{"id":"image","type":"string","label":"Tile 1 (when no images list)","default":""},{"id":"image2","type":"string","label":"Tile 2 (when no images list)","default":""},{"id":"images","type":"object","label":"[{src,w,h}] tiles in order","default":[]},{"id":"data","type":"object","label":"{names:[], at:[seconds], dip:seconds}","default":{"names":[]}}]'>
+<head>
+<meta charset="UTF-8" /><meta name="viewport" content="width=1920, height=1080" />
+<script src="assets/vendor/gsap-3.14.2.min.js"></script>
+<link rel="stylesheet" href="compositions/case-cards/lib/cc.css" />
+<link rel="stylesheet" href="compositions/case-cards/lib/nocturn.css" />
+<style>
+  #stage { background: #000; }
+  #bg { background: #0C0F0D; overflow: hidden; }
+  #bgimg { position: absolute; left: -80px; top: -80px; width: 2080px; height: 1240px; object-fit: cover; filter: blur(36px) saturate(0.4) brightness(0.45); }
+  #bgforest { background: #14211A; mix-blend-mode: multiply; opacity: 0.6; }
+  #persp { perspective: 1800px; }
+  #grid { transform-style: preserve-3d; transform-origin: 50% 50%; }
+  .tile { position: absolute; }
+  .face { position: relative; overflow: hidden; border: 2px solid rgba(233,230,232,0.85); box-shadow: 0 30px 60px rgba(0,0,0,0.75); background: #0C0F0D; }
+  .face img { display: inline; width: 100%; height: 100%; object-fit: cover; filter: saturate(0.6) contrast(1.1); }
+  .face .v { position: absolute; left: 0; top: 0; right: 0; bottom: 0; background: radial-gradient(ellipse 80% 80% at 50% 45%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.55) 100%); }
+  .face .n { position: absolute; left: 12px; top: 8px; font-family: "VCR OSD Mono", monospace; font-size: 26px; color: #C00524; letter-spacing: 2px; }
+  .face .fl { position: absolute; left: 0; top: 0; right: 0; bottom: 0; background: #fff; }
+  .nm { margin-top: 16px; text-align: center; font-family: "VCR OSD Mono", monospace; letter-spacing: 2px; color: #E9E6E8; white-space: nowrap; min-height: 34px; }
+  #vig { background: radial-gradient(ellipse 75% 70% at 50% 50%, rgba(0,0,0,0) 40%, rgba(0,0,0,0.65) 100%); }
+  #blk { background: #000; }
+</style>
+</head>
+<body>
+<div id="stage" data-composition-id="NocturnLineup" data-start="0" data-duration="5" data-fps="30" data-width="1920" data-height="1080">
+  <div class="fit">
+    <div id="bg" class="af"><img id="bgimg" alt="" /><div id="bgforest" class="af"></div></div>
+    <div id="persp" class="af"><div id="grid" class="af"></div></div>
+    <div id="vig" class="af"></div>
+    <div id="gr" class="af"></div>
+    <div id="blk" class="af"></div>
+  </div>
+</div>
+<script src="compositions/case-cards/lib/cc.js"></script>
+<script src="compositions/case-cards/lib/nocturn.js"></script>
+<script>
+  const P = CC.props({ text: "", frames: 150, fps: 30, image: "", image2: "", images: [], data: { names: [] } });
+  const { tween, ease, mix, typeOn, list, str, num, $ } = CC, N = CC.nocturn;
+  const D = P.data || {};
+  const tiles = (P.images && P.images.length) ? P.images.map(function (i) { return i.src; }) : [P.image, P.image2].filter(Boolean);
+  const names = list(D.names, []), at = list(D.at, []);
+  const dip = Math.min(num(D.dip, 0.6) * P.fps, P.frames / 3);
+  const n = tiles.length, first = n <= 4 ? n : Math.ceil(n / 2);
+  const rows = n <= 4 ? [n] : [first, n - first];
+  const cols = Math.max(Math.max.apply(null, rows), 1), CG = 40, RG = 36, NAME = 70;
+  const W = Math.min(290, (1500 - (cols - 1) * CG) / cols), H = W * 1.25;
+  const y0 = 540 - (rows.length * (H + NAME) + (rows.length - 1) * RG) / 2;
+  if (tiles[0]) $("bgimg").src = tiles[0]; else $("bgimg").style.display = "none";
+  const els = tiles.map(function (src, i) {
+    const r = i < first ? 0 : 1, c = r ? i - first : i, inRow = rows[r];
+    const x = 960 - (inRow * W + (inRow - 1) * CG) / 2 + c * (W + CG), y = y0 + r * (H + NAME + RG);
+    const name = str(names[i]).toUpperCase();
+    const fs = Math.min(26, (W + CG - 12) / Math.max(name.length * 0.72, 1));
+    const t = document.createElement("div"); t.className = "tile"; t.style.cssText = "left:" + x + "px;top:" + y + "px;width:" + W + "px";
+    t.innerHTML = '<div class="face" style="width:' + W + 'px;height:' + H + 'px"><img alt=""/><div class="v"></div><div class="n">' + String(i + 1).padStart(2, "0") + '</div><div class="fl"></div></div><div class="nm" style="font-size:' + fs + 'px"></div>';
+    t.querySelector("img").src = src; $("grid").appendChild(t);
+    return { t: t, fl: t.querySelector(".fl"), nm: t.querySelector(".nm"), name: name, t0: (at[i] !== undefined ? at[i] : 0.35 + 0.3 * i) * P.fps, i: i };
+  });
+  const setGrain = N.grain($("gr"));
+  function render(f) {
+    const fps = P.fps, frames = P.frames, end = Math.max(frames - dip, 1);
+    const p = tween(f, [0, end], [0, 1], ease.sine);
+    const zoom = mix(p, [0, 1], [0.9, 1.08]) * tween(f, [end, frames], [1, 1.2], ease.morph);
+    const black = Math.max(tween(f, [end, frames - 1], [0, 1], ease.ui), tween(f, [0, 0.5 * fps], [1, 0], ease.ui));
+    const d = N.drift(f, fps, 0.6);
+    $("bgimg").style.transform = "scale(" + (1 + 0.05 * p) + ")";
+    $("grid").style.transform = "translate(" + d[0] + "px," + d[1] + "px) scale(" + zoom + ") rotateX(" + mix(p, [0, 1], [12, 4]) + "deg) rotateY(" + mix(p, [0, 1], [-16, 9]) + "deg)";
+    els.forEach(function (e) {
+      const t0 = e.t0, q = tween(f, [t0, t0 + 0.7 * fps], [0, 1], ease.enter);
+      const flash = f >= t0 ? tween(f, [t0, t0 + 0.15 * fps, t0 + 0.6 * fps], [0, 0.15, 0], ease.ui) : 0;
+      const nch = typeOn(f, t0 + 0.25 * fps, e.name.length, 0.9);
+      e.t.style.opacity = f >= t0 ? tween(f, [t0, t0 + 0.45 * fps], [0, 1], ease.ui) : 0;
+      e.t.style.transform = "translateZ(" + 12 * Math.sin(f / fps * 0.6 + e.i) + "px) translateY(" + 6 * (1 - q) + "px) scale(" + (1.12 - 0.12 * q) + ") rotate(" + (e.i % 2 ? 2 : -2) * (1 - q) + "deg)";
+      e.fl.style.opacity = flash;
+      e.nm.textContent = e.name.slice(0, nch);
+    });
+    setGrain(f);
+    $("blk").style.opacity = black;
+  }
+  CC.clock("NocturnLineup", P.fps, P.frames, render);
+</script>
+</body></html>

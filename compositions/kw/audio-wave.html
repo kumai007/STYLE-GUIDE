@@ -1,0 +1,99 @@
+<!doctype html>
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"data","type":"string","label":"Wave data (name in assets/kw/waves/all.js; kw/waves/<name>.json accepted)","default":"kw/waves/c1_k1.json"},
+    {"id":"width","type":"number","label":"Wave width px","default":1024,"step":1},
+    {"id":"maxHeight","type":"number","label":"Max half-height px","default":120,"step":1},
+    {"id":"cy","type":"number","label":"Centre line y px","default":540,"step":1},
+    {"id":"color","type":"color","label":"Bar colour","default":"#F10410"},
+    {"id":"durationInFrames","type":"number","label":"Length in frames @29.97","default":925,"step":1}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="assets/vendor/gsap-3.14.2.min.js"></script>
+    <script src="compositions/kw/lib/kw-common.js"></script>
+    <script src="assets/kw/waves/all.js"></script>
+    <style>
+      * { box-sizing: border-box; }
+      html, body { margin: 0; width: 1920px; height: 1080px; overflow: hidden; background: transparent; }
+      #root { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; background: transparent; }
+      #kw-wave { position: absolute; inset: 0; opacity: 0; }
+      #kw-svg { position: absolute; left: 0; top: 0; filter: drop-shadow(0 0 6px rgba(0, 0, 0, 0.65)); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="kw-audio-wave" data-start="0" data-fps="30000/1001" data-width="1920" data-height="1080">
+      <div id="kw-wave">
+        <svg id="kw-svg" width="1920" height="1080" viewBox="0 0 1920 1080">
+          <rect id="kw-line" height="2" opacity="0.35" />
+          <g id="kw-bars" opacity="0.88"></g>
+        </svg>
+      </div>
+    </div>
+    <script>
+      (function () {
+        var v = window.__hyperframes.getVariables();
+        var fps = KW.NTSC;
+        var frames = KW.lengthInFrames(v, 925);
+        var span = frames / fps;
+        var width = v.width == null ? 1024 : +v.width;
+        var maxHeight = v.maxHeight == null ? 120 : +v.maxHeight;
+        var cy = v.cy == null ? 540 : +v.cy;
+        var color = v.color || "#F10410";
+        var key = String(v.data || "").split("/").pop().replace(/\.json$/, "");
+        var wave = window.KW_WAVES && window.KW_WAVES[key];
+        if (!wave) throw new Error("kw audio-wave: no wave named '" + key + "' in assets/kw/waves/all.js (run tools/kw-waves-build.mjs)");
+
+        document.getElementById("root").setAttribute("data-duration", String(span));
+
+        var n = wave.bands[0].length;
+        var slot = width / (2 * n);
+        var bw = slot * 0.72;
+        var NS = "http://www.w3.org/2000/svg";
+        var line = document.getElementById("kw-line");
+        line.setAttribute("x", 960 - width / 2); line.setAttribute("y", cy - 1);
+        line.setAttribute("width", width); line.setAttribute("fill", color);
+        var g = document.getElementById("kw-bars");
+        var rects = []; // rects[i] = [left, right] for band i
+        for (var i = 0; i < n; i++) {
+          var pair = [];
+          for (var s = -1; s <= 1; s += 2) {
+            var r = document.createElementNS(NS, "rect");
+            r.setAttribute("x", 960 + s * (i * slot + slot / 2) - bw / 2);
+            r.setAttribute("width", bw); r.setAttribute("rx", bw / 2); r.setAttribute("fill", color);
+            g.appendChild(r); pair.push(r);
+          }
+          rects.push(pair);
+        }
+
+        var last = -1;
+        function draw(t) {
+          var f = Math.floor(t * fps + 1e-4);
+          if (f < 0) f = 0;
+          f = Math.min(f, wave.frames - 1);
+          if (f === last) return;
+          last = f;
+          var bands = wave.bands[f];
+          for (var i = 0; i < n; i++) {
+            var h = Math.max(2, bands[i] * maxHeight);
+            for (var k = 0; k < 2; k++) {
+              rects[i][k].setAttribute("y", cy - h);
+              rects[i][k].setAttribute("height", 2 * h);
+            }
+          }
+        }
+        draw(0);
+
+        var fade = 8 / fps;
+        var tl = gsap.timeline({ paused: true });
+        tl.to({ p: 0 }, { p: 1, duration: span, ease: "none", onUpdate: function () { draw(tl.time()); } }, 0);
+        tl.fromTo("#kw-wave", { opacity: 0 }, { opacity: 1, duration: fade, ease: "none" }, 0);
+        tl.fromTo("#kw-wave", { opacity: 1 }, { opacity: 0, duration: fade, ease: "none", immediateRender: false }, span - fade);
+        window.__timelines["kw-audio-wave"] = tl;
+      })();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en" data-resolution="landscape"
+  data-composition-variables='[{"id":"text","type":"string","label":"unused","default":"Channel"},{"id":"frames","type":"number","label":"Length in frames (30 fps)","default":180},{"id":"fps","type":"number","label":"fps","default":30},{"id":"image","type":"string","label":"Channel page screenshot (path or data URI)","default":""},{"id":"imageWidth","type":"number","label":"image px width","default":1920},{"id":"imageHeight","type":"number","label":"image px height","default":1080}]'>
+<head>
+<meta charset="UTF-8" /><meta name="viewport" content="width=1920, height=1080" />
+<script src="assets/vendor/gsap-3.14.2.min.js"></script>
+<link rel="stylesheet" href="compositions/case-cards/lib/cc.css" />
+<style>
+  #stage { background: #000; }
+  #persp { background: #0f0f0f; perspective: 2200px; }
+  #spin { transform: rotateY(-7deg); rotate: -1.2deg; }
+  #over { scale: 1.06; }
+  #shot { position: absolute; display: block; max-width: none; }
+  #vig { background: radial-gradient(ellipse 78% 72% at 50% 50%, rgba(0,0,0,0) 40%, rgba(0,0,0,0.3) 100%); }
+</style>
+</head>
+<body>
+<div id="stage" data-composition-id="NocturnChannelPlate" data-start="0" data-duration="6" data-fps="30" data-width="1920" data-height="1080">
+  <div class="fit">
+    <div id="persp" class="af"><div id="spin" class="af"><div id="over" class="af"><img id="shot" alt="" /></div></div></div>
+    <div id="vig" class="af"></div>
+  </div>
+</div>
+<script src="compositions/case-cards/lib/cc.js"></script>
+<script>
+  const P = CC.props({ text: "Channel", frames: 180, fps: 30, image: "", imageWidth: 1920, imageHeight: 1080 });
+  const { tween, ease, $ } = CC;
+  const WIDTH = 1920, HEIGHT = 1080;
+  if (P.image) $("shot").src = P.image; else $("shot").style.display = "none";
+  function render(f) {
+    const fps = P.fps, frames = P.frames, W = P.imageWidth || 1920, H = P.imageHeight || 1080;
+    const p = tween(f, [0, Math.max(frames - 1, 1)], [0, 1], ease.sine);
+    const drift = Math.min(0.85, (0.45 / 6.8) * (frames / fps));
+    const cw = 0.84, ch = (cw * W * 9) / 16 / H;
+    const cx = 0.16, cy = (0.038 * W) / H + drift * ch * p;
+    const over = 1.06;
+    const ex = { x: cx + cw / 2 - (cw * over) / 2, y: cy + ch / 2 - (ch * over) / 2, w: cw * over, h: ch * over };
+    const s = Math.max(WIDTH / (ex.w * W), HEIGHT / (ex.h * H));
+    const left = WIDTH / 2 - s * (ex.x + ex.w / 2) * W, top = HEIGHT / 2 - s * (ex.y + ex.h / 2) * H;
+    const blur = tween(f, [0, 0.35 * fps], [16, 0], ease.enter);
+    const img = $("shot");
+    img.style.left = left + "px"; img.style.top = top + "px"; img.style.width = s * W + "px"; img.style.height = s * H + "px";
+    $("persp").style.filter = blur > 0.05 ? "blur(" + blur + "px)" : "none";
+    $("spin").style.scale = String(1.02 + 0.08 * p);
+  }
+  CC.clock("NocturnChannelPlate", P.fps, P.frames, render);
+</script>
+</body></html>

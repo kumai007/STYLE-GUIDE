@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en" data-resolution="landscape"
+  data-composition-variables='[
+    {"id":"text","type":"string","label":"Place name","default":"Meteora"},
+    {"id":"sub","type":"string","label":"Second line","default":"Greece"},
+    {"id":"theme","type":"enum","label":"Look","default":"geo","options":[{"value":"horror","label":"horror"},{"value":"geo","label":"geo"},{"value":"atlas","label":"atlas"},{"value":"news","label":"news"}]},
+    {"id":"frames","type":"number","label":"Frames (motion length at fps; file length is the root data-duration)","default":180,"min":2,"step":1},
+    {"id":"fps","type":"number","label":"fps","default":30,"min":1,"step":1},
+    {"id":"mapSrc","type":"string","label":"Props file inside the project (props/place-map/x.json) carrying text/sub/theme/frames/map; see notes","default":""}
+  ]'>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>Place Map</title>
+    <script src="assets/vendor/gsap-3.14.2.min.js"></script>
+    <style>
+      /* Place Map: port of Remotion PlaceMap (src/case/map). Theme only changes paint and type, never the motion. */
+      @font-face { font-family: "Nocturn Inter"; src: url("assets/place-map/fonts/inter-latin-700-normal.woff2") format("woff2"); font-weight: 700; font-style: normal; }
+      @font-face { font-family: "VCR OSD Mono"; src: url("assets/place-map/fonts/vcr-osd-mono.ttf") format("truetype"); font-weight: 400; font-style: normal; }
+      @font-face { font-family: "Georgia"; src: url("assets/place-map/fonts/georgia.ttf") format("truetype"); font-weight: 400; font-style: normal; }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; width: 1920px; height: 1080px; overflow: hidden; background: #000; }
+      #root { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; background: #000; overflow: hidden; }
+      .abs { position: absolute; left: 0; top: 0; right: 0; bottom: 0; display: flex; flex-direction: column; }
+      #pm-svg { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; }
+      #pm-label { align-items: center; justify-content: flex-end; padding-bottom: 120px; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="place-map" data-start="0" data-duration="6" data-width="1920" data-height="1080">
+      <div id="pm-fade" class="abs">
+        <svg id="pm-svg" width="1920" height="1080" viewBox="0 0 1920 1080"></svg>
+        <div id="pm-label" class="abs"><div id="pm-name"></div><div id="pm-sub"></div></div>
+      </div>
+      <div id="pm-vig" class="abs"></div>
+    </div>
+    <script src="compositions/place-map/lib/place-map.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["place-map"] = PlaceMapPort.mount({ defaultTheme: "geo", defaults: { text: "Meteora", sub: "Greece", theme: "geo", frames: 180, fps: 30 } });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en" data-resolution="landscape" data-composition-variables='[{"id":"prefix","type":"string","label":"Prefix (stays)","default":"202"},{"id":"from","type":"string","label":"From (tail shown first)","default":"5"},{"id":"to","type":"string","label":"To (tail it locks to)","default":"6"}]'>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1920, height=1080" />
+<script src="../../assets/glitch/gsap.min.js"></script>
+<style>
+  @font-face { font-family: "GN Inter"; src: url("../../assets/glitch/inter-variable-opsz-wght.ttf") format("truetype"); font-weight: 100 900; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; width: 1920px; height: 1080px; overflow: hidden; background: #000; }
+  #root { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; background: #000; overflow: hidden; }
+  .fill { position: absolute; inset: 0; width: 100%; height: 100%; display: flex; flex-direction: column; }
+  #gn-scene { background: #000; display: flex; align-items: center; justify-content: center; }
+  #gn-num { position: relative; width: 1920px; height: 550px; }
+  #gn-inner { position: absolute; inset: 0; isolation: isolate; background: #000; }
+  .gn-ch { position: absolute; inset: 0; mix-blend-mode: screen; }
+  .gn-sl { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+  .gn-tx { font-family: "GN Inter", Inter, sans-serif; font-weight: 900; font-size: 440px; line-height: 1.25; letter-spacing: -0.03em; font-variation-settings: "opsz" 14; font-variant-numeric: tabular-nums; white-space: pre; }
+  .gn-dg { display: inline-block; }
+  #gn-scan { background-image: repeating-linear-gradient(180deg, rgba(0,0,0,0.65) 0px, rgba(0,0,0,0.65) 1px, rgba(0,0,0,0) 1px, rgba(0,0,0,0) 4px); }
+  #gn-noise { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E"); mix-blend-mode: screen; }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="Glitch2025" data-start="0" data-duration="2" data-width="1920" data-height="1080" data-fps="60">
+  <div id="gn-scene" class="fill">
+    <div id="gn-num"><div id="gn-inner"></div></div>
+    <div id="gn-scan" class="fill"></div>
+    <div id="gn-noise" class="fill"></div>
+  </div>
+</div>
+<script src="lib/gm.js"></script>
+<script>
+  var P = (window.__hyperframes && window.__hyperframes.getVariables && window.__hyperframes.getVariables()) || {};
+  var prefix = P.prefix !== undefined ? P.prefix : "202", from = P.from !== undefined ? P.from : "5", to = P.to !== undefined ? P.to : "6";
+  var FPS = 60, DUR = 120, SLICES = 10, STAGE_H = 550, SLICE_H = 55, R = GM.random;
+  // FLICKER and BURSTS copied verbatim from templates/src/glitch/GlitchNumber.tsx
+  var FLICKER = "5658665555" + "5655555556" + "9656636656" + "6666566";
+  var BURSTS = [[3, 6, 0.45], [46, 55, 1], [57, 61, 0.4], [65, 79, 1], [81, 85, 0.55], [88, 92, 0.2]];
+  var bz = GM.bezier(0.16, 1, 0.3, 1);
+  var SCALE_EASE = [bz, GM.linear, GM.outQuad, bz];
+
+  // 3 RGB channels x 10 clip-path slices, built once from the same structure as the Remotion Channel component.
+  var inner = document.getElementById("gn-inner"), channels = [];
+  ["#ff0000", "#00ff00", "#0000ff"].forEach(function (color) {
+    var ch = document.createElement("div"); ch.className = "gn-ch"; var sl = [];
+    for (var i = 0; i < SLICES; i++) {
+      var s = document.createElement("div"); s.className = "gn-sl";
+      s.style.clipPath = "inset(" + i * SLICE_H + "px 0px " + (STAGE_H - (i + 1) * SLICE_H) + "px 0px)";
+      var t = document.createElement("div"); t.className = "gn-tx"; t.style.color = color;
+      t.appendChild(document.createTextNode(prefix));
+      var d = document.createElement("span"); d.className = "gn-dg"; t.appendChild(d);
+      s.appendChild(t); ch.appendChild(s); sl.push({ s: s, d: d });
+    }
+    inner.appendChild(ch); channels.push(sl);
+  });
+
+  function apply(frame) {
+    var burst = 0;
+    BURSTS.forEach(function (b) { if (frame >= b[0] && frame < b[1]) burst = Math.max(burst, b[2]); });
+    var g = burst === 0 ? 0 : (R("off-" + frame) < 0.14 ? burst * 0.22 : burst * (0.4 + 0.6 * R("amp-" + frame)));
+    var tail = function (c) { return c === "5" ? from : c === "6" ? to : c; };
+    var digit = frame < 47 ? from : frame > 83 ? to : tail(FLICKER[frame - 47]);
+    var offsets = [];
+    for (var i = 0; i < SLICES; i++) offsets.push(R("act-" + frame + "-" + i) < g * 0.55 ? (R("shift-" + frame + "-" + i) - 0.5) * 2 * 78 * g : 0);
+    var num = document.getElementById("gn-num");
+    num.style.opacity = GM.interp(frame, [0, 10], [0, 1], bz);
+    num.style.scale = String(GM.interp(frame, [0, 16, 78, 82, 94], [0.93, 1, 1, 1.035, 1], SCALE_EASE, true));
+    inner.style.translate = g * (R("jx-" + frame) - 0.5) * 28 + "px " + g * (R("jy-" + frame) - 0.5) * 12 + "px";
+    inner.style.opacity = 1 - g * 0.22 * R("op-" + frame);
+    var split = g * (5 + 24 * R("sp-" + frame)) + GM.interp(frame, [0, 78, 79, 104], [0, 0, 7, 0]);
+    var dx = [-split, 0, split];
+    var digitDx = g * (R("dd-" + frame) - 0.5) * 68;
+    channels.forEach(function (sl, ci) {
+      sl.forEach(function (o, i) {
+        o.s.style.translate = dx[ci] + offsets[i] + "px 0px";
+        o.d.style.translate = digitDx + "px 0px";
+        if (o.d.textContent !== digit) o.d.textContent = digit;
+      });
+    });
+    document.getElementById("gn-scan").style.opacity = 0.5 * g;
+    var noise = document.getElementById("gn-noise");
+    noise.style.backgroundPosition = Math.floor(R("nx-" + frame) * 300) + "px " + Math.floor(R("ny-" + frame) * 300) + "px";
+    noise.style.opacity = 0.09 * g;
+  }
+
+  var tl = gsap.timeline({ paused: true });
+  tl.set({}, {}, DUR / FPS);
+  tl.eventCallback("onUpdate", function () { apply(Math.min(Math.max(Math.round(tl.time() * FPS), 0), DUR - 1)); });
+  apply(0);
+  window.__timelines = window.__timelines || {};
+  window.__timelines["Glitch2025"] = tl;
+</script>
+</body>
+</html>

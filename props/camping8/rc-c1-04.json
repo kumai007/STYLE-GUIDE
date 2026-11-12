@@ -1,0 +1,39 @@
+{
+ "cards": [
+  {
+   "author": "@user-sculptor88",
+   "avatar": "props/camping8/avatars/sculptor.jpg",
+   "segs": [
+    {
+     "t": "First comment… 💧 Wouldn’t it be easier to check if you turned off the lights inside?"
+    }
+   ],
+   "at": 0.5,
+   "hlAt": 9,
+   "hlDur": 1,
+   "reply": false,
+   "note": "Translated from Japanese"
+  },
+  {
+   "author": "@kenyama",
+   "avatar": "props/camping8/avatars/ken.jpg",
+   "segs": [
+    {
+     "t": "Right — I realized that partway through. But I was scared that if I turned it off to see better, there’d be "
+    },
+    {
+     "t": "a face stuck to the window",
+     "hl": true
+    },
+    {
+     "t": "."
+    }
+   ],
+   "at": 2.8,
+   "hlAt": 4.0,
+   "hlDur": 1.4,
+   "reply": true,
+   "note": "Translated from Japanese"
+  }
+ ]
+}
