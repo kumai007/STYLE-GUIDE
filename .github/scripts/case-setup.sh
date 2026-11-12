@@ -22,6 +22,7 @@ chmod 600 ~/.config/rclone/rclone.conf
 
 # 4. Download the case folder and the fonts from Drive.
 rclone copy "gdrive:_cloud-jobs/$JOB" job --transfers 8
+mkdir -p job/renders   # output folder (not uploaded, so make it here)
 rclone copy gdrive:_cloud-jobs/fonts fonts
 du -sh job
 
