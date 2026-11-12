@@ -1,0 +1,129 @@
+# Builds a case video (Python + FFmpeg scripts) in the cloud, split over many machines.
+# Case files stay private: they come from Google Drive (gdrive:_cloud-jobs/<job>), not from this repo.
+# Logs are public on a public repo, so build output goes to files; only short status lines print.
+# No GitHub artifacts here (they would be public). The finished MP4 goes to Drive folder "AI".
+name: Case build
+
+# Only by hand: Actions tab > Case build > Run workflow.
+on:
+  workflow_dispatch:
+    inputs:
+      job:
+        description: "Case folder in gdrive:_cloud-jobs"
+        default: abyssal-01
+      script:
+        description: "Build script in build/"
+        default: build_v4.py
+      output:
+        description: "File the script writes in renders/"
+        default: abyssal_intro_case01_v4.mp4
+      parts:
+        description: "Machines that render shots at the same time (1-20)"
+        default: "18"
+
+permissions:
+  contents: read
+
+env:
+  TZ: Asia/Kolkata
+  JOB: ${{ inputs.job }}
+  # Temporary Drive folder that passes rendered shots from the part jobs to the final job.
+  TMP: gdrive:_cloud-jobs/_runs/${{ github.run_id }}
+
+jobs:
+  # Job 1: make the list of parts (0 .. parts-1).
+  plan:
+    runs-on: ubuntu-24.04
+    outputs:
+      parts: ${{ steps.p.outputs.parts }}
+    steps:
+      - id: p
+        run: echo "parts=$(jq -c -n --argjson n '${{ inputs.parts }}' '[range(0; $n)]')" >> "$GITHUB_OUTPUT"
+
+  # Job 2: each machine renders every Nth shot (r01, r02 ...). Up to 20 at the same time, 4 CPU cores each.
+  shots:
+    needs: plan
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    strategy:
+      fail-fast: true
+      max-parallel: 20
+      matrix:
+        part: ${{ fromJSON(needs.plan.outputs.parts) }}
+    steps:
+      # 1. Get the setup script.
+      - uses: actions/checkout@v7
+
+      # 2. Python with the same package versions as the laptop.
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - run: pip install -q numpy==2.5.3 opencv-python-headless==4.10.0.84 pillow==10.4.0
+
+      # 3. FFmpeg, rclone, case files and fonts.
+      - name: Set up machine and download case files
+        env:
+          RCLONE_CONFIG_TEXT: ${{ secrets.RCLONE_CONFIG }}
+        run: bash .github/scripts/case-setup.sh
+
+      # 4. Render this machine's shots. Prints only the time. On error, prints the last log lines.
+      - name: Render shots (part ${{ matrix.part }} of ${{ inputs.parts }})
+        run: |
+          ROWS=$(python3 -c "n=${{ inputs.parts }};g=${{ matrix.part }};print(' '.join(f'r{i:02d}' for i in range(1,100) if (i-1)%n==g))")
+          cd job/build
+          START=$SECONDS
+          python -I -X utf8 "${{ inputs.script }}" seg $ROWS > ../../shots.log 2>&1 || { tail -30 ../../shots.log; exit 1; }
+          echo "SHOTS_TIME: $((SECONDS - START))s, $(grep -c '^render ' ../../shots.log) render lines"
+
+      # 5. Send the rendered shots (and slowed clips) to the temporary Drive folder.
+      - name: Upload shots to temporary Drive folder
+        run: |
+          cd job/build
+          rclone copy seg_v4 "$TMP/seg_v4" --transfers 8
+          rclone copy aud "$TMP/aud" --include 'r??s_*.mp4'
+
+  # Job 3: join all shots, make the sound mix, write the MP4, put it in Drive "AI".
+  final:
+    needs: shots
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - run: pip install -q numpy==2.5.3 opencv-python-headless==4.10.0.84 pillow==10.4.0
+
+      - name: Set up machine and download case files
+        env:
+          RCLONE_CONFIG_TEXT: ${{ secrets.RCLONE_CONFIG }}
+        run: bash .github/scripts/case-setup.sh
+
+      # 1. Get the shots from all part jobs.
+      - name: Download rendered shots
+        run: |
+          rclone copy "$TMP/seg_v4" job/build/seg_v4 --transfers 8
+          rclone copy "$TMP/aud" job/build/aud
+          echo "shots: $(ls job/build/seg_v4 | wc -l)"
+
+      # 2. Join picture (pic), then sound mix + final MP4 (audio). Prints only the time.
+      - name: Join picture and mix sound
+        run: |
+          cd job/build
+          START=$SECONDS
+          python -I -X utf8 "${{ inputs.script }}" pic > ../../final.log 2>&1 || { tail -30 ../../final.log; exit 1; }
+          python -I -X utf8 "${{ inputs.script }}" audio >> ../../final.log 2>&1 || { tail -30 ../../final.log; exit 1; }
+          echo "FINAL_TIME: $((SECONDS - START))s"
+          ffprobe -v error -show_entries format=duration,size -of default=nw=1 "../renders/${{ inputs.output }}"
+
+      # 3. Upload the MP4 to Drive "AI" as <name>_cloud_<date>_<time>.mp4.
+      - name: Upload MP4 to Google Drive (gdrive:AI)
+        run: |
+          NAME="${{ inputs.output }}"; NAME="${NAME%.mp4}_cloud_$(date +%Y-%m-%d_%H-%M-%S).mp4"
+          rclone copyto "job/renders/${{ inputs.output }}" "gdrive:AI/$NAME" --stats-one-line -v
+          rclone lsl gdrive:AI --include "$NAME"
+
+      # 4. Delete the temporary shots folder (only this run's own temp folder).
+      - name: Clean up temporary Drive folder
+        if: always()
+        run: rclone purge "$TMP" || true
