@@ -1,34 +1,75 @@
-# Renders the HyperFrames video in the cloud and uploads the MP4 to Google Drive.
+# Renders HyperFrames videos in the cloud (CPU only) and uploads each MP4 to Google Drive.
+# Many videos render at the same time: one job per video, up to 20 jobs, 4 CPU cores each.
 name: Render video
 
-# Run on every push to main, and by hand from the Actions tab ("Run workflow").
+# Push to main: render the main video (index.html).
+# "Run workflow" button: pick "main" or "all" (main video + every file in compositions/).
 on:
   push:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      target:
+        description: "What to render"
+        type: choice
+        options: [main, all]
+        default: main
 
 # The workflow only needs to read the repo.
 permissions:
   contents: read
 
+env:
+  # Time zone used in the output file names.
+  TZ: Asia/Kolkata
+  # Pinned HyperFrames version (same as package.json).
+  HF: hyperframes@0.8.210
+
 jobs:
+  # Job 1: make the list of videos to render, and one time stamp for all of them.
+  plan:
+    runs-on: ubuntu-24.04
+    outputs:
+      files: ${{ steps.list.outputs.files }}
+      stamp: ${{ steps.list.outputs.stamp }}
+    steps:
+      # 1. Get the project files.
+      - name: Check out repo
+        uses: actions/checkout@v7
+
+      # 2. Build the list as JSON. "all" adds every .html file in compositions/.
+      - name: List videos to render
+        id: list
+        run: |
+          if [ "${{ inputs.target }}" = "all" ]; then
+            FILES=$(find compositions -name '*.html' | sort | jq -R . | jq -sc '["index.html"] + .')
+          else
+            FILES='["index.html"]'
+          fi
+          echo "files=$FILES" >> "$GITHUB_OUTPUT"
+          echo "stamp=$(date +%Y-%m-%d_%H-%M-%S)" >> "$GITHUB_OUTPUT"
+          echo "Videos to render: $(echo "$FILES" | jq length)"
+
+  # Job 2: one job per video. Up to 20 run at the same time.
   render:
-    runs-on: ubuntu-latest
+    needs: plan
+    runs-on: ubuntu-24.04
     timeout-minutes: 60
-    env:
-      # Time zone used in the output file name.
-      TZ: Asia/Kolkata
-      # Pinned HyperFrames version (same as package.json).
-      HF: hyperframes@0.8.210
+    strategy:
+      # One failed video does not stop the others.
+      fail-fast: false
+      max-parallel: 20
+      matrix:
+        file: ${{ fromJSON(needs.plan.outputs.files) }}
 
     steps:
       # 1. Get the project files.
       - name: Check out repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
-      # 2. Install Node. HyperFrames needs Node 22 or newer (Node 20 is too old).
+      # 2. Install Node. HyperFrames needs Node 22 or newer.
       - name: Set up Node 22
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: 22
 
@@ -39,31 +80,46 @@ jobs:
           sudo apt-get install -y -qq ffmpeg
           npx --yes "$HF" browser ensure
 
-      # 4. Build the output name: <project name>_<date>_<time>.mp4
+      # 4. Build the output name: <project>_<video>_<date>_<time>.mp4
+      #    (the main video has no <video> part).
       - name: Make output file name
+        env:
+          FILE: ${{ matrix.file }}
+          STAMP: ${{ needs.plan.outputs.stamp }}
         run: |
           PROJECT=$(jq -r '.name // empty' meta.json 2>/dev/null)
           PROJECT=${PROJECT:-${{ github.event.repository.name }}}
-          STAMP=$(date +%Y-%m-%d_%H-%M-%S)
-          echo "OUT=renders/${PROJECT}_${STAMP}.mp4" >> "$GITHUB_ENV"
+          if [ "$FILE" = "index.html" ]; then
+            NAME="${PROJECT}_${STAMP}"
+          else
+            PART=${FILE#compositions/}; PART=${PART%.html}; PART=${PART//\//-}
+            NAME="${PROJECT}_${PART}_${STAMP}"
+          fi
+          echo "NAME=$NAME" >> "$GITHUB_ENV"
+          echo "OUT=renders/$NAME.mp4" >> "$GITHUB_ENV"
 
-      # 5. Render. GitHub runners have no GPU, so --gpu is not used (default CPU encode).
-      #    The step prints how long the render took.
-      - name: Render with HyperFrames
+      # 5. Render on CPU only, with all 4 cores:
+      #    --no-browser-gpu = software (CPU) drawing, --workers 4 = 4 parallel Chrome workers.
+      #    No --gpu (GitHub runners have no GPU). The step prints how long the render took.
+      - name: Render with HyperFrames (CPU, 4 workers)
+        env:
+          FILE: ${{ matrix.file }}
         run: |
           mkdir -p renders
+          ARGS=()
+          [ "$FILE" != "index.html" ] && ARGS=(-c "$FILE")
           START=$SECONDS
-          npx --yes "$HF" render -o "$OUT"
+          npx --yes "$HF" render "${ARGS[@]}" --no-browser-gpu --workers 4 -o "$OUT"
           TOOK=$((SECONDS - START))
-          echo "Render took ${TOOK}s ($((TOOK / 60))m $((TOOK % 60))s)"
+          echo "RENDER_TIME: ${TOOK}s ($((TOOK / 60))m $((TOOK % 60))s) for $FILE"
           echo "Render took **${TOOK}s** → \`$OUT\`" >> "$GITHUB_STEP_SUMMARY"
           ffprobe -v error -show_entries format=duration,size -of default=nw=1 "$OUT"
 
       # 6. Backup: keep the MP4 as a GitHub artifact for 7 days.
       - name: Upload MP4 as artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
-          name: render-${{ github.run_number }}
+          name: ${{ env.NAME }}
           path: ${{ env.OUT }}
           retention-days: 7
 
