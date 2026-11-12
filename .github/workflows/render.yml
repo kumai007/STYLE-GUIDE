@@ -1,4 +1,4 @@
-# Renders HyperFrames videos in the cloud (CPU only) and uploads each MP4 to Google Drive.
+# Renders HyperFrames videos in the cloud (CPU only) and uploads each MP4 to the Google Drive folder "AI".
 # Many videos render at the same time: one job per video, up to 20 jobs, 4 CPU cores each.
 name: Render video
 
@@ -131,7 +131,7 @@ jobs:
 
       # 8. Write the RCLONE_CONFIG secret to rclone's config path (only on this
       #    temporary machine; never printed, never committed), then copy the MP4.
-      - name: Upload MP4 to Google Drive (gdrive:Renders)
+      - name: Upload MP4 to Google Drive (gdrive:AI)
         env:
           RCLONE_CONFIG_TEXT: ${{ secrets.RCLONE_CONFIG }}
         run: |
@@ -142,5 +142,5 @@ jobs:
           mkdir -p ~/.config/rclone
           printf '%s\n' "$RCLONE_CONFIG_TEXT" > ~/.config/rclone/rclone.conf
           chmod 600 ~/.config/rclone/rclone.conf
-          rclone copy "$OUT" gdrive:Renders --stats-one-line -v
-          rclone lsl gdrive:Renders --include "$(basename "$OUT")"
+          rclone copy "$OUT" gdrive:AI --stats-one-line -v
+          rclone lsl gdrive:AI --include "$(basename "$OUT")"
