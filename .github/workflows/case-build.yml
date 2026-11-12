@@ -20,6 +20,11 @@ on:
       parts:
         description: "Machines that render shots at the same time (1-20)"
         default: "18"
+      join:
+        description: "Where to join the shots: cloud (MP4 to Drive AI) or laptop (case-hybrid.sh does it)"
+        type: choice
+        options: [cloud, laptop]
+        default: cloud
 
 permissions:
   contents: read
@@ -83,8 +88,10 @@ jobs:
           rclone copy aud "$TMP/aud" --include 'r??s_*.mp4'
 
   # Job 3: join all shots, make the sound mix, write the MP4, put it in Drive "AI".
+  #        Skipped when join=laptop: the laptop script downloads the shots and joins them.
   final:
     needs: shots
+    if: inputs.join == 'cloud'
     runs-on: ubuntu-24.04
     timeout-minutes: 90
     steps:

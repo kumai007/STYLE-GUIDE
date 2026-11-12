@@ -1,0 +1,14 @@
+# Which case files go to the cloud / work copy. Big rebuilt files stay out (the build makes them again).
+- .case-work
+- renders/**
+- sources/free_*/**
+- build/seg*/**
+- build/gfx_v4/**
+- build/__pycache__/**
+- build/aud/r??s_*.mp4
+- build/picture*
+- build/mix_*
+- build/*.npy
+- build/*.log
+- build/*.wav
++ **
