@@ -57,10 +57,19 @@ step "4/6 Wait for cloud shots"
 (cd "$REPO" && gh run watch "$RUN" --exit-status --interval 15 > /dev/null) || { echo "Cloud run failed: $URL"; exit 1; }
 
 # 5. Download the shots.
+#    Many machines upload at once, so Drive can make 2 folders with the same name. dedupe merges them first.
 step "5/6 Download shots"
+"$RCLONE" dedupe --dedupe-mode skip "gdrive:_cloud-jobs/_runs" -q
 "$RCLONE" copy "$TMP/seg_v4" "$JW/build/seg_v4" --transfers 8 -q
 "$RCLONE" copy "$TMP/aud" "$JW/build/aud" -q
 echo "    shots: $(ls "$JW/build/seg_v4" | wc -l)"
+#    Stop if a shot is missing (the timeline file lists every shot).
+python -I - "$JW/build/timeline_v4.json" "$JW/build/seg_v4" <<'PY'
+import json, os, sys
+T = json.load(open(sys.argv[1], encoding='utf-8')); have = {f[:-4] for f in os.listdir(sys.argv[2])}
+miss = [s['name'] for s in T if s['name'] not in have]
+if miss: sys.exit(f'Missing shots: {miss}')
+PY
 
 # 6. Join picture + mix sound on the laptop. Full log: $JW/join.log
 step "6/6 Join picture and mix sound (laptop)"

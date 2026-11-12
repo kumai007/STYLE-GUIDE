@@ -106,9 +106,11 @@ jobs:
           RCLONE_CONFIG_TEXT: ${{ secrets.RCLONE_CONFIG }}
         run: bash .github/scripts/case-setup.sh
 
-      # 1. Get the shots from all part jobs.
+      # 1. Get the shots from all part jobs. Many jobs upload at once, so Drive can make
+      #    2 folders with the same name: dedupe merges them, or some shots are lost.
       - name: Download rendered shots
         run: |
+          rclone dedupe --dedupe-mode skip "gdrive:_cloud-jobs/_runs" -q
           rclone copy "$TMP/seg_v4" job/build/seg_v4 --transfers 8
           rclone copy "$TMP/aud" job/build/aud
           echo "shots: $(ls job/build/seg_v4 | wc -l)"
