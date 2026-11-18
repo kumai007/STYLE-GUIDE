@@ -88,3 +88,13 @@ Photo device (new, devices/lm_c01a.mjs): img cover, keyed drift scale 1.04->1.12
   TypedDate twice in a row). HCR has 226 frames (last = 225; freeze end uses 224). Music: tarmac 61.1 only lasts to 156.5,
   so dark_days returns at 150.5 (xfade 150.5-156.5).
 - STEP 2 DONE: build exit 0, no media problems; check ok, 0 errors, 8 warnings.
+- STEP 3 (stills QA, 2 rounds, sheet `productions/last-moments/edit/qa/lm_case01a_sheet.jpg`, 41 snapshots, sheet labels S36+ are
+  shifted by one because the map has 2 frames). Round 1 fixes: lm RedCircle rotates -120, so it tilts any non-round ellipse:
+  new RingC01 (any rx/ry, small tilt). lm Spotlight (.8 black) made shots Y13-24: new SpotC01 (.55, softer). Per-shot Grade bri
+  so entries sit at Y61-71 (photos .55-.82, HCR .68-.78, HPK 1.05-1.12, regent 1.2, rain window 2.6). Map fx brightness 2.3,
+  pan earlier (2nd label typed by f246 of 284). Faces mosaicked (MOS boxes): brompton_road (5 people), hans_crescent_geograph
+  (10 people + tabloid cover with a woman's photo and headline).
+  Round 2: 0 errors; Y 61-71 everywhere except spotlight/dark-by-design shots S19 rain window 33, S27 cone 31, S30 replay 32,
+  S39 entry 41, map 43-44, S23 card 52.
+- Open: mosaic boxes only checked at thumbnail size (check brompton/geograph at full size in the preview); p01a 35.82:36.18
+  filler cut needs a listen; S19 rain window still dark; Tag on S26 lifted 150 px to clear the burned "Entrance Holland Park".

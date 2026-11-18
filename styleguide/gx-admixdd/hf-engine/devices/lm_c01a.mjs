@@ -28,7 +28,7 @@ export const MosImg = {
 export const MapC01 = {
   name: 'MapC01',
   html: (p, ctx) => {
-    const [ox, oy, k] = p.off, W = 3840, H = 2304, fx = p.fx || 'brightness(1.75) contrast(1.3) saturate(.6)';
+    const [ox, oy, k] = p.off, W = 3840, H = 2304, fx = p.fx || 'brightness(2.3) contrast(1.35) saturate(.6)';
     const pins = (p.pins || []).map((q, i) => `<div data-pin="${i}" style="position:absolute;left:${q.x}px;top:${q.y}px;width:0;height:0">`
       + `<div data-s style="position:absolute;left:0;top:0;width:0;height:0">`
       + `<i data-ring style="position:absolute;left:-60px;top:-60px;width:120px;height:120px;border-radius:50%;border:3px solid ${C.red};box-shadow:0 0 18px rgba(158,31,28,.8);opacity:0"></i>`
@@ -71,4 +71,17 @@ export const MapC01 = {
   },
 };
 
-export default [Frz, MosImg, MapC01];
+// RingC01 {cx,cy,rx,ry,at=0,rot=-6}  hand-drawn red ellipse (any rx/ry; lm RedCircle rotates -120 so it only suits circles), 48 f draw.
+export const RingC01 = {
+  name: 'RingC01',
+  html: (p, ctx) => `<svg class="${AF}" width="1920" height="1080" style="pointer-events:none;overflow:visible"><ellipse ${ctx.dev('RingC01', { at: p.at ?? 0 })} cx="${p.cx}" cy="${p.cy}" rx="${p.rx}" ry="${p.ry}" fill="none" stroke="${C.red}" stroke-width="6" stroke-linecap="round" pathLength="100" stroke-dasharray="100 100" stroke-dashoffset="100" transform="rotate(${p.rot ?? -6} ${p.cx} ${p.cy})" style="filter:drop-shadow(0 0 6px rgba(158,31,28,.7)) drop-shadow(0 2px 3px rgba(0,0,0,.8))"/></svg>`,
+  render: function (el, f, p) { var u = Math.max(0, Math.min(1, (f - p.at) / 48)), e = u < 0.5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2; el.setAttribute('stroke-dashoffset', (100 * (1 - e)).toFixed(2)); },
+};
+// SpotC01 {cx,cy,r=300,at=0,hold=165,k=.55}  soft light-falloff spotlight (lm Spotlight goes to .8 black = too dark).
+export const SpotC01 = {
+  name: 'SpotC01',
+  html: (p, ctx) => `<div class="${AF}" ${ctx.dev('SpotC01', { at: p.at ?? 0, hold: p.hold ?? 165 })} style="pointer-events:none;opacity:0;background:radial-gradient(circle ${p.r ?? 300}px at ${p.cx}px ${p.cy}px, rgba(0,0,0,0) 40%, rgba(0,0,0,${p.k ?? 0.55}) 100%)"></div>`,
+  render: function (el, f, p) { var c = function (x) { return Math.max(0, Math.min(1, x)); }, io = function (x) { return x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2; }; el.style.opacity = (io(c((f - p.at) / 36)) * (1 - io(c((f - p.at - 36 - p.hold) / 36)))).toFixed(4); },
+};
+
+export default [Frz, MosImg, MapC01, RingC01, SpotC01];

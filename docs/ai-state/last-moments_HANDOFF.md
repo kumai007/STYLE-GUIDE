@@ -22,7 +22,15 @@ State:
 - DONE: sources conformed (`sources/conf/*.mp4`, 60 fps). Ref study done: `productions/_abyssal-ref/latest5/SUMMARY.md`
   (lead decisions on 6 open Qs at its top) + `<id>/CATALOG.md`.
 - DONE: intro part `hf-engine/parts/lm_intro` (61.1 s, check 0 errors, sheet `edit/qa/lm_intro_sheet.jpg` looked OK by lead).
-- RUNNING: case 1 split in 2 parts: `lm_case01a` (VO p01a-c + p02, HPK + HCR raws, map; also intro fixes + Commons retry;
+- 2026-11-18 LATE: ALL 3 PARTS BUILT, check 0 errors: lm_intro v2 (owner rejected v1 as "AI slop"; redesign in
+  `devices/lm_v2.mjs`: Warning2 on HCR doorway, Descent stairwell list, DescentReturn red hairline, CaseCard2), lm_case01a
+  (185.9 s, 40 shots, map MapC01), lm_case01b (309 s, 70 shots). Sheets in `productions/last-moments/edit/qa/`.
+  Preview: Claude Browser config "last-moments-preview" (.claude/launch.json, port 4848) = preview.sh lm_intro,lm_case01a,lm_case01b.
+  WAITING: owner watches in Final Phase Lite and sends notes. Known: intro 54.2 s case-01 name blurs briefly; case 1 B-roll
+  repeats (rain window, wet street, SIS, padlock ~5-6x each: Commons 429 blocked 10 photos); p01a 35.82-36.18 filler cut
+  needs a listen; RAD/WED licence needs owner OK; abyssal.json Learnings save blocked by 8 invalid statuses (note in
+  memory + intro_v2 handoff). After OK: full render on GitHub (run_all.sh / farm).
+- OLD: case 1 split in 2 parts: `lm_case01a` (VO p01a-c + p02, HPK + HCR raws, map; also intro fixes + Commons retry;
   state `docs/ai-state/last-moments_case01a_HANDOFF.md`) and `lm_case01b` (VO p03 + p04, HCR half-speed replay, inquest page;
   state `..._case01b_HANDOFF.md`). Then: `bash tools/case-build/preview.sh lm_intro,lm_case01a,lm_case01b`.
 - OLD: build agent 1 = `hf-engine/devices/lm.mjs` (all channel devices) + `cases/lm_intro.mjs` + QA sheet
