@@ -295,8 +295,35 @@ const markTools = document.createElement("div");
 markTools.id = "markTools";
 markTools.className = "mark-tools";
 $("viewer").appendChild(markTools);
-Object.assign(S, { marks: [], marksAt: null, marksSent: false, filesVersion: 0 });
+Object.assign(S, { marks: [], marksAt: null, marksSent: false, filesVersion: 0, tool: "pen" });
 let stroke = null;
+// Local addition 2026-11-18: drawing tools. Every shape is stored as a plain list of points, like a pen stroke,
+// so notes, the sent picture and the marked region work unchanged.
+const TOOLS = [
+  ["pen", "Pen", '<path d="M4 20c3-1 4-4 7-7l6-6 2 2-6 6c-3 3-6 4-7 7z"/>'],
+  ["arrow", "Arrow", '<path d="M5 19L19 5M19 5h-8M19 5v8"/>'],
+  ["line", "Line", '<path d="M5 19L19 5"/>'],
+  ["rect", "Box", '<rect x="4" y="6" width="16" height="12" rx="1"/>'],
+  ["ellipse", "Circle", '<ellipse cx="12" cy="12" rx="8.5" ry="6.5"/>'],
+];
+function shapeFrom(tool, a, b) {
+  const [x0, y0] = a, [x1, y1] = b;
+  if (tool === "line") return [a, b];
+  if (tool === "rect") return [[x0, y0], [x1, y0], [x1, y1], [x0, y1], [x0, y0]];
+  if (tool === "ellipse") {
+    const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2, rx = Math.abs(x1 - x0) / 2, ry = Math.abs(y1 - y0) / 2;
+    return Array.from({ length: 49 }, (_, i) => [cx + rx * Math.cos((i / 48) * 2 * Math.PI), cy + ry * Math.sin((i / 48) * 2 * Math.PI)]);
+  }
+  if (tool === "arrow") {
+    // head in pixel space so it keeps its shape on any picture size
+    const W = S.w || 1, H = S.h || 1, dx = (x1 - x0) * W, dy = (y1 - y0) * H, len = Math.hypot(dx, dy) || 1;
+    const hl = Math.min(len * 0.35, Math.max(W, H) * 0.035), ang = Math.atan2(dy, dx);
+    const head = (d) => [x1 - (hl * Math.cos(ang + d)) / W, y1 - (hl * Math.sin(ang + d)) / H];
+    return [a, b, head(0.5), b, head(-0.5)];
+  }
+  return null;
+}
+const liveStroke = () => (!stroke ? null : S.tool === "pen" || stroke.length < 2 ? stroke : shapeFrom(S.tool, stroke[0], stroke[stroke.length - 1]));
 
 // Where the picture sits inside the viewer (it's letterboxed to keep its shape).
 function pictureRect() {
@@ -334,7 +361,7 @@ function paintStrokes(ctx, strokes, w, h, dim = false) {
 function drawMarks() {
   const ctx = marksCanvas.getContext("2d");
   ctx.clearRect(0, 0, marksCanvas.width, marksCanvas.height);
-  paintStrokes(ctx, stroke ? [...S.marks, stroke] : S.marks, marksCanvas.width, marksCanvas.height, S.marksSent);
+  paintStrokes(ctx, stroke ? [...S.marks, liveStroke()] : S.marks, marksCanvas.width, marksCanvas.height, S.marksSent);
   const v = $("viewer");
   v.classList.toggle("has-source", !!S.source && S.dur > 0);
   v.classList.toggle("can-draw", !!S.source && S.dur > 0 && !S.playing);
@@ -342,10 +369,13 @@ function drawMarks() {
 }
 function renderMarkTools() {
   if (!S.source || !S.dur || S.playing) return void (markTools.innerHTML = "");
-  markTools.innerHTML = S.marks.length
+  const tools = `<span class="tool-row">${TOOLS.map(([id, label, d]) => `<button type="button" class="tool-btn${S.tool === id ? " on" : ""}" data-tool="${id}" title="${label}" aria-label="${label}">${svg(d)}</button>`).join("")}<button type="button" class="tool-btn" id="undoMark" title="Undo last mark" aria-label="Undo"${S.marks.length && !S.marksSent ? "" : " disabled"}>${svg('<path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/>')}</button></span>`;
+  markTools.innerHTML = tools + (S.marks.length
     ? `<span class="dotm"></span><span>${S.marksSent ? "Your circle, sent with the note" : "Circled. Now say what to change"}</span><button type="button" class="link" id="clearMarks">${S.marksSent ? "Hide" : "Clear"}</button>`
-    : `<span>Draw on the picture to circle what you mean</span>`;
+    : `<span>Draw on the picture to mark what you mean</span>`);
   $("clearMarks")?.addEventListener("click", clearMarks);
+  markTools.querySelectorAll("[data-tool]").forEach((b) => b.addEventListener("click", () => { S.tool = b.dataset.tool; renderMarkTools(); }));
+  $("undoMark")?.addEventListener("click", () => { S.marks.pop(); if (!S.marks.length) S.marksAt = null; drawMarks(); renderComposer(); });
 }
 function clearMarks() {
   if (!S.marks.length && !stroke) return;
@@ -379,7 +409,8 @@ marksCanvas.addEventListener("pointerdown", (e) => {
 });
 marksCanvas.addEventListener("pointermove", (e) => {
   if (!stroke) return;
-  if (stroke.length < 600) stroke.push(toPoint(e));
+  if (S.tool !== "pen") stroke = [stroke[0], toPoint(e)];
+  else if (stroke.length < 600) stroke.push(toPoint(e));
   drawMarks();
 });
 function endStroke() {
@@ -393,6 +424,7 @@ function endStroke() {
     const r = 0.05;
     s = Array.from({ length: 41 }, (_, i) => [x0 + (r * S.h / S.w) * Math.cos((i / 40) * 2 * Math.PI), y0 + r * Math.sin((i / 40) * 2 * Math.PI)]);
   }
+  else if (S.tool !== "pen") s = shapeFrom(S.tool, s[0], s[s.length - 1]);
   S.marks.push(s);
   drawMarks();
   renderComposer();

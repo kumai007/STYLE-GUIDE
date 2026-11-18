@@ -1,2 +1,5 @@
 Source: https://github.com/Jadouminou/final-phase-lite (MIT), commit bf3114a, copied 2026-11-18.
 Local change: server.mjs folder-arg fix (optIndex < 0). Use via tools/case-build/preview.sh, not its own install/Render button.
+Local change 2026-11-18: lib/agents/claude.mjs findClaude() prefers the real claude.exe on Windows (npm shim gave spawn ENOENT).
+Local change 2026-11-18: public/app.js + style.css drawing tools (pen, arrow, line, box, circle, undo); shapes stored as point lists. Backups *.bak_20261118.
+Local change 2026-11-18: lib/agents/claude.mjs run() drops the host Claude session/auth env vars (child claude used the desktop host's auth: OAuth expired).

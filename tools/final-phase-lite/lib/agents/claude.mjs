@@ -24,8 +24,17 @@ export function findClaude() {
   if (process.env.LITE_CLAUDE_BIN) return process.env.LITE_CLAUDE_BIN;
   try {
     const out = execFileSync(WIN ? "where" : "which", ["claude"], { encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] });
-    const first = out.split(/\r?\n/).find((l) => l.trim());
-    if (first) return first.trim();
+    const lines = out.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+    // Local fix 2026-11-18: on Windows `where` lists the extensionless npm shim first (a sh script: spawn ENOENT).
+    // Prefer the real claude.exe that the npm claude.cmd launches, then any .exe/.cmd.
+    if (WIN) {
+      for (const l of lines) {
+        const exe = path.join(path.dirname(l), "node_modules", "@anthropic-ai", "claude-code", "bin", "claude.exe");
+        if (/\.cmd$/i.test(l) && existsSync(exe)) return exe;
+      }
+      const runnable = lines.find((l) => /\.(exe|cmd|bat)$/i.test(l));
+      if (runnable) return runnable;
+    } else if (lines[0]) return lines[0];
   } catch {}
   const home = os.homedir();
   const guesses = WIN
@@ -69,13 +78,22 @@ export function readLimit(e) {
  * Runs one message. Calls `onSession(id)` as soon as Claude Code says which session it is and `onLimit(limit)` when
  * it reports your plan's limit. Resolves when it ends with { ok, sessionId, error, usage }.
  */
+// Local fix 2026-11-18: when this server was started from inside a Claude Code session (desktop app, terminal),
+// it inherits that host's private session/auth variables; the child claude then tries the host's auth and fails
+// ("OAuth session expired"). The child must use its own login (~/.claude), so drop those variables.
+function cleanEnv() {
+  const env = { ...process.env, FORCE_COLOR: "0" };
+  for (const k of Object.keys(env)) if (/^(CLAUDECODE$|CLAUDE_CODE_|CLAUDE_AGENT_SDK_|CLAUDE_PID$|CLAUDE_EFFORT$|CLAUDE_PREVIEW_|ANTHROPIC_BASE_URL$|USE_LOCAL_OAUTH$|USE_STAGING_OAUTH$)/.test(k)) delete env[k];
+  return env;
+}
+
 export function run({ bin, cwd, prompt, resumeId, fork = false, onSession, onLimit }) {
   const child = spawn(bin, claudeArgs(resumeId, fork), {
     cwd,
     stdio: ["pipe", "pipe", "pipe"],
     shell: WIN && /\.(cmd|bat)$/i.test(bin),
     windowsHide: true,
-    env: { ...process.env, FORCE_COLOR: "0" },
+    env: cleanEnv(),
   });
   let sessionId = resumeId ?? null;
   let carry = "";

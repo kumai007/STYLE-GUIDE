@@ -377,3 +377,11 @@ textarea:focus { border-color: rgba(255, 255, 255, 0.3); }
 .mark-tools:empty { display: none; }
 .mark-tools .dotm { width: 9px; height: 9px; border-radius: 50%; border: 2px solid #ff5a36; }
 .mark-tools .link { font-size: 12px; }
+/* Local addition 2026-11-18: drawing tool buttons */
+.mark-tools .tool-row { display: inline-flex; gap: 4px; margin-right: 8px; padding-right: 8px; border-right: 1px solid rgba(255,255,255,0.15); }
+.mark-tools .tool-btn { width: 30px; height: 30px; display: inline-grid; place-items: center; border-radius: 8px; border: 1px solid transparent; background: transparent; color: #cfcfcf; cursor: pointer; padding: 0; }
+.mark-tools .tool-btn svg { width: 18px; height: 18px; }
+.mark-tools .tool-btn:hover { background: rgba(255,255,255,0.08); }
+.mark-tools .tool-btn.on { color: #ff5a36; border-color: #ff5a36; background: rgba(255,90,54,0.12); }
+.mark-tools .tool-btn:disabled { opacity: 0.35; cursor: default; }
+.mark-tools { flex-wrap: wrap; max-width: calc(100% - 24px); border-radius: 14px; row-gap: 6px; }
