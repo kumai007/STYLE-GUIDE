@@ -1,0 +1,436 @@
+{
+ "_about": {
+  "made": "2026-10-15, Waterpark SFX rebuild (study/sfx/SFX.md). All files DESIGNED in Python (study/sfx/tools/synth.py, fitted params study/sfx/design/params.json) to measurements of the reference videos. No reference audio and no third-party library audio is in any file.",
+  "format": "48 kHz, 24-bit PCM WAV, stereo",
+  "file_loudness": "every file normalised to -20.0 LUFS-M max (BS.1770 momentary, 400 ms), true peak <= -1 dBTP (file_lufs_m / file_tp_dbtp per file)",
+  "gain_db": "target loudness of the SFX relative to the VO: (SFX LUFS-M max) - (VO integrated LUFS), measured on the references (Demucs no-vocals stem, bed-subtracted, corrected for isolation loss).",
+  "how_to_place": "file gain (dB) = vo_lufs_i + gain_db - file_lufs_m. With our VO file as delivered (vo/full_v1.mp3) that is file_gain_db_raw_vo. If the VO is re-levelled in the mix, add the same dB change to every SFX.",
+  "sync": "start the file sync_offset_frames (30 fps) relative to the anchor frame (negative = before). sync_offset_s is the exact value.",
+  "vo_lufs_i": -24.44,
+  "fps": 30
+ },
+ "events": {
+  "transition_whoosh": {
+   "gain_db": -16.3,
+   "anchor": "first full-white frame of the 10-frame flash-streak (D3 F1 frame 0)",
+   "ref_group": "whoosh_flash_V3",
+   "note": "Dashcam Vol.3 flash-streak swish; rotate the 3 variants",
+   "enabled": true,
+   "files": [
+    {
+     "file": "sfx/whoosh_flash_01.wav",
+     "dur_s": 0.62,
+     "file_lufs_m": -20.0,
+     "file_tp_dbtp": -9.14,
+     "sync_offset_s": -0.155,
+     "sync_offset_frames": -5,
+     "file_gain_db_raw_vo": -20.74,
+     "ab_J": 7.09
+    },
+    {
+     "file": "sfx/whoosh_flash_02.wav",
+     "dur_s": 0.62,
+     "file_lufs_m": -20.0,
+     "file_tp_dbtp": -9.93,
+     "sync_offset_s": -0.135,
+     "sync_offset_frames": -4,
+     "file_gain_db_raw_vo": -20.74,
+     "ab_J": 7.33
+    },
+    {
+     "file": "sfx/whoosh_flash_03.wav",
+     "dur_s": 0.62,
+     "file_lufs_m": -20.0,
+     "file_tp_dbtp": -7.68,
+     "sync_offset_s": -0.14,
+     "sync_offset_frames": -4,
+     "file_gain_db_raw_vo": -20.74,
+     "ab_J": 8.17
+    }
+   ]
+  },
+  "white_flash_hit": {
+   "gain_db": -3.5,
+   "anchor": "first white frame of a hard white flash / flash cut (case entry, look-here release)",
+   "ref_group": "hit_V2",
+   "note": "Dashcam Vol.2 transition hit: 0.3 s swell -> punch -> hiss tail",
+   "enabled": true,
+   "files": [
+    {
+     "file": "sfx/flash_hit_01.wav",
+     "dur_s": 0.9,
+     "file_lufs_m": -20.0,
+     "file_tp_dbtp": -11.57,
+     "sync_offset_s": -0.385,
+     "sync_offset_frames": -12,
+     "file_gain_db_raw_vo": -7.94,
+     "ab_J": 9.79
+    },
+    {
+     "file": "sfx/flash_hit_02.wav",
+     "dur_s": 0.9,
+     "file_lufs_m": -20.0,
+     "file_tp_dbtp": -12.0,
+     "sync_offset_s": -0.385,
+     "sync_offset_frames": -12,
+     "file_gain_db_raw_vo": -7.94,
+     "ab_J": 10.1
+    }
+   ]
+  },
+  "dip_whoosh": {
+   "gain_db": -22.9,
+   "anchor": "first black frame of a sine dip-to-black (D3 F3)",
+   "ref_group": "whoosh_dip_V3",
+   "note": "soft, wide, dark whoosh under the dip; low-confidence level (5 instances, wide spread)",
+   "enabled": true,
+   "files": [
+    {
+     "file": "sfx/whoosh_dip_01.wav",
+     "dur_s": 1.0,
+     "file_lufs_m": -20.0,
+     "file_tp_dbtp": -12.4,
+     "sync_offset_s": -0.135,
+     "sync_offset_frames": -4,
+     "file_gain_db_raw_vo": -27.34,
+     "ab_J": 7.15
+    },
+    {
+     "file": "sfx/whoosh_dip_02.wav",
+     "dur_s": 1.0,
+     "file_lufs_m": -20.0,
+     "file_tp_dbtp": -10.84,
+     "sync_offset_s": -0.13,
+     "sync_offset_frames": -4,
+     "file_gain_db_raw_vo": -27.34,
+     "ab_J": 7.42
+    }
+   ]
+  },
+  "glitch": {
+   "gain_db": -19.8,
+   "anchor": "first frame of the glitch-streak (D3 F2 frame 0)",
+   "ref_group": "glitch_V3",
+   "note": "stuttered bit-crushed digital burst in 2-frame steps, very wide stereo; rotate variants",
+   "enabled": true,
+   "files": [
+    {
+     "file": "sfx/glitch_01.wav",
+     "dur_s": 0.42,
+     "file_lufs_m": -20.0,
+     "file_tp_dbtp": -11.19,
+     "sync_offset_s": -0.155,
+     "sync_offset_frames": -5,
+     "file_gain_db_raw_vo": -24.24,
+     "ab_J": 8.88
+    },
+    {
+     "file": "sfx/glitch_02.wav",
+     "dur_s": 0.42,
+     "file_lufs_m": -20.0,
+     "file_tp_dbtp": -9.55,
+     "sync_offset_s": -0.14,
+     "sync_offset_frames": -4,
+     "file_gain_db_raw_vo": -24.24,
+     "ab_J": 8.72
+    },
+    {
+     "file": "sfx/glitch_03.wav",
+     "dur_s": 0.42,
+     "file_lufs_m": -20.0,
+     "file_tp_dbtp": -10.59,
+     "sync_offset_s": -0.15,
+     "sync_offset_frames": -5,
+     "file_gain_db_raw_vo": -24.24,
+     "ab_J": 8.68
+    }
+   ]
+  },
+  "glitch_static": {
+   "gain_db": -12.4,
+   "anchor": "first white frame after an Abyssal-style title glitch-out",
+   "ref_group": "glitch_AB",
+   "note": "OPTIONAL Abyssal static crackle; not a Dashcam device",
+   "enabled": true,
+   "files": [
+    {
+     "file": "sfx/glitch_static_01.wav",
+     "dur_s": 0.42,
+     "file_lufs_m": -21.75,
+     "file_tp_dbtp": -1.0,
+     "sync_offset_s": -0.15,
+     "sync_offset_frames": -5,
+     "file_gain_db_raw_vo": -15.1,
+     "ab_J": 8.55
+    }
+   ]
+  },
+  "case_number_hit": {
+   "gain_db": -0.4,
+   "anchor": "first visible frame of the case number / case title",
+   "ref_group": "title_hit_SI",
+   "note": "SIRIUS case-title thump: dark 200 Hz body, 0.33 s plateau, no highs",
+   "enabled": true,
+   "files": [
+    {
+     "file": "sfx/title_hit_01.wav",
+     "dur_s": 0.75,
+     "file_lufs_m": -20.0,
+     "file_tp_dbtp": -17.62,
+     "sync_offset_s": -0.09,
+     "sync_offset_frames": -3,
+     "file_gain_db_raw_vo": -4.84,
+     "ab_J": 6.08
+    },
+    {
+     "file": "sfx/title_hit_02.wav",
+     "dur_s": 0.75,
+     "file_lufs_m": -20.0,
+     "file_tp_dbtp": -16.74,
+     "sync_offset_s": -0.09,
+     "sync_offset_frames": -3,
+     "file_gain_db_raw_vo": -4.84,
+     "ab_J": 6.52
+    }
+   ]
+  },
+  "title_word_hit": {
+   "gain_db": -2.1,
+   "anchor": "first frame of the title word's fade-in on the wall (D3 E8: 36.03 / 36.37)",
+   "ref_group": "title_hit_V3",
+   "note": "Dashcam Vol.3 title-word impact; use _01 on line 1, _02 at gain_db-6 on line 2 (measured +23/+17 dB)",
+   "enabled": true,
+   "files": [
+    {
+     "file": "sfx/title_word_hit_01.wav",
+     "dur_s": 1.1,
+     "file_lufs_m": -20.0,
+     "file_tp_dbtp": -17.87,
+     "sync_offset_s": -0.06,
+     "sync_offset_frames": -2,
+     "file_gain_db_raw_vo": -6.54,
+     "ab_J": 9.25
+    },
+    {
+     "file": "sfx/title_word_hit_02.wav",
+     "dur_s": 1.1,
+     "file_lufs_m": -20.0,
+     "file_tp_dbtp": -18.31,
+     "sync_offset_s": -0.06,
+     "sync_offset_frames": -2,
+     "file_gain_db_raw_vo": -6.54,
+     "ab_J": 9.28
+    }
+   ]
+  },
+  "title_wall_move": {
+   "gain_db": 2.1,
+   "anchor": "first frame of the camera move (pull-back, push-in, pan, tile drop)",
+   "ref_group": "wall_V3",
+   "note": "Dashcam Vol.3 wall moves: low-body whoosh peaking at the move's velocity peak; pick pan direction = camera direction",
+   "enabled": true,
+   "files": [
+    {
+     "file": "sfx/wall_whoosh_lr.wav",
+     "dur_s": 1.5,
+     "file_lufs_m": -20.0,
+     "file_tp_dbtp": -13.93,
+     "sync_offset_s": -0.145,
+     "sync_offset_frames": -4,
+     "file_gain_db_raw_vo": -2.34,
+     "ab_J": 8.1
+    },
+    {
+     "file": "sfx/wall_whoosh_rl.wav",
+     "dur_s": 1.5,
+     "file_lufs_m": -20.0,
+     "file_tp_dbtp": -13.47,
+     "sync_offset_s": -0.12,
+     "sync_offset_frames": -4,
+     "file_gain_db_raw_vo": -2.34,
+     "ab_J": 8.27
+    },
+    {
+     "file": "sfx/wall_whoosh_push.wav",
+     "dur_s": 1.5,
+     "file_lufs_m": -20.0,
+     "file_tp_dbtp": -14.47,
+     "sync_offset_s": -0.12,
+     "sync_offset_frames": -4,
+     "file_gain_db_raw_vo": -2.34,
+     "ab_J": 8.43
+    }
+   ]
+  },
+  "sub_boom": {
+   "gain_db": 7.6,
+   "anchor": "first frame of the card / black beat",
+   "ref_group": "boom_VV",
+   "note": "Visual Venture chapter-card boom: pitch-drop 190->50 Hz then held sub, mono",
+   "enabled": true,
+   "files": [
+    {
+     "file": "sfx/sub_boom_01.wav",
+     "dur_s": 2.8,
+     "file_lufs_m": -20.0,
+     "file_tp_dbtp": -21.47,
+     "sync_offset_s": 0.01,
+     "sync_offset_frames": 0,
+     "file_gain_db_raw_vo": 3.16,
+     "ab_J": 4.94
+    }
+   ]
+  },
+  "zoom_boom": {
+   "gain_db": 3.2,
+   "anchor": "first frame of the zoom-through",
+   "ref_group": "boom_AB",
+   "note": "Abyssal level zoom-through: slow 0.5 s sub swell with a mid whoosh layer",
+   "enabled": true,
+   "files": [
+    {
+     "file": "sfx/zoom_boom_01.wav",
+     "dur_s": 1.6,
+     "file_lufs_m": -20.0,
+     "file_tp_dbtp": -16.85,
+     "sync_offset_s": -0.19,
+     "sync_offset_frames": -6,
+     "file_gain_db_raw_vo": -1.24,
+     "ab_J": 6.66
+    }
+   ]
+  },
+  "riser": {
+   "gain_db": -8.4,
+   "anchor": "the frame the riser cuts on (card / boom frame); file END lands on the anchor",
+   "ref_group": "preswell_VV",
+   "note": "Visual Venture 0.5 s pre-swell into the chapter boom; the only riser any reference uses",
+   "enabled": true,
+   "files": [
+    {
+     "file": "sfx/riser_01.wav",
+     "dur_s": 0.65,
+     "file_lufs_m": -20.0,
+     "file_tp_dbtp": -12.04,
+     "sync_offset_s": -0.65,
+     "sync_offset_frames": -20,
+     "file_gain_db_raw_vo": -12.84,
+     "ab_J": 6.29
+    }
+   ]
+  },
+  "typing_key": {
+   "gain_db": -7.3,
+   "anchor": "each glyph step of a typed caption (one key per step, 0.065-0.13 s apart)",
+   "ref_group": "typing_SI",
+   "note": "SIRIUS typewriter: low 150 Hz thock, 20 ms; gain is per key (a 10 key/s run measures about -1.3 LU re VO)",
+   "enabled": true,
+   "files": [
+    {
+     "file": "sfx/type_key_01.wav",
+     "dur_s": 0.074,
+     "file_lufs_m": -20.0,
+     "file_tp_dbtp": -3.62,
+     "sync_offset_s": -0.0,
+     "sync_offset_frames": 0,
+     "file_gain_db_raw_vo": -11.74,
+     "ab_J": 2.29
+    },
+    {
+     "file": "sfx/type_key_02.wav",
+     "dur_s": 0.075,
+     "file_lufs_m": -20.0,
+     "file_tp_dbtp": -4.02,
+     "sync_offset_s": -0.0,
+     "sync_offset_frames": 0,
+     "file_gain_db_raw_vo": -11.74,
+     "ab_J": 3.91
+    },
+    {
+     "file": "sfx/type_key_03.wav",
+     "dur_s": 0.075,
+     "file_lufs_m": -20.0,
+     "file_tp_dbtp": -4.63,
+     "sync_offset_s": -0.0,
+     "sync_offset_frames": 0,
+     "file_gain_db_raw_vo": -11.74,
+     "ab_J": 5.36
+    },
+    {
+     "file": "sfx/type_key_04.wav",
+     "dur_s": 0.075,
+     "file_lufs_m": -20.0,
+     "file_tp_dbtp": -3.67,
+     "sync_offset_s": -0.0,
+     "sync_offset_frames": 0,
+     "file_gain_db_raw_vo": -11.74,
+     "ab_J": 2.03
+    },
+    {
+     "file": "sfx/type_key_05.wav",
+     "dur_s": 0.073,
+     "file_lufs_m": -20.0,
+     "file_tp_dbtp": -3.93,
+     "sync_offset_s": -0.0,
+     "sync_offset_frames": 0,
+     "file_gain_db_raw_vo": -11.74,
+     "ab_J": 3.58
+    },
+    {
+     "file": "sfx/type_key_06.wav",
+     "dur_s": 0.073,
+     "file_lufs_m": -20.0,
+     "file_tp_dbtp": -4.16,
+     "sync_offset_s": -0.0,
+     "sync_offset_frames": 0,
+     "file_gain_db_raw_vo": -11.74,
+     "ab_J": 4.45
+    },
+    {
+     "file": "sfx/type_key_07.wav",
+     "dur_s": 0.074,
+     "file_lufs_m": -20.0,
+     "file_tp_dbtp": -4.14,
+     "sync_offset_s": -0.0,
+     "sync_offset_frames": 0,
+     "file_gain_db_raw_vo": -11.74,
+     "ab_J": 4.26
+    },
+    {
+     "file": "sfx/type_key_08.wav",
+     "dur_s": 0.075,
+     "file_lufs_m": -20.0,
+     "file_tp_dbtp": -4.54,
+     "sync_offset_s": -0.0,
+     "sync_offset_frames": 0,
+     "file_gain_db_raw_vo": -11.74,
+     "ab_J": 5.24
+    }
+   ]
+  },
+  "ring_draw": {
+   "gain_db": -30.0,
+   "anchor": "first frame of the ring draw-on",
+   "ref_group": "ring_V3",
+   "note": "OPTIONAL and OFF by default: 0/10 reference rings had a measurable sound",
+   "enabled": false,
+   "files": [
+    {
+     "file": "sfx/ring_draw_01.wav",
+     "dur_s": 0.614,
+     "file_lufs_m": -20.0,
+     "file_tp_dbtp": -10.18,
+     "sync_offset_s": -0.125,
+     "sync_offset_frames": -4,
+     "file_gain_db_raw_vo": -34.44,
+     "ab_J": 11.11
+    }
+   ]
+  }
+ },
+ "silent_events": {
+  "label_pop": "0/12 Dashcam Vol.3 date/place/stat labels had a sound (median band rise <= 3 dB, inside VO sibilance); VV text pops are silent too",
+  "freeze": "0/10 freezes and punch-ins (V1, V2, V3) had a sound; the effect is carried by the music drop",
+  "look_here": "the V1 freeze + punch + ring beat (183.0-187.0) and the V3 freeze-circle (51.77) have no SFX; only the release flash gets white_flash_hit"
+ }
+}

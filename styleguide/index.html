@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FARRELL Style Guide</title>
+<link rel="stylesheet" href="/app.css">
+</head>
+<body>
+<header>
+  <div class="brand">FARRELL <span>STYLE GUIDE</span></div>
+  <nav id="tabs">
+    <button data-tab="guide" class="on">Guide</button>
+    <button data-tab="graphics">Motion graphics</button>
+    <button data-tab="rulebook">Rule book</button>
+    <button data-tab="learnings">Learnings</button>
+    <button data-tab="updates">Updates</button>
+  </nav>
+  <div id="meta" class="dim"></div>
+</header>
+<div id="msg" hidden></div>
+<main>
+  <aside id="toc"></aside>
+  <section id="view"></section>
+</main>
+<footer>
+  <textarea id="note" rows="2" placeholder="Note for Claude: what to improve, fix or learn. Ctrl+Enter = Update"></textarea>
+  <button id="go">Update</button>
+  <div id="run" class="dim"></div>
+</footer>
+<div id="player" hidden>
+  <div class="box">
+    <video id="vid" muted playsinline></video>
+    <img id="pimg" alt="" hidden>
+    <div class="row"><span id="plabel"></span><button id="pmute">Sound off</button><button id="pclose">Close (Esc)</button></div>
+  </div>
+</div>
+<dialog id="form">
+  <form method="dialog" onsubmit="return false">
+    <h3 id="fhead">New rule</h3>
+    <label>Title<input id="ftitle" maxlength="80" placeholder="Short name, e.g. Crushed blacks" autocomplete="off"></label>
+    <label><span id="ftextlbl">What it is</span><textarea id="ftext" rows="4" placeholder="The rule: what to do and when, with numbers if you know them"></textarea></label>
+    <div id="fgfx" hidden>
+      <label>Use it when<textarea id="fuse" rows="3" placeholder="The situations it is for: what the narration or story is doing, e.g. the VO names a real place, route or distance"></textarea></label>
+      <label>Why<textarea id="fwhy" rows="2" placeholder="What it does for the viewer, e.g. shows the real page so the viewer trusts the claim"></textarea></label>
+      <label>Not when<textarea id="favoid" rows="2" placeholder="When to pick something else (optional)"></textarea></label>
+      <label>Narration does (situation)<input id="fsituation" list="fsits" maxlength="80" placeholder="Pick one, e.g. Name a place or move to a new place" autocomplete="off"></label>
+      <datalist id="fsits"></datalist>
+      <label>Fits Farrell<input id="ffit" maxlength="200" placeholder="yes / adapt: the change it needs / no: the rule it breaks" autocomplete="off"></label>
+      <label>Kind<input id="fkind" list="fkinds" maxlength="40" placeholder="Board tag, e.g. map" autocomplete="off"></label>
+      <datalist id="fkinds"><option>page-3d</option><option>comments</option><option>ui-typing</option><option>title-card</option><option>map</option><option>layout</option><option>glitch</option><option>text-card</option><option>censor</option><option>transition</option><option>other</option></datalist>
+    </div>
+    <div class="lbl">Examples: screenshots, videos or board clips that show it</div>
+    <div id="fdrop">Drop screenshots or videos here, paste one (Ctrl+V), or <button type="button" id="fbrowse">Browse…</button>
+      <input type="file" id="ffile" multiple accept="image/*,video/*,.mov,.m4v" hidden></div>
+    <div id="fchips"></div>
+    <details id="fclips"><summary>Add a clip from the Farrell board</summary>
+      <input id="fq" placeholder="Search: title, tag or video (e.g. v03 glitch)" autocomplete="off"><div id="fclist"></div></details>
+    <div class="row"><span id="fmsg" class="dim"></span>
+      <button type="button" id="fcancel">Cancel</button><button type="button" id="fsave">Save</button>
+      <button type="button" id="flearn" class="primary">Save &amp; learn</button></div>
+  </form>
+</dialog>
+<script src="/app.js"></script>
+</body>
+</html>

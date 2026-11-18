@@ -1,0 +1,3 @@
+real/: Pixabay (WM sfx2 catalog.json licences), resampled 48k stereo
+lvl1 agent 2026-10-26: static_1/3 car_engine_2/4 tires_gravel_1 impact_1/4 metal_clank_3/4 boom_2 camcorder_beep_1 vhs_1/2 mouse_click_1 footsteps_gravel_2 wind_gust_1 riser_2 reverse_swell_1 sub_drop_2 page_turn_1 marker_1 projector_1 from WM sfx2 (Pixabay), 48k stereo, long ones trimmed
+rain_3/5/9/22.wav = trims of Pixabay rain_tent_3 (Rain on tent), WM sfx2; boom_2/4/5, impact_4, page_turn_2, paper_3 = WM sfx2 Pixabay

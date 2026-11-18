@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="lite-token" content="%%TOKEN%%" />
+    <title>%%NAME%%</title>
+    <link rel="icon" href="/moon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <header class="top">
+      <div class="brand"><img src="/moon.svg" alt="" /><span>Final Phase <em>Lite</em></span></div>
+      <div class="where">
+        <span class="folder" id="folder"></span>
+        <span class="sep">/</span>
+        <select id="sessionPick" title="Which Claude Code session to follow"></select>
+      </div>
+      <div class="spacer"></div>
+      <div id="statusPill" class="pill"></div>
+      <button id="renderBtn" class="btn primary" title="Ask the AI to render the final video">Render</button>
+    </header>
+
+    <main class="grid">
+      <section class="panel activity">
+        <div class="panel-head"><h2 id="activityTitle">What the AI is doing</h2></div>
+        <div id="nowCard" class="now"></div>
+        <div id="todos" class="todos"></div>
+        <ol id="steps" class="steps"></ol>
+        <div id="usage" class="usage"></div>
+      </section>
+
+      <section class="stage">
+        <div class="viewer-head">
+          <div class="sources" id="sources"></div>
+          <div class="spacer"></div>
+          <button id="muteBtn" class="icon-btn" title="Sound on or off"></button>
+          <button id="reloadBtn" class="icon-btn" title="Reload the preview"></button>
+        </div>
+        <div id="viewer" class="viewer">
+          <div id="flash" class="flash"></div>
+          <div id="empty" class="empty"></div>
+        </div>
+        <div class="transport">
+          <button id="playBtn" class="icon-btn play" title="Play or pause (space)"></button>
+          <button id="backBtn" class="icon-btn" title="One frame back (←)"></button>
+          <button id="fwdBtn" class="icon-btn" title="One frame forward (→)"></button>
+          <span id="timeText" class="time">0:00.0</span>
+          <span class="spacer"></span>
+          <span class="hint">Pause, circle what you mean, then say what to change.</span>
+        </div>
+        <div id="timeline" class="timeline">
+          <div id="ruler" class="ruler"></div>
+          <div id="lanes" class="lanes"></div>
+          <div id="pins" class="pins"></div>
+          <div id="playhead" class="playhead"><i></i></div>
+        </div>
+      </section>
+
+      <section class="panel chat">
+        <div class="panel-head">
+          <h2>Chat</h2>
+          <button id="newChatBtn" class="link" title="Start a new session with your next message">New chat</button>
+        </div>
+        <div id="aiRow" class="ai-row"></div>
+        <div id="messages" class="messages"></div>
+        <form id="composer" class="composer">
+          <div id="atChip" class="at-chip"></div>
+          <textarea id="input" rows="3" placeholder="What should change here?"></textarea>
+          <div class="composer-row">
+            <span id="composerHint" class="hint"></span>
+            <button id="stopBtn" type="button" class="btn ghost">Stop</button>
+            <button id="sendBtn" type="submit" class="btn primary">Send</button>
+          </div>
+        </form>
+      </section>
+    </main>
+    <div id="toast" class="toast"></div>
+    <script src="/app.js" type="module"></script>
+  </body>
+</html>

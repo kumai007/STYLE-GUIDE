@@ -1,0 +1,21 @@
+- [Feedback: 3-D = Three.js](feedback-3d-threejs.md) — Iceberg/OHF: every 3-D shot in Three.js (render_map3d.sh), never Blender
+- [User: 404 thread channel](user-channel-404-thread.md) — Ekam's channel, Farrell-style, perfection, style docs in GX_TEMPLATE_PACK/DOCS
+- [Project: Lost Games Part 2](project-lost-games-part2.md) — current 30-case video, asset paths, macOS/yt-dlp quirks
+- [Feedback: no verification passes](feedback-no-verification-passes.md) — do the work, spot-check once, short status
+- [Feedback: shot density](feedback-shot-density.md) — one picture per clause, no long holds; prototype a stretch before full case
+- [Project: Disturbing Games compilation](project-disturbing-games-compilation.md) — 3 channel videos → 37 cases, China last, pipeline in compilation/
+- [Feedback: brand-safe on-screen text](feedback-brand-safety-text.md) — OCR + blur flaggable words on pages; never type them
+- [Feedback: intro style](feedback-intro-style.md) — no flash montages/glitch SFX; eased 3-D flight synced to music approved
+- [Feedback: SS variety & craft](feedback-ss-variety-craft.md) — many page treatments, 3D motion, clean highlights, real SFX; every case at case-1 level
+- [Feedback: no padding/text templates](feedback-no-padding-templates.md) — real material only; no pull-quote/number/date cards, no filler transitions; credit-efficient
+- [Feedback: monetisation blur](feedback-monetisation-blur.md) — blur nudity/extreme violence/violent text post-render; blood ok
+- [Project: Iceberg niche (separate)](project-iceberg-separate.md) — caught-on-camera iceberg videos in ~/Downloads/Iceberg; keep apart from 404
+- [Feedback: Iceberg kit rules](feedback-iceberg-kit-rules.md) — owner sent 404_KIT; build Iceberg cases only from its approved recipe
+- [Feedback: Iceberg download permission](feedback-iceberg-download-permission.md) — may download case footage (small channels only, never licensed/big YT); vary templates
+- [Feedback: Iceberg variety + full power](feedback-iceberg-variety-full-power.md) — case 2 approved; full Tornado + ND; new devices per case, Blender/3-D ok, keep style + VO:raw ratio
+- [Feedback: Iceberg raw audio clean](feedback-iceberg-raw-audio-clean.md) — rawclean.py strips music from raws; follow cut-sheet raws; blur graphic raws
+- [Project: Iceberg handoff](project-iceberg-handoff.md) — READ ~/Downloads/Iceberg/HANDOFF.md first; overnight 3-video build state
+- [Iceberg longer raws](feedback-iceberg-longer-raws.md) — main raw 10–25 s showing the incident, no 3 s flashes
+- [Feedback: real screenshots, light red](feedback-iceberg-real-screenshots.md) — real article SS with new treatment, red only on key phrase, real photos ok, raw important
+- [Feedback: YouTube cookies](feedback-youtube-cookies.md) — owner allowed Chrome cookies for yt-dlp; cookies.txt expired
+- [Feedback: finals to Downloads](feedback-finals-delivery.md) — no phone copies; full-quality finals in ~/Downloads/OldHeritage_Finals/

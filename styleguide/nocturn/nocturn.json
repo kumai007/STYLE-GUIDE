@@ -1,0 +1,3584 @@
+{
+ "version": 1,
+ "rev": 3,
+ "saved": "2026-11-12T13:53:49",
+ "categories": [
+  {
+   "id": "overall-aesthetic",
+   "name": "Overall aesthetic",
+   "summary": "Found internet footage is the film; graphics are thin proof around it. Dark grounds, vignettes, VHS damage and red accents make every built shot look recovered from a hard drive, not designed.",
+   "rules": [
+    {
+     "id": "r-5fa30ae2",
+     "title": "Raw is the base",
+     "text": "Raw found footage is the base: 42-92% of runtime, median 72% across 15 videos. Graphics median 28%; only v10 is graphics-majority (58%).",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbc09b254383",
+       "sf_in": 14741,
+       "sf_out": 19540,
+       "label": "v06 · Blood trail exploration"
+      },
+      {
+       "clip": "c1a1cbc4c92d804d",
+       "sf_in": 35201,
+       "sf_out": 41820,
+       "label": "v04 · Josh's camp footage"
+      }
+     ]
+    },
+    {
+     "id": "r-8bd9ae4d",
+     "title": "Graphics have a job",
+     "text": "Every graphic does one job: prove (page), date (card), locate (map) or point (callout). No decorative graphic.",
+     "source": "refs",
+     "evidence": []
+    },
+    {
+     "id": "r-b994df19",
+     "title": "Many short graphic clips",
+     "text": "Many clips, few seconds: 34-126 clips per video (1144 over 15). Motion-graphic clips average about 7.8 s (est., range 4.7-13.1 s per video).",
+     "source": "refs",
+     "evidence": []
+    },
+    {
+     "id": "r-a16d5a26",
+     "title": "Dark ground",
+     "text": "Built shots sit on dark ground: black, a dimmed or blurred copy of the footage, or a dark page, always with a vignette (est.).",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbc4aef6c537",
+       "sf_in": 17122,
+       "sf_out": 17235,
+       "label": "v01 · Mother portrait, name caption"
+      },
+      {
+       "clip": "c1a1cbc2b9a14486",
+       "sf_in": 3416,
+       "sf_out": 3664,
+       "label": "v12 · Group photo, blurred bg push"
+      }
+     ]
+    },
+    {
+     "id": "r-631c4733",
+     "title": "Analog damage",
+     "text": "Analog damage is the house texture: VHS grain and scan lines on cards, static bursts, RGB tears, PLAY tags, pixel fonts. RGB tear in 12 of 15 videos, static in 5.",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbc055b55715",
+       "sf_in": 1340,
+       "sf_out": 1465,
+       "label": "v03 · JULY 2022 date card"
+      },
+      {
+       "clip": "c1a1cbc0bf00b746",
+       "sf_in": 13833,
+       "sf_out": 13909,
+       "label": "v10 · VCR PLAY screen"
+      }
+     ]
+    },
+    {
+     "id": "r-92c3482f",
+     "title": "Native aspect",
+     "text": "Raw clips keep their native aspect (9:16 phone, 4:3 tape) on a blurred enlarged copy or dark pillarbox with vignette (6 of 15).",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbc633a70241",
+       "sf_in": 24812,
+       "sf_out": 28217,
+       "label": "v01 · Vertical phone video, pillarbox"
+      },
+      {
+       "clip": "c1a1cbc01994d732",
+       "sf_in": 1018,
+       "sf_out": 1187,
+       "label": "v15 · Vertical doorbell, blur sides"
+      }
+     ]
+    },
+    {
+     "id": "r-a6a105f2",
+     "title": "Keep source overlays",
+     "text": "The source's own overlays stay: bodycam timestamps, CCTV labels, stream chat, LIVE tags, burned camera dates (est.).",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbc4aef6696b",
+       "sf_in": 15636,
+       "sf_out": 16858,
+       "label": "v01 · Bodycam, river rescue"
+      },
+      {
+       "clip": "c1a1cbbfe7a0d964",
+       "sf_in": 0,
+       "sf_out": 918,
+       "label": "v11 · Livestream cold open"
+      }
+     ]
+    },
+    {
+     "id": "r-e3494518",
+     "title": "Same blocks, new arrangement",
+     "text": "Each video picks its own look for cards and captions (pixel font, serif or bold sans); the building blocks repeat, the intro never does. No two of 15 intros share a structure.",
+     "source": "refs",
+     "evidence": []
+    }
+   ]
+  },
+  {
+   "id": "mood-emotion",
+   "name": "Mood and emotion",
+   "summary": "Cold dread from real footage. The edit lets the clip scare, then proves it is real; damage effects and colour drains mark the moments where something goes wrong.",
+   "rules": [
+    {
+     "id": "r-cc982aee",
+     "title": "Cold open",
+     "text": "Open cold on the strongest raw moment: first frame is raw footage in 11 of 15 videos; no logo or title at 0:00 in any.",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbbf95856bb5",
+       "sf_in": 0,
+       "sf_out": 334,
+       "label": "v13 · Cold open at the door"
+      },
+      {
+       "clip": "c1a1cbc0199427fd",
+       "sf_in": 0,
+       "sf_out": 301,
+       "label": "v15 · Cold open, fade up"
+      }
+     ]
+    },
+    {
+     "id": "r-8fd749f8",
+     "title": "Loud intro",
+     "text": "The intro hits harder: intro loudness is usually 1-3 dB above the whole video (v05 -10.6 vs -13.2 LUFS; v06 -10.9 vs -13.2).",
+     "source": "refs",
+     "evidence": []
+    },
+    {
+     "id": "r-cc6a7241",
+     "title": "Facts, no jokes",
+     "text": "Tone is documentary, not jokey: graphics state facts (date, place, name, source) and never comment on the scare (est.).",
+     "source": "refs",
+     "evidence": []
+    },
+    {
+     "id": "r-d6e7f3b3",
+     "title": "Colour drain before disaster",
+     "text": "Drain colour to black and white with a vignette, or show a camcorder STOP icon, at the moment before a disaster or death (6 of 15).",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbc2b9a16bb1",
+       "sf_in": 1621,
+       "sf_out": 1690,
+       "label": "v12 · B&W STOP overlay"
+      },
+      {
+       "clip": "c1a1cbc0e924e2c0",
+       "sf_in": 18833,
+       "sf_out": 19223,
+       "label": "v08 · Storm's last footage"
+      }
+     ]
+    },
+    {
+     "id": "r-78c06f7d",
+     "title": "Quiet human close",
+     "text": "Close a death or loss on a quiet human photo with a colour drain or fade, not a graphic (3 of 15: v08, v11, v12).",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbc4f223e98f",
+       "sf_in": 26540,
+       "sf_out": 26823,
+       "label": "v11 · Brittany photo, fade to grey"
+      },
+      {
+       "clip": "c1a1cbc51b03c111",
+       "sf_in": 28572,
+       "sf_out": 28795,
+       "label": "v11 · Four cases grid"
+      }
+     ]
+    },
+    {
+     "id": "r-02555955",
+     "title": "Tease the next case",
+     "text": "Keep tension across cases: 5-30 s of the next case's footage plays before the dip to black (5 of 15).",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbc3c6ea79a1",
+       "sf_in": 13981,
+       "sf_out": 14127,
+       "label": "v01 · Next-case preview in red frame"
+      }
+     ]
+    },
+    {
+     "id": "r-9b1d6aab",
+     "title": "Damage at the scare",
+     "text": "Make the recovered footage feel uncanny with damage at the scare: RGB tear (8-13 frames) or static burst (0.1-1 s), not a jump-scare sting on every cut.",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbc1061e9f00",
+       "sf_in": 643,
+       "sf_out": 650,
+       "label": "v09 · RGB glitch sting"
+      },
+      {
+       "clip": "c1a1cbc055b52bdd",
+       "sf_in": 1466,
+       "sf_out": 1470,
+       "label": "v03 · VHS static sting"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "color-palette",
+   "name": "Color palette",
+   "summary": "Near-black grounds with white text and red as the one strong accent. Highlights add yellow or blue; subtitles are colour-coded by speaker. Footage keeps its own colour unless it drains to black and white.",
+   "rules": [
+    {
+     "id": "r-7d061cbb",
+     "title": "Red accent",
+     "text": "Red is the accent: frames, arrows, circles, node lines, highlight bars, the logo and the red last word or second line of a title.",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbc01994a52e",
+       "sf_in": 596,
+       "sf_out": 814,
+       "label": "v15 · Dresser, then living room"
+      },
+      {
+       "clip": "c1a1cbbf9585e089",
+       "sf_in": 335,
+       "sf_out": 592,
+       "label": "v13 · Red frame to clip wall"
+      },
+      {
+       "clip": "c1a1cbbfd3aa4300",
+       "sf_in": 1060,
+       "sf_out": 1179,
+       "label": "v08 · Title over clip mosaic"
+      }
+     ]
+    },
+    {
+     "id": "r-10a2afba",
+     "title": "White on dark",
+     "text": "Text is white on dark: date cards, name tags, time-jump titles and quote cards.",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbbffaa6c14b",
+       "sf_in": 1576,
+       "sf_out": 1695,
+       "label": "v05 · Date card Aug 2nd"
+      },
+      {
+       "clip": "c1a1cbc01994aad1",
+       "sf_in": 1870,
+       "sf_out": 2091,
+       "label": "v15 · 5 DAYS EARLIER"
+      }
+     ]
+    },
+    {
+     "id": "r-fb59778c",
+     "title": "Highlight colours",
+     "text": "Highlight the line the voice reads with a yellow, red or blue sweep (12 of 15).",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbc58fe12cf3",
+       "sf_in": 19320,
+       "sf_out": 19577,
+       "label": "v09 · Article, yellow marker"
+      },
+      {
+       "clip": "c1a1cbbf5def63a8",
+       "sf_in": 1760,
+       "sf_out": 1813,
+       "label": "v14 · IFLScience article, highlight"
+      },
+      {
+       "clip": "c1a1cbc2b9a1cd03",
+       "sf_in": 3820,
+       "sf_out": 4361,
+       "label": "v12 · YouTube comment, marker swipes"
+      }
+     ]
+    },
+    {
+     "id": "r-2172a051",
+     "title": "Speaker colours",
+     "text": "Subtitles on raw are coloured by speaker: white, blue, yellow; red for sounds or an unseen voice (12 of 15 burn subtitles).",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbc1ad9944ff",
+       "sf_in": 24672,
+       "sf_out": 26797,
+       "label": "v03 · Gunman confrontation, red subtitles"
+      },
+      {
+       "clip": "c1a1cbbf9585c4a6",
+       "sf_in": 3716,
+       "sf_out": 4021,
+       "label": "v13 · 911 call captions on footage"
+      }
+     ]
+    },
+    {
+     "id": "r-a961d779",
+     "title": "Call colours",
+     "text": "911 call waveform: red glow, white caller lines, blue or cyan operator lines (4 of 15).",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbc4aef6dc9b",
+       "sf_in": 14378,
+       "sf_out": 15635,
+       "label": "v01 · Aerial map, 911 call waveform"
+      },
+      {
+       "clip": "c1a1cbc58fe15718",
+       "sf_in": 19955,
+       "sf_out": 20535,
+       "label": "v09 · 911 audio waveform"
+      }
+     ]
+    },
+    {
+     "id": "r-2f2cb9d7",
+     "title": "Page tint",
+     "text": "Pages may take a colour tint on entry (v04 Reddit pages: green-pink-red tint).",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbc037764cec",
+       "sf_in": 1859,
+       "sf_out": 1893,
+       "label": "v04 · Reddit bridge writing post"
+      }
+     ]
+    },
+    {
+     "id": "r-91596094",
+     "title": "Dark red ground",
+     "text": "Time-jump and quote cards can sit on a dark red vignette (v05 '2 Years Earlier...').",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbbffaa6afc8",
+       "sf_in": 154,
+       "sf_out": 225,
+       "label": "v05 · 2 Years Earlier title"
+      }
+     ]
+    },
+    {
+     "id": "r-eea72e58",
+     "title": "VCR blue",
+     "text": "VCR PLAY card is the blue VCR screen with white PLAY, SP and timecode (v10).",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbc0bf00b746",
+       "sf_in": 13833,
+       "sf_out": 13909,
+       "label": "v10 · VCR PLAY screen"
+      }
+     ]
+    },
+    {
+     "id": "r-00095120",
+     "title": "Leave raw colour",
+     "text": "Raw colour is not graded to a house look; it changes only for a black-and-white drain or a VHS grade on a zoom (est.).",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbbf630e8e3a",
+       "sf_in": 602,
+       "sf_out": 713,
+       "label": "v01 · Zoom on woman, VHS grade"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "lighting",
+   "name": "Lighting",
+   "summary": "There is no lighting to set: the footage is what it is, mostly night, torch, night-vision and CCTV. The edit controls light only on built shots, with vignettes, glow and dimming.",
+   "rules": [
+    {
+     "id": "r-02a2997a",
+     "title": "Dark sources stay dark",
+     "text": "Source footage is mostly dark: night torch, infrared night vision, CCTV, doorbell cams. It is not brightened (est.).",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbc055b5e8a9",
+       "sf_in": 6086,
+       "sf_out": 9773,
+       "label": "v03 · Lights off, hiding"
+      },
+      {
+       "clip": "c1a1cbbf95856bb5",
+       "sf_in": 0,
+       "sf_out": 334,
+       "label": "v13 · Cold open at the door"
+      }
+     ]
+    },
+    {
+     "id": "r-d44aa15e",
+     "title": "Dim under text",
+     "text": "Dim or blur the footage before text goes on it (quote or text on dimmed footage in 7 of 15).",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbc1889d1a13",
+       "sf_in": 18443,
+       "sf_out": 18544,
+       "label": "v11 · Typed quote on dim stream"
+      },
+      {
+       "clip": "c1a1cbbfd3aae944",
+       "sf_in": 10482,
+       "sf_out": 10975,
+       "label": "v08 · Audio waveform with captions"
+      }
+     ]
+    },
+    {
+     "id": "r-7d506bc2",
+     "title": "Text glow",
+     "text": "Titles, dates and the logo glow softly (glow date cards in v04, v05, v15).",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbc03776e960",
+       "sf_in": 1979,
+       "sf_out": 2157,
+       "label": "v04 · Date card: November 2021"
+      },
+      {
+       "clip": "c1a1cbbffaa67850",
+       "sf_in": 1476,
+       "sf_out": 1575,
+       "label": "v05 · NOCTURN logo sting"
+      }
+     ]
+    },
+    {
+     "id": "r-ac3edf54",
+     "title": "Vignette",
+     "text": "Every built shot gets a vignette: dark edges, light centre (est.).",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbbffaa68582",
+       "sf_in": 226,
+       "sf_out": 331,
+       "label": "v05 · Facebook post, vignette"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "camera-angles",
+   "name": "Camera angles",
+   "summary": "Angles come from whoever filmed it: bodycam, CCTV corner, doorbell, selfie, stream cam. The edit adds only the views of pages and maps.",
+   "rules": [
+    {
+     "id": "r-f5d15f48",
+     "title": "Source angle",
+     "text": "Use the source angle as it is: bodycam, high CCTV corner, doorbell, selfie stream, first-person POV. No staged angles.",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbc4aef6696b",
+       "sf_in": 15636,
+       "sf_out": 16858,
+       "label": "v01 · Bodycam, river rescue"
+      },
+      {
+       "clip": "c1a1cbc0199427fd",
+       "sf_in": 0,
+       "sf_out": 301,
+       "label": "v15 · Cold open, fade up"
+      },
+      {
+       "clip": "c1a1cbbf5dee7121",
+       "sf_in": 0,
+       "sf_out": 53,
+       "label": "v14 · Raw POV, fade up"
+      }
+     ]
+    },
+    {
+     "id": "r-a5811fe4",
+     "title": "Second angle as PIP",
+     "text": "When a second camera exists, show it as a PIP inset rather than cutting away (v01 bodycam inset, v07 corner inset).",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbbf630efd4f",
+       "sf_in": 873,
+       "sf_out": 1339,
+       "label": "v01 · Bodycam inset over witness footage"
+      },
+      {
+       "clip": "c1a1cbc184cca348",
+       "sf_in": 12626,
+       "sf_out": 12901,
+       "label": "v07 · Inset camera view"
+      }
+     ]
+    },
+    {
+     "id": "r-905d147f",
+     "title": "Map views",
+     "text": "Maps are top-down satellite or tilted 3D aerial or tilt-shift; Street View for the street level.",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbc00f6dc6dc",
+       "sf_in": 1384,
+       "sf_out": 1532,
+       "label": "v02 · Aerial Cleveland, tilt-shift"
+      },
+      {
+       "clip": "c1a1cbc236c74760",
+       "sf_in": 23322,
+       "sf_out": 23487,
+       "label": "v05 · Street View shop history"
+      }
+     ]
+    },
+    {
+     "id": "r-ac956cea",
+     "title": "Page angle",
+     "text": "Pages are shown on a 3D tilt or flat with blur and vignette, never as a plain full-screen screenshot (est.).",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbbffaa62b21",
+       "sf_in": 1696,
+       "sf_out": 1774,
+       "label": "v05 · Facebook opening post"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "camera-movement",
+   "name": "Camera movement",
+   "summary": "Raw footage keeps its own handheld motion. Every built shot moves a little: slow push on pages, photos and maps; punch-ins and strobe cuts point at one detail.",
+   "rules": [
+    {
+     "id": "r-900b9422",
+     "title": "Raw motion only",
+     "text": "Raw keeps its own motion; whip and zoom blur appear only inside raw footage, not as added transitions.",
+     "source": "refs",
+     "evidence": []
+    },
+    {
+     "id": "r-aa6ee8ac",
+     "title": "Slow push",
+     "text": "Pages, photos and maps never sit still: slow push or slow drift (est.).",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbc2b9a14486",
+       "sf_in": 3416,
+       "sf_out": 3664,
+       "label": "v12 · Group photo, blurred bg push"
+      },
+      {
+       "clip": "c1a1cbc00c20d9e2",
+       "sf_in": 9310,
+       "sf_out": 9682,
+       "label": "v10 · Satellite map, slow push"
+      }
+     ]
+    },
+    {
+     "id": "r-c72d0f59",
+     "title": "Punch-in",
+     "text": "Punch-in zoom on one detail, 1-4 s (5 of 15).",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbc0da9698f8",
+       "sf_in": 16867,
+       "sf_out": 16990,
+       "label": "v13 · Punch-in on his face"
+      },
+      {
+       "clip": "c1a1cbc0f2447615",
+       "sf_in": 14544,
+       "sf_out": 14657,
+       "label": "v04 · Zoom on logbook line"
+      }
+     ]
+    },
+    {
+     "id": "r-b0336768",
+     "title": "Strobe on words",
+     "text": "Strobe or word-synced cuts: 2-10 frame flashes, about one per narrated word (v04); repeated push per word held 3-5 frames (v06).",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbc1a3a1eb00",
+       "sf_in": 23142,
+       "sf_out": 23214,
+       "label": "v04 · Word-synced strobe cuts"
+      },
+      {
+       "clip": "c1a1cbc009ffe986",
+       "sf_in": 13516,
+       "sf_out": 13768,
+       "label": "v06 · Word-by-word jump zoom"
+      }
+     ]
+    },
+    {
+     "id": "r-2818539b",
+     "title": "Grid move",
+     "text": "Grids and walls move: shrink, pan, then zoom into the chosen cell.",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbbf9585e089",
+       "sf_in": 335,
+       "sf_out": 592,
+       "label": "v13 · Red frame to clip wall"
+      },
+      {
+       "clip": "c1a1cbc050d2620c",
+       "sf_in": 13028,
+       "sf_out": 13349,
+       "label": "v11 · Case grid, pan to Case 2"
+      }
+     ]
+    },
+    {
+     "id": "r-05c4a19f",
+     "title": "Map move",
+     "text": "Maps fly in Google-Earth style or drift over a tilt-shift aerial, 3-15 s.",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbc19438c5b4",
+       "sf_in": 13570,
+       "sf_out": 13944,
+       "label": "v14 · Google Earth runway, red arrow"
+      },
+      {
+       "clip": "c1a1cbc0e92430fd",
+       "sf_in": 17259,
+       "sf_out": 17682,
+       "label": "v08 · Satellite map, labels"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "shot-composition",
+   "name": "Shot composition",
+   "summary": "Subject centred; everything that is not the footage is small and kept out of its way. Pages float on blurred backgrounds; vertical clips sit on their own blurred copy.",
+   "rules": [
+    {
+     "id": "r-70603159",
+     "title": "Caption position",
+     "text": "Captions sit bottom centre, about y 91% of frame, about 27 px tall on 720p, one line (v03, v04).",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbc055b59526",
+       "sf_in": 0,
+       "sf_out": 1339,
+       "label": "v03 · Cold open teaser"
+      },
+      {
+       "clip": "c1a1cbc0377678d5",
+       "sf_in": 0,
+       "sf_out": 1607,
+       "label": "v04 · Case 1 hook footage"
+      }
+     ]
+    },
+    {
+     "id": "r-b529e26a",
+     "title": "Name tag position",
+     "text": "Name tags are small and placed on the person: on the chest, beside the head, or under a small framed portrait.",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbc055b5e86d",
+       "sf_in": 1471,
+       "sf_out": 1729,
+       "label": "v03 · Moe intro, name tag"
+      },
+      {
+       "clip": "c1a1cbc4cee95edc",
+       "sf_in": 10685,
+       "sf_out": 10967,
+       "label": "v12 · Steve Stephens, name tag"
+      }
+     ]
+    },
+    {
+     "id": "r-aa22b151",
+     "title": "Corner furniture",
+     "text": "Channel pop-up sits top-centre; corner date stamp bottom-left; PLAY tag top-left; PIP in a corner.",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbc014d272df",
+       "sf_in": 44,
+       "sf_out": 201,
+       "label": "v07 · Live stream, channel pop-up"
+      },
+      {
+       "clip": "c1a1cbc00f6c1942",
+       "sf_in": 0,
+       "sf_out": 179,
+       "label": "v02 · Vlog frame, date, channel pop-up"
+      },
+      {
+       "clip": "c1a1cbc118efcf93",
+       "sf_in": 23045,
+       "sf_out": 23200,
+       "label": "v06 · PLAY camcorder B/W"
+      }
+     ]
+    },
+    {
+     "id": "r-3162f6dd",
+     "title": "Page placement",
+     "text": "Pages are centred or tilted with a blurred, vignetted background.",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbc58fe12cf3",
+       "sf_in": 19320,
+       "sf_out": 19577,
+       "label": "v09 · Article, yellow marker"
+      }
+     ]
+    },
+    {
+     "id": "r-fe7932c1",
+     "title": "Blurred copy fill",
+     "text": "Vertical or 4:3 footage and photos sit on a blurred enlarged copy of themselves, not black bars (6 of 15).",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbc1e7dc2f7b",
+       "sf_in": 21599,
+       "sf_out": 21814,
+       "label": "v08 · Couple photo, blurred copy"
+      },
+      {
+       "clip": "c1a1cbc01994d732",
+       "sf_in": 1018,
+       "sf_out": 1187,
+       "label": "v15 · Vertical doorbell, blur sides"
+      }
+     ]
+    },
+    {
+     "id": "r-5e07193c",
+     "title": "Callout on target",
+     "text": "Callouts sit on the detail itself (arrow onto the sleeper, circle round the knife), never in a separate panel.",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbc091117d92",
+       "sf_in": 13368,
+       "sf_out": 13467,
+       "label": "v13 · Woman with knife, red tag"
+      }
+     ]
+    },
+    {
+     "id": "r-81c3ea15",
+     "title": "Grid layout",
+     "text": "Grids hold 4-10 cells, each in a thin red frame, numbered (v13 1-10, v14 1-6, v11 CASE 1-4).",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbbf5defaa6d",
+       "sf_in": 1123,
+       "sf_out": 1339,
+       "label": "v14 · Numbered preview grid"
+      },
+      {
+       "clip": "c1a1cbc51b03c111",
+       "sf_in": 28572,
+       "sf_out": 28795,
+       "label": "v11 · Four cases grid"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "editing-rhythm",
+   "name": "Editing rhythm",
+   "summary": "Long raw runs, short graphic bridges. Scene detection gives a median of 12 s per cut over the whole video and 8.2 s in the intro; raw clips run 10-60 s while pages and cards take 2-10 s.",
+   "rules": [
+    {
+     "id": "r-1973e192",
+     "title": "Shot length",
+     "text": "Average shot per detected cut: median 12 s (6.6 s v10 to 19.2 s v06); intro median 8.2 s; after 90 s median 14 s. Detection undercounts.",
+     "source": "refs",
+     "evidence": []
+    },
+    {
+     "id": "r-0b657a70",
+     "title": "Long raw runs",
+     "text": "Raw clips run 10-60 s (to 170 s in v07); captions change instead of cuts.",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbc014d2e53d",
+       "sf_in": 376,
+       "sf_out": 1999,
+       "label": "v07 · Live stream footage, tight light"
+      },
+      {
+       "clip": "c1a1cbc09b254383",
+       "sf_in": 14741,
+       "sf_out": 19540,
+       "label": "v06 · Blood trail exploration"
+      }
+     ]
+    },
+    {
+     "id": "r-277ba7a7",
+     "title": "Short graphics",
+     "text": "Graphic and page stretches run 2-4 s per shot; a graphic lasts 2-10 s.",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbc03776eca3",
+       "sf_in": 1763,
+       "sf_out": 1814,
+       "label": "v04 · Reddit gas station post"
+      }
+     ]
+    },
+    {
+     "id": "r-1320ab59",
+     "title": "Proof breaks",
+     "text": "Inside a long raw run, a page or comments break comes every 30-60 s.",
+     "source": "refs",
+     "evidence": []
+    },
+    {
+     "id": "r-60fcef0b",
+     "title": "Headline flashes",
+     "text": "Headline flash run on a spoken list: 3-4 pages at 0.7-1.2 s each (v02, v11).",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbc00f6d2bae",
+       "sf_in": 1645,
+       "sf_out": 1661,
+       "label": "v02 · News headline flash 1"
+      },
+      {
+       "clip": "c1a1cbc1254beb18",
+       "sf_in": 17352,
+       "sf_out": 17471,
+       "label": "v11 · Headline montage, fast cuts"
+      }
+     ]
+    },
+    {
+     "id": "r-eb2d4241",
+     "title": "Intro cut rate",
+     "text": "Intro cut rate in the first 90 s: median 20 cuts at scene threshold 0.2 (range 3 in v06 to 125 in v09 flicker).",
+     "source": "refs",
+     "evidence": []
+    },
+    {
+     "id": "r-9c7758a5",
+     "title": "Glitch rate",
+     "text": "Glitch accents roughly once per 20-60 s (est.), never on every cut.",
+     "source": "refs",
+     "evidence": []
+    },
+    {
+     "id": "r-6be53c89",
+     "title": "Callback clip",
+     "text": "Return to the key clip whenever the story circles back (v05 CCTV clip returns 3 times; v15 same red label each return).",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbc4993ac394",
+       "sf_in": 24842,
+       "sf_out": 25792,
+       "label": "v05 · CCTV replay of the clip"
+      }
+     ]
+    },
+    {
+     "id": "r-b47a7287",
+     "title": "Narrated pace",
+     "text": "Ease into a narrated story faster: v05 intro ran one cut per 2.6 s (graphics and B-roll), later narration about 14 s per cut (est.).",
+     "source": "refs",
+     "evidence": []
+    }
+   ]
+  },
+  {
+   "id": "transitions",
+   "name": "Transitions",
+   "summary": "Hard cuts do the work (about 85-90% of joins). Pages dissolve in and out, cases are split by a dip to black, and short RGB tears or static bursts cover graphic edges and scares.",
+   "rules": [
+    {
+     "id": "r-683e2a77",
+     "title": "Hard cut default",
+     "text": "Hard cut for about 85-90% of all joins (est.).",
+     "source": "refs",
+     "evidence": []
+    },
+    {
+     "id": "r-1b3466e6",
+     "title": "Page dissolve",
+     "text": "Dissolve pages and cards in and out over 10-16 frames (0.3-0.5 s); never hard cut to a page (12 of 15).",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbc3c466c378",
+       "sf_in": 11352,
+       "sf_out": 11493,
+       "label": "v09 · YouTube page, explorer video"
+      },
+      {
+       "clip": "c1a1cbc037762a3e",
+       "sf_in": 1608,
+       "sf_out": 1723,
+       "label": "v04 · YouTube page of Phil's video"
+      }
+     ]
+    },
+    {
+     "id": "r-6c7f2db0",
+     "title": "RGB tear",
+     "text": "RGB tear 8-13 frames on a cut or graphic edge (12 of 15).",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbc1061e9f00",
+       "sf_in": 643,
+       "sf_out": 650,
+       "label": "v09 · RGB glitch sting"
+      },
+      {
+       "clip": "c1a1cbc40da721aa",
+       "sf_in": 4362,
+       "sf_out": 4380,
+       "label": "v12 · RGB tear sting"
+      }
+     ]
+    },
+    {
+     "id": "r-e3e41f97",
+     "title": "Black dip",
+     "text": "Dip to black between cases, 0.3-1.5 s (13 of 15). No wipes.",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbc4cee921a2",
+       "sf_in": 14502,
+       "sf_out": 14687,
+       "label": "v12 · Rifley stream, face blurred"
+      }
+     ]
+    },
+    {
+     "id": "r-4c96926d",
+     "title": "Static burst",
+     "text": "VHS static burst 0.1-1 s into a tape, card or new case (5 of 15).",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbc3a010bfcc",
+       "sf_in": 25049,
+       "sf_out": 25054,
+       "label": "v10 · VHS static burst"
+      },
+      {
+       "clip": "c1a1cbc009ff5a30",
+       "sf_in": 10933,
+       "sf_out": 11000,
+       "label": "v06 · VHS static burst"
+      }
+     ]
+    },
+    {
+     "id": "r-23f9ad82",
+     "title": "Flash rare",
+     "text": "White flash is rare (v07, v10); keep it for one reveal at most (est.).",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbc014d2ac1b",
+       "sf_in": 202,
+       "sf_out": 241,
+       "label": "v07 · Headline page, white flash"
+      }
+     ]
+    },
+    {
+     "id": "r-aaa4b3e8",
+     "title": "Fade out",
+     "text": "End the video with a fade to black on the last frame (8 of 15).",
+     "source": "refs",
+     "evidence": []
+    },
+    {
+     "id": "r-0c4ab07e",
+     "title": "One-off bridges",
+     "text": "Special bridges are one-offs: film-strip montage (v10, about 12 s), glass shatter into a crime (v15).",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbbe75bd5a38",
+       "sf_in": 1808,
+       "sf_out": 1944,
+       "label": "v10 · Film strip of clips"
+      },
+      {
+       "clip": "c1a1cbc019945d0c",
+       "sf_in": 2092,
+       "sf_out": 2259,
+       "label": "v15 · Glass shatter dissolve"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "typography",
+   "name": "Typography",
+   "summary": "Small, quiet type: white serif, VCR mono or pixel font, bold sans for a few dates. Exact fonts are not verified; one family per video. Red marks the second line or last word.",
+   "rules": [
+    {
+     "id": "r-bc37ba05",
+     "title": "Date card type",
+     "text": "Date cards use one of three looks: VCR pixel or mono on grain (v03, v04, v07), small white serif (v06, v09, v10), or bold sans typed word by word (v13, v14).",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbc055b55715",
+       "sf_in": 1340,
+       "sf_out": 1465,
+       "label": "v03 · JULY 2022 date card"
+      },
+      {
+       "clip": "c1a1cbc1061ff187",
+       "sf_in": 4220,
+       "sf_out": 4287,
+       "label": "v09 · September 2025 date card"
+      },
+      {
+       "clip": "c1a1cbbf9585b001",
+       "sf_in": 1144,
+       "sf_out": 1295,
+       "label": "v13 · Date card October 14th 2025"
+      }
+     ]
+    },
+    {
+     "id": "r-543782b8",
+     "title": "Name tag type",
+     "text": "Name tags: small serif or mono text, in a thin box or under a framed portrait.",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbc055b5e86d",
+       "sf_in": 1471,
+       "sf_out": 1729,
+       "label": "v03 · Moe intro, name tag"
+      },
+      {
+       "clip": "c1a1cbc1e4a73ac4",
+       "sf_in": 19610,
+       "sf_out": 19783,
+       "label": "v10 · Karla portrait, glitch in"
+      }
+     ]
+    },
+    {
+     "id": "r-cf9b43bf",
+     "title": "Caption chunks",
+     "text": "Captions follow phrases, 3-7 words, one line; they replace each other, no word-by-word pop.",
+     "source": "refs",
+     "evidence": []
+    },
+    {
+     "id": "r-7ccfdc92",
+     "title": "Caption style",
+     "text": "Caption style is set per video: uppercase VCR mono on a tight black box (v03, v04), small white sans with shadow (v01, v06, v09), larger white sans lower-case (v12, v13).",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbc0377678d5",
+       "sf_in": 0,
+       "sf_out": 1607,
+       "label": "v04 · Case 1 hook footage"
+      },
+      {
+       "clip": "c1a1cbbf95856bb5",
+       "sf_in": 0,
+       "sf_out": 334,
+       "label": "v13 · Cold open at the door"
+      }
+     ]
+    },
+    {
+     "id": "r-4aae2979",
+     "title": "Starred swears",
+     "text": "Star out profanity in captions ('F***').",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbc0377678d5",
+       "sf_in": 0,
+       "sf_out": 1607,
+       "label": "v04 · Case 1 hook footage"
+      }
+     ]
+    },
+    {
+     "id": "r-6e978111",
+     "title": "Audio tags",
+     "text": "Bad audio gets a short tag in place of a caption: '*Broken audio*'.",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbc00f6d3298",
+       "sf_in": 3673,
+       "sf_out": 5968,
+       "label": "v02 · Footage with audio captions"
+      }
+     ]
+    },
+    {
+     "id": "r-48b419cd",
+     "title": "Glow titles",
+     "text": "Titles glow: '2 Years Earlier...' in sentence case with an ellipsis, or uppercase '5 DAYS EARLIER'.",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbbffaa6afc8",
+       "sf_in": 154,
+       "sf_out": 225,
+       "label": "v05 · 2 Years Earlier title"
+      },
+      {
+       "clip": "c1a1cbc01994aad1",
+       "sf_in": 1870,
+       "sf_out": 2091,
+       "label": "v15 · 5 DAYS EARLIER"
+      }
+     ]
+    },
+    {
+     "id": "r-e25a3054",
+     "title": "Red second line",
+     "text": "Two-line titles put the second line or the last word in red ('THEIR FINAL MOMENTS').",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbbfd3aa4300",
+       "sf_in": 1060,
+       "sf_out": 1179,
+       "label": "v08 · Title over clip mosaic"
+      }
+     ]
+    },
+    {
+     "id": "r-36e44575",
+     "title": "Type-on",
+     "text": "Text types on word by word or line by line for dates and quotes (v13, v14, v11).",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbc0fc25f9bb",
+       "sf_in": 6080,
+       "sf_out": 6117,
+       "label": "v14 · Date title September 27th"
+      },
+      {
+       "clip": "c1a1cbc1f69902e8",
+       "sf_in": 19363,
+       "sf_out": 19500,
+       "label": "v11 · Typed quote 'Is she AFK?'"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "music-sound",
+   "name": "Music and sound",
+   "summary": "Loud, never silent. Median master -13.2 LUFS with the intro 1-3 dB hotter. A bed or room tone always runs; glitch zaps, static and impacts sit on the graphic hits. Music titles and exact SFX counts are not measured.",
+   "rules": [
+    {
+     "id": "r-65c62d5f",
+     "title": "Master loudness",
+     "text": "Master to about -13 LUFS integrated: median -13.2 (range -10.8 to -17.5); LRA median 8.6.",
+     "source": "refs",
+     "evidence": []
+    },
+    {
+     "id": "r-0decd36c",
+     "title": "Hot intro",
+     "text": "Intro 1-3 dB louder than the whole video.",
+     "source": "refs",
+     "evidence": []
+    },
+    {
+     "id": "r-8c9d1ebf",
+     "title": "No silence",
+     "text": "No true silence: silencedetect (-45 dB, 0.7 s) found 0 gaps in 9 videos and 1-2 in 6. Quietest 50 ms level median -30 dBFS in intros.",
+     "source": "refs",
+     "evidence": []
+    },
+    {
+     "id": "r-c61dac2a",
+     "title": "Bed level",
+     "text": "Under narration a music bed runs about 8-12 dB below the voice (est., v05). In raw compilations the bed is mostly ambience plus an occasional drone.",
+     "source": "refs",
+     "evidence": []
+    },
+    {
+     "id": "r-aa1e52e0",
+     "title": "No new cue per case",
+     "text": "A case starts with a card and a dip, not a new music piece (est.).",
+     "source": "refs",
+     "evidence": []
+    },
+    {
+     "id": "r-10eae745",
+     "title": "SFX on hits",
+     "text": "SFX sit on graphic hits: glitch zaps on RGB cuts, static bursts, impacts on logo and cards, risers into cards (est.). Real designed hits about 4-10 per minute (est.).",
+     "source": "refs",
+     "evidence": []
+    },
+    {
+     "id": "r-1f678f11",
+     "title": "Dip before card",
+     "text": "A short near-silent dip (about 4 s in v04) before a date card resets the ear.",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbc03776e960",
+       "sf_in": 1979,
+       "sf_out": 2157,
+       "label": "v04 · Date card: November 2021"
+      }
+     ]
+    },
+    {
+     "id": "r-182505a8",
+     "title": "Ticks",
+     "text": "Ticking under a narrated intro: about 12 even clock or heartbeat ticks in the first 9 s (v05).",
+     "source": "refs",
+     "evidence": []
+    },
+    {
+     "id": "r-76cdb98c",
+     "title": "Keep raw audio",
+     "text": "Raw audio is kept under captions; the clip's own sound carries the scare (est.).",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbc055b5e8a9",
+       "sf_in": 6086,
+       "sf_out": 9773,
+       "label": "v03 · Lights off, hiding"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "storytelling",
+   "name": "Storytelling",
+   "summary": "Compilations of 4-6 cases, or one long story. Each case: dip to black, date, source page or map, then a long raw run with proof breaks; close on a proof page or the last footage. No outro card.",
+   "rules": [
+    {
+     "id": "r-8a0ab6a3",
+     "title": "Case count",
+     "text": "A compilation runs 4-6 cases; single-story videos (v05, v09) follow the same beats with one case.",
+     "source": "refs",
+     "evidence": []
+    },
+    {
+     "id": "r-dbf17b75",
+     "title": "Case open",
+     "text": "Case open: dip to black, a date card within 3-5 s, then the source page or a map, then raw footage (9 of 15 this exact order).",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbc15013043d",
+       "sf_in": 5999,
+       "sf_out": 6152,
+       "label": "v01 · Date card on black"
+      },
+      {
+       "clip": "c1a1cbc03776e960",
+       "sf_in": 1979,
+       "sf_out": 2157,
+       "label": "v04 · Date card: November 2021"
+      }
+     ]
+    },
+    {
+     "id": "r-6daf932f",
+     "title": "Source-first open",
+     "text": "Or open on the source: the YouTube watch page or post, often with the date on it (8 of 15).",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbc055b5115a",
+       "sf_in": 13216,
+       "sf_out": 13435,
+       "label": "v03 · YouTube page, video plays"
+      },
+      {
+       "clip": "c1a1cbc1061ff187",
+       "sf_in": 4220,
+       "sf_out": 4287,
+       "label": "v09 · September 2025 date card"
+      }
+     ]
+    },
+    {
+     "id": "r-8d8b7f91",
+     "title": "Locate",
+     "text": "When a place is named, show a map or aerial, 3-15 s (13 of 15).",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbc0199419bc",
+       "sf_in": 1631,
+       "sf_out": 1869,
+       "label": "v15 · Aerial with photo pin"
+      }
+     ]
+    },
+    {
+     "id": "r-5dd6aec9",
+     "title": "Name",
+     "text": "When a person is named, show a name tag at first appearance (9 of 15). In v08 a name tag opens every case.",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbc4cee95edc",
+       "sf_in": 10685,
+       "sf_out": 10967,
+       "label": "v12 · Steve Stephens, name tag"
+      },
+      {
+       "clip": "c1a1cbc0e92422be",
+       "sf_in": 19224,
+       "sf_out": 19406,
+       "label": "v08 · Finn name tag, glitch"
+      }
+     ]
+    },
+    {
+     "id": "r-43371889",
+     "title": "Prove",
+     "text": "Every claim gets its source page for 3-10 s, then back to footage.",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbc58fe1b398",
+       "sf_in": 18004,
+       "sf_out": 18117,
+       "label": "v09 · Feud article, blue selection"
+      }
+     ]
+    },
+    {
+     "id": "r-cbcc9f2d",
+     "title": "Case close",
+     "text": "Case close: end on a proof page or comments (10 of 15) or let the last raw play out with the outcome in narration (7 of 15).",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbc620885f2f",
+       "sf_in": 32764,
+       "sf_out": 33001,
+       "label": "v05 · YouTube comments, red highlight"
+      }
+     ]
+    },
+    {
+     "id": "r-c606a402",
+     "title": "Grid teaser and recap",
+     "text": "A numbered grid works as the list teaser early and as the recap late (4 of 15).",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbbf5defaa6d",
+       "sf_in": 1123,
+       "sf_out": 1339,
+       "label": "v14 · Numbered preview grid"
+      },
+      {
+       "clip": "c1a1cbc0fc258239",
+       "sf_in": 5902,
+       "sf_out": 6046,
+       "label": "v14 · Numbered grid recap"
+      }
+     ]
+    },
+    {
+     "id": "r-ed9cc32e",
+     "title": "Bridge line",
+     "text": "Narration for case N+1 can start over its first footage while case N closes (v12, v13).",
+     "source": "refs",
+     "evidence": []
+    },
+    {
+     "id": "r-88452c28",
+     "title": "Analysis beat",
+     "text": "Add outside voices for analysis: reaction creators, comments, explanation cards (v05, v07).",
+     "source": "refs",
+     "evidence": [
+      {
+       "clip": "c1a1cbc4993a4e04",
+       "sf_in": 29973,
+       "sf_out": 30128,
+       "label": "v05 · Reaction video zoom"
+      },
+      {
+       "clip": "c1a1cbc25c8c1c9f",
+       "sf_in": 29651,
+       "sf_out": 29945,
+       "label": "v07 · Three explanations"
+      }
+     ]
+    },
+    {
+     "id": "r-426024d6",
+     "title": "No outro",
+     "text": "No outro card, subscribe screen or logo at the end of any of the 15 videos.",
+     "source": "refs",
+     "evidence": []
+    }
+   ]
+  }
+ ],
+ "rulebook": [
+  {
+   "id": "b-b5d4d572",
+   "title": "Cold open",
+   "text": "No logo and no title at 0:00. Open on the strongest raw footage (11 of 15 start on raw; none shows a logo at 0:00).",
+   "source": "refs",
+   "evidence": [
+    {
+     "clip": "c1a1cbbf95856bb5",
+     "sf_in": 0,
+     "sf_out": 334,
+     "label": "v13 · Cold open at the door"
+    },
+    {
+     "clip": "c1a1cbbe75bd139e",
+     "sf_in": 0,
+     "sf_out": 214,
+     "label": "v10 · Dylan tape, morning ritual"
+    }
+   ]
+  },
+  {
+   "id": "b-50d5f637",
+   "title": "Date every case",
+   "text": "State the date before each case: a date card or date title within 3-5 s of the black dip (13 of 15 videos).",
+   "source": "refs",
+   "evidence": [
+    {
+     "clip": "c1a1cbc055b55715",
+     "sf_in": 1340,
+     "sf_out": 1465,
+     "label": "v03 · JULY 2022 date card"
+    },
+    {
+     "clip": "c1a1cbbf9585b001",
+     "sf_in": 1144,
+     "sf_out": 1295,
+     "label": "v13 · Date card October 14th 2025"
+    }
+   ]
+  },
+  {
+   "id": "b-588b08a9",
+   "title": "Raw is the base",
+   "text": "Raw footage fills most of the runtime (median 72%, never under 42%). A graphic must prove, date, locate or point.",
+   "source": "refs"
+  },
+  {
+   "id": "b-a3590df0",
+   "title": "Native aspect",
+   "text": "Raw clips keep their native aspect. Vertical or 4:3 goes on a blurred enlarged copy or dark pillarbox; never stretch or crop to fill.",
+   "source": "refs",
+   "evidence": [
+    {
+     "clip": "c1a1cbc01994d732",
+     "sf_in": 1018,
+     "sf_out": 1187,
+     "label": "v15 · Vertical doorbell, blur sides"
+    }
+   ]
+  },
+  {
+   "id": "b-ebe8bc8c",
+   "title": "Caption raw speech",
+   "text": "Caption all raw speech (15 of 15): one line, 3-7 words, profanity starred.",
+   "source": "refs",
+   "evidence": [
+    {
+     "clip": "c1a1cbc0377678d5",
+     "sf_in": 0,
+     "sf_out": 1607,
+     "label": "v04 · Case 1 hook footage"
+    }
+   ]
+  },
+  {
+   "id": "b-73245a91",
+   "title": "No silence",
+   "text": "Never true silence. A music bed or room tone always runs (0 gaps of -45 dB/0.7 s in 9 of 15 videos).",
+   "source": "refs"
+  },
+  {
+   "id": "b-316b2ec5",
+   "title": "Master loudness",
+   "text": "Master about -13 LUFS integrated (median -13.2); intro 1-3 dB louder than the rest.",
+   "source": "refs"
+  },
+  {
+   "id": "b-dc5d7ec4",
+   "title": "Censor",
+   "text": "Blur, pixelate or scribble over bodies, gore and private faces (11 of 15).",
+   "source": "refs",
+   "evidence": [
+    {
+     "clip": "c1a1cbc1061ed573",
+     "sf_in": 3404,
+     "sf_out": 3802,
+     "label": "v09 · Cooler footage, push in"
+    },
+    {
+     "clip": "c1a1cbc09b2592d4",
+     "sf_in": 14663,
+     "sf_out": 14740,
+     "label": "v06 · Blurred blood floor"
+    }
+   ]
+  },
+  {
+   "id": "b-0d844bbf",
+   "title": "Hard cuts",
+   "text": "About 85-90% of joins are hard cuts. Dissolves, tears and dips are accents with a job.",
+   "source": "refs"
+  },
+  {
+   "id": "b-ca0bd480",
+   "title": "No hard cut to a page",
+   "text": "Pages dissolve in and out over 10-16 frames (12 of 15).",
+   "source": "refs"
+  },
+  {
+   "id": "b-2244a09d",
+   "title": "Show the source",
+   "text": "Every claim gets its source page on screen for 3-10 s, with the line the voice reads highlighted (pages 15 of 15, highlights 12 of 15).",
+   "source": "refs"
+  },
+  {
+   "id": "b-0cc38d58",
+   "title": "Black dip between cases",
+   "text": "Cases are split by a 0.3-1.5 s dip to black (13 of 15). No wipes.",
+   "source": "refs"
+  },
+  {
+   "id": "b-6d8b5654",
+   "title": "No outro",
+   "text": "No outro card, subscribe screen or end logo. End on proof or the last footage, then fade to black.",
+   "source": "refs"
+  },
+  {
+   "id": "b-971a795c",
+   "title": "Red means look here",
+   "text": "Callouts, frames, node lines and grids are red; red is the only strong accent colour.",
+   "source": "refs"
+  },
+  {
+   "id": "b-bf6bc91a",
+   "title": "Short glitches",
+   "text": "RGB tears stay 8-13 frames and static bursts 0.1-1 s; never a glitch on every cut.",
+   "source": "refs"
+  },
+  {
+   "id": "b-9ee52bce",
+   "text": "Follow styleguide/_shared/GENERIC_RULES.md (shot length >= 3 s, audio cutting, SFX/music levels, loudness, transition hygiene, smoothness, QC, feedback loop). This guide's own rule book wins only where it says so explicitly.",
+   "since": "2026-11-12",
+   "from": "owner 2026-11-12",
+   "title": "Generic rules"
+  },
+  {
+   "id": "b-38d647f2",
+   "text": "Every owner note on a render goes into this guide the same day (rule book entry or rule, plus a Learnings entry, via model.apply_ops + model.save). The next build must read the rule book, the open Learnings and styleguide/_shared/GENERIC_RULES.md first; after each render check it against every line, fix what fails, then deliver.",
+   "since": "2026-11-12",
+   "from": "owner 2026-11-12",
+   "title": "Feedback loop"
+  }
+ ],
+ "graphics": [
+  {
+   "id": "g-cc2e1b80",
+   "title": "VCR pixel date card",
+   "text": "White pixel or VCR-mono date ('JULY 2022', 'NOVEMBER 2021 / THANKSGIVING WEEKEND') centred on dark VHS grain with faint scan lines. 3-4 s. Enters from black or static; one glitch band or a scan-line tear; exits by dissolve into the footage or into full static. Optional second line.",
+   "source": "refs",
+   "evidence": [
+    {
+     "clip": "c1a1cbc055b55715",
+     "sf_in": 1340,
+     "sf_out": 1465,
+     "label": "v03 · JULY 2022 date card"
+    },
+    {
+     "clip": "c1a1cbc03776e960",
+     "sf_in": 1979,
+     "sf_out": 2157,
+     "label": "v04 · Date card: November 2021"
+    },
+    {
+     "clip": "c1a1cbc014d2f581",
+     "sf_in": 0,
+     "sf_out": 43,
+     "label": "v07 · Date card May 2019"
+    },
+    {
+     "clip": "c1a1cbc253521000",
+     "sf_in": 42076,
+     "sf_out": 42201,
+     "label": "v03 · SEPTEMBER 2018 date card"
+    }
+   ],
+   "use": "A case starts and the voice gives the month and year.",
+   "avoid": "Inside a case; on a video whose other cards use serif.",
+   "kind": "title-card",
+   "why": "Dates the case like a recovered tape label.",
+   "situation": "Give a date or time",
+   "fit": "yes",
+   "media": [
+    {
+     "file": "2e5fa2f092826117.jpg",
+     "kind": "image",
+     "name": "date_card_july2022.jpg"
+    }
+   ]
+  },
+  {
+   "id": "g-6fa0124a",
+   "title": "Glowing date and place card",
+   "text": "Black, then two lines of glowing white text: date on top ('August 2nd, 2020'), place smaller below ('Guadalajara, Mexico'). 3-4 s, fades up, fades away.",
+   "source": "refs",
+   "evidence": [
+    {
+     "clip": "c1a1cbbffaa6c14b",
+     "sf_in": 1576,
+     "sf_out": 1695,
+     "label": "v05 · Date card Aug 2nd"
+    },
+    {
+     "clip": "c1a1cbc15013043d",
+     "sf_in": 5999,
+     "sf_out": 6152,
+     "label": "v01 · Date card on black"
+    },
+    {
+     "clip": "c1a1cbc24dede292",
+     "sf_in": 22560,
+     "sf_out": 22654,
+     "label": "v11 · Date card 'November 2016'"
+    }
+   ],
+   "use": "The story clock starts and the place matters.",
+   "avoid": "When a map will name the place straight after.",
+   "kind": "title-card",
+   "why": "Sets time and place in one beat.",
+   "situation": "Give a date or time",
+   "fit": "yes",
+   "media": [
+    {
+     "file": "380f52ea482dc0bb.jpg",
+     "kind": "image",
+     "name": "date_card_location.jpg"
+    }
+   ]
+  },
+  {
+   "id": "g-0ea57cf4",
+   "title": "Typed date title over footage",
+   "text": "Dip to black; bold white date types on word by word ('OCTOBER', '14TH,', '2025') with a red flash on each word or a red last word; the footage fades up behind it. 2-4 s.",
+   "source": "refs",
+   "evidence": [
+    {
+     "clip": "c1a1cbbf9585b001",
+     "sf_in": 1144,
+     "sf_out": 1295,
+     "label": "v13 · Date card October 14th 2025"
+    },
+    {
+     "clip": "c1a1cbbf5def1c9b",
+     "sf_in": 1570,
+     "sf_out": 1665,
+     "label": "v14 · Date title April 28th, 2000"
+    },
+    {
+     "clip": "c1a1cbc4d4030d42",
+     "sf_in": 19364,
+     "sf_out": 19455,
+     "label": "v12 · June 22nd 2025 date title"
+    },
+    {
+     "clip": "c1a1cbc0fc25f9bb",
+     "sf_in": 6080,
+     "sf_out": 6117,
+     "label": "v14 · Date title September 27th"
+    }
+   ],
+   "use": "Fast case starts in clip compilations (doorbell, final moments, live stream).",
+   "avoid": "Slow narrated stories; use the glowing card there.",
+   "kind": "title-card",
+   "why": "Gives the date without a separate card, so the clip starts sooner.",
+   "situation": "Give a date or time",
+   "fit": "yes"
+  },
+  {
+   "id": "g-1c977a32",
+   "title": "Small serif date over page or footage",
+   "text": "Small white serif date ('September 2025', 'May 1989') fades in over a dim channel page, night exterior or tape, 2-5 s, then fades out. No box.",
+   "source": "refs",
+   "evidence": [
+    {
+     "clip": "c1a1cbc1061ff187",
+     "sf_in": 4220,
+     "sf_out": 4287,
+     "label": "v09 · September 2025 date card"
+    },
+    {
+     "clip": "c1a1cbbe75bd1546",
+     "sf_in": 3777,
+     "sf_out": 4035,
+     "label": "v10 · May 1989 date overlay"
+    },
+    {
+     "clip": "c1a1cbbf793e2936",
+     "sf_in": 7234,
+     "sf_out": 7433,
+     "label": "v06 · February 2024 date card"
+    },
+    {
+     "clip": "c1a1cbbf630ed1a9",
+     "sf_in": 0,
+     "sf_out": 95,
+     "label": "v01 · Date card on VHS footage"
+    }
+   ],
+   "use": "Dating a source page or old tape while it plays.",
+   "avoid": "When the footage behind is bright; dim it first.",
+   "kind": "title-card",
+   "why": "Quiet, keeps the source on screen.",
+   "situation": "Give a date or time",
+   "fit": "yes"
+  },
+  {
+   "id": "g-ef901f8c",
+   "title": "Corner date stamp",
+   "text": "Tiny white date text ('September 10th 2019') fades in at lower left of a framed video or page, 2-3 s (est.), then fades out.",
+   "source": "refs",
+   "evidence": [
+    {
+     "clip": "c1a1cbc00f6c1942",
+     "sf_in": 0,
+     "sf_out": 179,
+     "label": "v02 · Vlog frame, date, channel pop-up"
+    },
+    {
+     "clip": "c1a1cbc58fe19887",
+     "sf_in": 18191,
+     "sf_out": 18339,
+     "label": "v09 · September 18th 2024 label"
+    }
+   ],
+   "use": "The host's vlog or a page needs a date without stopping.",
+   "avoid": "As the main case date; use a card.",
+   "kind": "title-card",
+   "why": "Dates without covering the frame.",
+   "situation": "Give a date or time",
+   "fit": "yes"
+  },
+  {
+   "id": "g-0195c516",
+   "title": "Time-jump title",
+   "text": "Glowing white text '2 Years Earlier...', '3 Years Later', '1 DAY LATER', '5 DAYS EARLIER' over a dark red vignette, darkened aerial, page or clip. 2-4 s; fades in with a slight glow pulse or types in; fades out. 5 of 15 videos.",
+   "source": "refs",
+   "evidence": [
+    {
+     "clip": "c1a1cbbffaa6afc8",
+     "sf_in": 154,
+     "sf_out": 225,
+     "label": "v05 · 2 Years Earlier title"
+    },
+    {
+     "clip": "c1a1cbc01994aad1",
+     "sf_in": 1870,
+     "sf_out": 2091,
+     "label": "v15 · 5 DAYS EARLIER"
+    },
+    {
+     "clip": "c1a1cbc4c92d8a7a",
+     "sf_in": 41821,
+     "sf_out": 41930,
+     "label": "v04 · VHS card: 1 Day Later"
+    },
+    {
+     "clip": "c1a1cbc00f6d3843",
+     "sf_in": 12955,
+     "sf_out": 13150,
+     "label": "v02 · Three years later page"
+    },
+    {
+     "clip": "c1a1cbc1254be6c1",
+     "sf_in": 17472,
+     "sf_out": 17607,
+     "label": "v11 · Time-jump title on footage"
+    }
+   ],
+   "use": "The story jumps back or forward in time.",
+   "avoid": "For the first date of a case; use a date card.",
+   "kind": "title-card",
+   "why": "Tells the viewer the clock moved.",
+   "situation": "Give a date or time",
+   "fit": "yes",
+   "media": [
+    {
+     "file": "491552721f516f3f.jpg",
+     "kind": "image",
+     "name": "title_2_years_earlier.jpg"
+    }
+   ]
+  },
+  {
+   "id": "g-2a22330e",
+   "title": "Page tilt with highlight sweep",
+   "text": "Article, post or site captured and shown on a 3D tilt (or flat) with vignette and blurred edges, slow push. 3-10 s (up to 16). A yellow, red or blue bar sweeps over the exact line the voice reads. Dissolve in and out 10-16 frames or RGB tear. 12 of 15 highlight.",
+   "source": "refs",
+   "evidence": [
+    {
+     "clip": "c1a1cbbffaa68582",
+     "sf_in": 226,
+     "sf_out": 331,
+     "label": "v05 · Facebook post, vignette"
+    },
+    {
+     "clip": "c1a1cbc40da77144",
+     "sf_in": 4916,
+     "sf_out": 5067,
+     "label": "v12 · NYT article, red swipes"
+    },
+    {
+     "clip": "c1a1cbbf5def63a8",
+     "sf_in": 1760,
+     "sf_out": 1813,
+     "label": "v14 · IFLScience article, highlight"
+    },
+    {
+     "clip": "c1a1cbc1ad991ffe",
+     "sf_in": 15281,
+     "sf_out": 15345,
+     "label": "v03 · Newspaper headline, highlight"
+    },
+    {
+     "clip": "c1a1cbc03028f3cf",
+     "sf_in": 4830,
+     "sf_out": 4955,
+     "label": "v15 · Article with yellow highlight"
+    }
+   ],
+   "use": "The narration states a fact that a page backs up.",
+   "avoid": "For a video that will play; use the YouTube watch page.",
+   "kind": "page-3d",
+   "why": "Proves the claim is on record and leads the eye to the line.",
+   "situation": "Show the real page, post or document",
+   "fit": "yes",
+   "media": [
+    {
+     "file": "626577c014696abd.jpg",
+     "kind": "image",
+     "name": "highlight_bar_article.jpg"
+    }
+   ]
+  },
+  {
+   "id": "g-cac09baf",
+   "title": "Headline word boxes",
+   "text": "Big headline on a dark page; white boxes appear behind the key words one by one as they are read; RGB tear or white flash on entry. 2-5 s.",
+   "source": "refs",
+   "evidence": [
+    {
+     "clip": "c1a1cbc014d2caf3",
+     "sf_in": 242,
+     "sf_out": 375,
+     "label": "v07 · Headline page, dark glitch"
+    },
+    {
+     "clip": "c1a1cbc014d2ac1b",
+     "sf_in": 202,
+     "sf_out": 241,
+     "label": "v07 · Headline page, white flash"
+    },
+    {
+     "clip": "c1a1cbc280768178",
+     "sf_in": 10896,
+     "sf_out": 10958,
+     "label": "v01 · News article, cloaking headline"
+    }
+   ],
+   "use": "Opening a case on a shocking headline.",
+   "avoid": "Long article text; use the sweep bar.",
+   "kind": "page-3d",
+   "why": "Makes the headline read like a verdict.",
+   "situation": "Stress a number, fact or outcome",
+   "fit": "yes",
+   "media": [
+    {
+     "file": "723e085e7f1d5b2c.jpg",
+     "kind": "image",
+     "name": "highlight_headline_box.jpg"
+    }
+   ]
+  },
+  {
+   "id": "g-f98cd845",
+   "title": "Headline flash run",
+   "text": "3-4 pages or headlines cut in at 0.7-1.2 s each on a spoken list, then out. v02 and v11.",
+   "source": "refs",
+   "evidence": [
+    {
+     "clip": "c1a1cbc00f6d2bae",
+     "sf_in": 1645,
+     "sf_out": 1661,
+     "label": "v02 · News headline flash 1"
+    },
+    {
+     "clip": "c1a1cbc00f6db6a4",
+     "sf_in": 1662,
+     "sf_out": 1682,
+     "label": "v02 · News headline flash 2"
+    },
+    {
+     "clip": "c1a1cbc1254beb18",
+     "sf_in": 17352,
+     "sf_out": 17471,
+     "label": "v11 · Headline montage, fast cuts"
+    },
+    {
+     "clip": "c1a1cbc03776ca2e",
+     "sf_in": 11516,
+     "sf_out": 11545,
+     "label": "v04 · Reddit gas station flash"
+    }
+   ],
+   "use": "The voice lists reports or sources in one breath.",
+   "avoid": "When one source matters; give it a full page tilt.",
+   "kind": "page-3d",
+   "why": "Shows how much coverage there was, fast.",
+   "situation": "Compare or show many things",
+   "fit": "yes"
+  },
+  {
+   "id": "g-7536b60a",
+   "title": "YouTube watch page with footage playing",
+   "text": "Dark YouTube watch page, footage playing in the player, sidebar blurred, slight push. 3-10 s. Glitch or dissolve in; the footage then expands to full frame. 8 of 15.",
+   "source": "refs",
+   "evidence": [
+    {
+     "clip": "c1a1cbc00f6d5b55",
+     "sf_in": 1711,
+     "sf_out": 1845,
+     "label": "v02 · YouTube page, footage playing"
+    },
+    {
+     "clip": "c1a1cbc055b5115a",
+     "sf_in": 13216,
+     "sf_out": 13435,
+     "label": "v03 · YouTube page, video plays"
+    },
+    {
+     "clip": "c1a1cbbfd3aa2baa",
+     "sf_in": 0,
+     "sf_out": 111,
+     "label": "v08 · YouTube page opener"
+    },
+    {
+     "clip": "c1a1cbc3c466c378",
+     "sf_in": 11352,
+     "sf_out": 11493,
+     "label": "v09 · YouTube page, explorer video"
+    },
+    {
+     "clip": "c1a1cbc184cc0149",
+     "sf_in": 20987,
+     "sf_out": 21120,
+     "label": "v07 · YouTube page, glitch"
+    }
+   ],
+   "use": "Start of a case or before the key clip, to show where it was posted.",
+   "avoid": "When the source is not on YouTube; use the platform it was on.",
+   "kind": "page-3d",
+   "why": "The real upload proves the footage is real.",
+   "situation": "Show a video in its context (platform, CCTV, phone, file)",
+   "fit": "yes"
+  },
+  {
+   "id": "g-18fcb2e5",
+   "title": "Stream page (Twitch, Kick, YouTube live)",
+   "text": "The stream platform page, dimmed or zooming into the player; live chat on the side. Held still or slow zoom, then dissolve into full-frame stream footage.",
+   "source": "refs",
+   "evidence": [
+    {
+     "clip": "c1a1cbc050d2bd24",
+     "sf_in": 13350,
+     "sf_out": 13573,
+     "label": "v11 · Twitch page, game stream zoom"
+    },
+    {
+     "clip": "c1a1cbc3c4669594",
+     "sf_in": 11740,
+     "sf_out": 11934,
+     "label": "v09 · Livestream page, masked explorer"
+    },
+    {
+     "clip": "c1a1cbc1f699362b",
+     "sf_in": 19225,
+     "sf_out": 19362,
+     "label": "v11 · Twitch page zoom to stream"
+    },
+    {
+     "clip": "c1a1cbc4d403bb2f",
+     "sf_in": 18787,
+     "sf_out": 18990,
+     "label": "v12 · TikTok profile page"
+    }
+   ],
+   "use": "The footage was live-streamed.",
+   "avoid": "For uploaded videos; use the watch page.",
+   "kind": "page-3d",
+   "why": "Shows it happened live, in public.",
+   "situation": "Show a video in its context (platform, CCTV, phone, file)",
+   "fit": "yes"
+  },
+  {
+   "id": "g-6697ef3b",
+   "title": "Channel pop-up pill",
+   "text": "Dark rounded pill or card with avatar, channel name, subs and Subscribe, top-centre over the footage. Slides down or pops in, drifts up, leaves after 2-3 s. 3 of 15.",
+   "source": "refs",
+   "evidence": [
+    {
+     "clip": "c1a1cbc014d272df",
+     "sf_in": 44,
+     "sf_out": 201,
+     "label": "v07 · Live stream, channel pop-up"
+    },
+    {
+     "clip": "c1a1cbc00f6c1942",
+     "sf_in": 0,
+     "sf_out": 179,
+     "label": "v02 · Vlog frame, date, channel pop-up"
+    },
+    {
+     "clip": "c1a1cbc3c466d9de",
+     "sf_in": 12537,
+     "sf_out": 12870,
+     "label": "v09 · Kayak fisher video page"
+    }
+   ],
+   "use": "The voice names the creator who filmed it.",
+   "avoid": "For people who are not channel owners; use a name tag.",
+   "kind": "other",
+   "why": "Credits the source and shows a real account.",
+   "situation": "Introduce a person or account",
+   "fit": "yes"
+  },
+  {
+   "id": "g-0d35e168",
+   "title": "Channel page or video grid",
+   "text": "The creator's channel page or grid of uploads, tilted or flat, slow scroll or push, 3-6 s; glitch in. 5 of 15.",
+   "source": "refs",
+   "evidence": [
+    {
+     "clip": "c1a1cbc184ccee7f",
+     "sf_in": 10715,
+     "sf_out": 10900,
+     "label": "v07 · Channel page, video grid"
+    },
+    {
+     "clip": "c1a1cbc0e924a905",
+     "sf_in": 14449,
+     "sf_out": 14619,
+     "label": "v08 · Storm channel grid, tilt"
+    },
+    {
+     "clip": "c1a1cbc3c4663118",
+     "sf_in": 12948,
+     "sf_out": 13126,
+     "label": "v09 · Channel page grid"
+    },
+    {
+     "clip": "c1a1cbc1b1cd5da3",
+     "sf_in": 33488,
+     "sf_out": 33740,
+     "label": "v06 · Channel page, scroll"
+    }
+   ],
+   "use": "Showing who the creator is or how much they posted.",
+   "avoid": "When a pop-up says enough.",
+   "kind": "page-3d",
+   "why": "Gives the creator a life before the scare.",
+   "situation": "Introduce a person or account",
+   "fit": "yes"
+  },
+  {
+   "id": "g-a278c3aa",
+   "title": "Social post in tilt",
+   "text": "Facebook, Reddit, X or Instagram post on a 3D tilt with vignette; may take a green-pink-red tint (v04) or carry a red arrow; 3-16 s; RGB glitch at the end hands off to footage.",
+   "source": "refs",
+   "evidence": [
+    {
+     "clip": "c1a1cbbffaa62b21",
+     "sf_in": 1696,
+     "sf_out": 1774,
+     "label": "v05 · Facebook opening post"
+    },
+    {
+     "clip": "c1a1cbc03776eca3",
+     "sf_in": 1763,
+     "sf_out": 1814,
+     "label": "v04 · Reddit gas station post"
+    },
+    {
+     "clip": "c1a1cbbf793e117c",
+     "sf_in": 5550,
+     "sf_out": 5965,
+     "label": "v06 · X post, tilt and highlight"
+    },
+    {
+     "clip": "c1a1cbc0b10de753",
+     "sf_in": 4728,
+     "sf_out": 4824,
+     "label": "v01 · Facebook post, New World Order image"
+    }
+   ],
+   "use": "The story starts from or turns on a post.",
+   "avoid": "News facts; use an article page.",
+   "kind": "page-3d",
+   "why": "The post is the first-hand record.",
+   "situation": "Show the real page, post or document",
+   "fit": "yes"
+  },
+  {
+   "id": "g-eabf7487",
+   "title": "Comments page with red bar",
+   "text": "Dark (or light) YouTube, Reddit or Facebook comments, zoomed, slow scroll or drift; a red marker swipe (or yellow) on the key line. 6-12 s (to 25). 11 of 15.",
+   "source": "refs",
+   "evidence": [
+    {
+     "clip": "c1a1cbc0b10d77f4",
+     "sf_in": 4158,
+     "sf_out": 4389,
+     "label": "v01 · Reddit thread, zoom on comment"
+    },
+    {
+     "clip": "c1a1cbc2b9a1cd03",
+     "sf_in": 3820,
+     "sf_out": 4361,
+     "label": "v12 · YouTube comment, marker swipes"
+    },
+    {
+     "clip": "c1a1cbbf95859ff2",
+     "sf_in": 4724,
+     "sf_out": 4884,
+     "label": "v13 · YouTube comments, red highlight"
+    },
+    {
+     "clip": "c1a1cbc4c92d4e99",
+     "sf_in": 33188,
+     "sf_out": 33858,
+     "label": "v04 · Reddit doubts, red bars"
+    },
+    {
+     "clip": "c1a1cbc3c4669504",
+     "sf_in": 16135,
+     "sf_out": 16524,
+     "label": "v09 · Facebook comments, yellow highlight"
+    }
+   ],
+   "use": "Reaction beat, doubt, or the case close.",
+   "avoid": "As the first proof of a fact.",
+   "kind": "comments",
+   "why": "Shows how people reacted; a natural end to a case.",
+   "situation": "Read a quote, comment or message",
+   "fit": "yes"
+  },
+  {
+   "id": "g-a666b399",
+   "title": "Comment ticker over footage",
+   "text": "A comment, huge and blurred or small, slides across the live footage; one word flagged in a red box each time it appears. 3-6 s.",
+   "source": "refs",
+   "evidence": [
+    {
+     "clip": "c1a1cbc184cc40a2",
+     "sf_in": 10217,
+     "sf_out": 10309,
+     "label": "v07 · Comment ticker, ghost word"
+    },
+    {
+     "clip": "c1a1cbbf793e46b3",
+     "sf_in": 5156,
+     "sf_out": 5344,
+     "label": "v06 · Owl comment over footage"
+    },
+    {
+     "clip": "c1a1cbc014d2669b",
+     "sf_in": 2000,
+     "sf_out": 2139,
+     "label": "v07 · YouTube comments over footage"
+    }
+   ],
+   "use": "Viewers noticed something in the clip the viewer should look for.",
+   "avoid": "When the footage needs full attention.",
+   "kind": "comments",
+   "why": "Brings the audience's reading into the clip.",
+   "situation": "Read a quote, comment or message",
+   "fit": "yes"
+  },
+  {
+   "id": "g-0df05159",
+   "title": "Name tag on the person",
+   "text": "Tiny white mono or serif text, sometimes in a thin box, placed on the chest or beside the head ('MOE SARGI', 'Steve Stephens'). Pops in, 1-4 s. 9 of 15.",
+   "source": "refs",
+   "evidence": [
+    {
+     "clip": "c1a1cbc055b5e86d",
+     "sf_in": 1471,
+     "sf_out": 1729,
+     "label": "v03 · Moe intro, name tag"
+    },
+    {
+     "clip": "c1a1cbc4cee95edc",
+     "sf_in": 10685,
+     "sf_out": 10967,
+     "label": "v12 · Steve Stephens, name tag"
+    },
+    {
+     "clip": "c1a1cbc4d4030762",
+     "sf_in": 14688,
+     "sf_out": 14842,
+     "label": "v12 · Rifley selfie, name tag"
+    },
+    {
+     "clip": "c1a1cbc14c4d14c4",
+     "sf_in": 17813,
+     "sf_out": 17933,
+     "label": "v11 · Twitch channel page, name tag"
+    }
+   ],
+   "use": "A person is named or first seen.",
+   "avoid": "When a portrait card is coming; do not tag twice.",
+   "kind": "other",
+   "why": "The viewer knows who is on screen without a cutaway.",
+   "situation": "Introduce a person or account",
+   "fit": "yes",
+   "media": [
+    {
+     "file": "295ce731119695e4.jpg",
+     "kind": "image",
+     "name": "name_tag_chest.jpg"
+    }
+   ]
+  },
+  {
+   "id": "g-20e5367f",
+   "title": "Framed portrait over blurred copy",
+   "text": "Still photo in a thin frame, small serif name under it, over a dark blurred enlarged copy of the same face. Glitch or fade in and out, 3-9 s.",
+   "source": "refs",
+   "evidence": [
+    {
+     "clip": "c1a1cbc4aef6c537",
+     "sf_in": 17122,
+     "sf_out": 17235,
+     "label": "v01 · Mother portrait, name caption"
+    },
+    {
+     "clip": "c1a1cbc1e4a73ac4",
+     "sf_in": 19610,
+     "sf_out": 19783,
+     "label": "v10 · Karla portrait, glitch in"
+    },
+    {
+     "clip": "c1a1cbc319233886",
+     "sf_in": 19945,
+     "sf_out": 20089,
+     "label": "v10 · Tammy portrait, name caption"
+    },
+    {
+     "clip": "c1a1cbc1e7dc2f7b",
+     "sf_in": 21599,
+     "sf_out": 21814,
+     "label": "v08 · Couple photo, blurred copy"
+    }
+   ],
+   "use": "Naming a victim, suspect or family member with no footage of them.",
+   "avoid": "When the person is on screen in raw; use the name tag.",
+   "kind": "other",
+   "why": "Gives a face to a name with weight.",
+   "situation": "Introduce a person or account",
+   "fit": "yes"
+  },
+  {
+   "id": "g-f89a83c1",
+   "title": "Glitch-face name tag",
+   "text": "Black dip, then a black-and-white portrait with a mono name tag; the face breaks with glitch tears. 1-3 s. Opens every case in v08.",
+   "source": "refs",
+   "evidence": [
+    {
+     "clip": "c1a1cbbfd3aa3388",
+     "sf_in": 11816,
+     "sf_out": 11935,
+     "label": "v08 · Storm name tag, glitch"
+    },
+    {
+     "clip": "c1a1cbc0e92422be",
+     "sf_in": 19224,
+     "sf_out": 19406,
+     "label": "v08 · Finn name tag, glitch"
+    },
+    {
+     "clip": "c1a1cbc1e7dcac2b",
+     "sf_in": 26043,
+     "sf_out": 26162,
+     "label": "v08 · Tor name tag, glitch"
+    },
+    {
+     "clip": "c1a1cbc4f8ce9674",
+     "sf_in": 33095,
+     "sf_out": 33250,
+     "label": "v08 · Greg name tag, glitch"
+    }
+   ],
+   "use": "A case is about one person (final moments, missing creator).",
+   "avoid": "Living bystanders.",
+   "kind": "other",
+   "why": "Marks the person as lost before the story starts.",
+   "situation": "Open a section or chapter",
+   "fit": "yes"
+  },
+  {
+   "id": "g-a81193a7",
+   "title": "News lower third (kept from source)",
+   "text": "The TV clip's own lower third stays on: white bar with black headline and red tag line ('BODY PULLED FROM BLACKSTONE RIVER'). 3-4 s. Not rebuilt.",
+   "source": "refs",
+   "evidence": [
+    {
+     "clip": "c1a1cbbfe7a0a1ac",
+     "sf_in": 919,
+     "sf_out": 1014,
+     "label": "v11 · News clip: body pulled"
+    },
+    {
+     "clip": "c1a1cbbf793e285f",
+     "sf_in": 7989,
+     "sf_out": 8124,
+     "label": "v06 · TV news clip, school exterior"
+    },
+    {
+     "clip": "c1a1cbc09111356f",
+     "sf_in": 12637,
+     "sf_out": 12728,
+     "label": "v13 · BBC News clip"
+    }
+   ],
+   "use": "Using a local news clip as proof.",
+   "avoid": "Do not build a fake news bar.",
+   "kind": "raw-footage",
+   "why": "Real broadcast proof.",
+   "situation": "Show a video in its context (platform, CCTV, phone, file)",
+   "fit": "yes"
+  },
+  {
+   "id": "g-2c86cefa",
+   "title": "Red callout on footage",
+   "text": "Red arrow, hand-drawn circle, box or bracket on the detail, often with a red uppercase or typed label ('VICTIMS SLEEPING', '*knife*'). Pops in without ease, 1-10 s; returns whenever the footage returns. 6 of 15.",
+   "source": "refs",
+   "evidence": [
+    {
+     "clip": "c1a1cbc01994a52e",
+     "sf_in": 596,
+     "sf_out": 814,
+     "label": "v15 · Dresser, then living room"
+    },
+    {
+     "clip": "c1a1cbc091117d92",
+     "sf_in": 13368,
+     "sf_out": 13467,
+     "label": "v13 · Woman with knife, red tag"
+    },
+    {
+     "clip": "c1a1cbc236c7826d",
+     "sf_in": 24286,
+     "sf_out": 24561,
+     "label": "v05 · Motion alert, red circle"
+    },
+    {
+     "clip": "c1a1cbc118ef92f0",
+     "sf_in": 24114,
+     "sf_out": 24532,
+     "label": "v06 · Window reflection, red box"
+    },
+    {
+     "clip": "c1a1cbc050d2ddc8",
+     "sf_in": 10940,
+     "sf_out": 11238,
+     "label": "v11 · YouTube page, red box on walker"
+    }
+   ],
+   "use": "The scary detail is small or hard to see.",
+   "avoid": "When the detail is already obvious.",
+   "kind": "other",
+   "why": "Makes sure everyone sees it, without leaving the clip.",
+   "situation": "Point at a detail",
+   "fit": "yes",
+   "media": [
+    {
+     "file": "6ccbb0056f7794d5.jpg",
+     "kind": "image",
+     "name": "red_arrow_callout.jpg"
+    }
+   ]
+  },
+  {
+   "id": "g-3d2688d2",
+   "title": "Typed label or quote on footage",
+   "text": "Footage dims; a boxed label or quote types on ('Always had bad intentions', 'Is she AFK?'), sometimes with a red scan line sweep. 3-5 s. 7 of 15.",
+   "source": "refs",
+   "evidence": [
+    {
+     "clip": "c1a1cbc050d2dda6",
+     "sf_in": 11486,
+     "sf_out": 11741,
+     "label": "v11 · Joshua on camera, callout"
+    },
+    {
+     "clip": "c1a1cbc1889d1a13",
+     "sf_in": 18443,
+     "sf_out": 18544,
+     "label": "v11 · Typed quote on dim stream"
+    },
+    {
+     "clip": "c1a1cbc1f69902e8",
+     "sf_in": 19363,
+     "sf_out": 19500,
+     "label": "v11 · Typed quote 'Is she AFK?'"
+    },
+    {
+     "clip": "c1a1cbbf793ed921",
+     "sf_in": 3467,
+     "sf_out": 4033,
+     "label": "v06 · Name-tag callout footage"
+    }
+   ],
+   "use": "Quoting chat, a message or a key line said off screen.",
+   "avoid": "For speech the clip already has; caption it.",
+   "kind": "other",
+   "why": "Puts the exact words on screen.",
+   "situation": "Read a quote, comment or message",
+   "fit": "yes"
+  },
+  {
+   "id": "g-5c0d6813",
+   "title": "Glowing text card",
+   "text": "Black or dimmed portrait; one white glowing line or short paragraph ('Work during the day... stay away from the shop at night'). About 3-5 s, fades in and out.",
+   "source": "refs",
+   "evidence": [
+    {
+     "clip": "c1a1cbc17eb35d70",
+     "sf_in": 17430,
+     "sf_out": 17609,
+     "label": "v05 · Glowing rule text card"
+    },
+    {
+     "clip": "c1a1cbc4aef63fec",
+     "sf_in": 17236,
+     "sf_out": 17414,
+     "label": "v01 · Text card, deceased 14 hours"
+    },
+    {
+     "clip": "c1a1cbc40da75c63",
+     "sf_in": 4504,
+     "sf_out": 4815,
+     "label": "v12 · Mother's message card"
+    },
+    {
+     "clip": "c1a1cbc019947b0b",
+     "sf_in": 1188,
+     "sf_out": 1257,
+     "label": "v15 · Lock your doors text card"
+    },
+    {
+     "clip": "c1a1cbc6208804d7",
+     "sf_in": 31198,
+     "sf_out": 31429,
+     "label": "v05 · Glowing quote card"
+    }
+   ],
+   "use": "A rule, statement or question is the beat.",
+   "avoid": "Long text; use the page.",
+   "kind": "text-card",
+   "why": "Lets one line land in silence.",
+   "situation": "Read a quote, comment or message",
+   "fit": "yes"
+  },
+  {
+   "id": "g-badc6e3a",
+   "title": "Numbered red-frame grid",
+   "text": "Footage gets a thin red border, shrinks and flies into a dark wall of numbered red-framed clips (1-6 or 1-10); camera pans and zooms into the next cell. 4-8 s. 4 of 15.",
+   "source": "refs",
+   "evidence": [
+    {
+     "clip": "c1a1cbbf9585e089",
+     "sf_in": 335,
+     "sf_out": 592,
+     "label": "v13 · Red frame to clip wall"
+    },
+    {
+     "clip": "c1a1cbbf5defaa6d",
+     "sf_in": 1123,
+     "sf_out": 1339,
+     "label": "v14 · Numbered preview grid"
+    },
+    {
+     "clip": "c1a1cbc40da71577",
+     "sf_in": 5270,
+     "sf_out": 5402,
+     "label": "v12 · Numbered case preview grid"
+    },
+    {
+     "clip": "c1a1cbc51b03c111",
+     "sf_in": 28572,
+     "sf_out": 28795,
+     "label": "v11 · Four cases grid"
+    }
+   ],
+   "use": "List video intro (table of contents) or recap.",
+   "avoid": "Single-story videos.",
+   "kind": "layout",
+   "why": "Promises the list and shows progress.",
+   "situation": "Compare or show many things",
+   "fit": "yes",
+   "media": [
+    {
+     "file": "389fedae1a27c90d.jpg",
+     "kind": "image",
+     "name": "red_frame_pip_grid.jpg"
+    }
+   ]
+  },
+  {
+   "id": "g-4978466b",
+   "title": "Red-frame next-case teaser",
+   "text": "Next case's footage plays small inside a red frame (or torn frames) on dark, 4-14 s, before the black dip.",
+   "source": "refs",
+   "evidence": [
+    {
+     "clip": "c1a1cbc3c6ea79a1",
+     "sf_in": 13981,
+     "sf_out": 14127,
+     "label": "v01 · Next-case preview in red frame"
+    },
+    {
+     "clip": "c1a1cbc5b1164dfe",
+     "sf_in": 23174,
+     "sf_out": 23289,
+     "label": "v01 · Next-case preview in red frame"
+    },
+    {
+     "clip": "c1a1cbbfd3aa5184",
+     "sf_in": 648,
+     "sf_out": 1059,
+     "label": "v08 · Case preview in torn frames"
+    }
+   ],
+   "use": "Ending a case and hooking the next.",
+   "avoid": "The last case.",
+   "kind": "layout",
+   "why": "Keeps the viewer through the case change.",
+   "situation": "Open a section or chapter",
+   "fit": "yes"
+  },
+  {
+   "id": "g-82f45b50",
+   "title": "Title over clip mosaic or film strip",
+   "text": "After the cold open: a glitching mosaic of tiny clips or a curved 3D film strip, then white mono or glowing serif title with a red second line ('TIMES YOUTUBERS RECORDED / THEIR FINAL MOMENTS'). 2-4 s.",
+   "source": "refs",
+   "evidence": [
+    {
+     "clip": "c1a1cbbfd3aa4300",
+     "sf_in": 1060,
+     "sf_out": 1179,
+     "label": "v08 · Title over clip mosaic"
+    },
+    {
+     "clip": "c1a1cbbe75bd5a38",
+     "sf_in": 1808,
+     "sf_out": 1944,
+     "label": "v10 · Film strip of clips"
+    },
+    {
+     "clip": "c1a1cbbe75bd6f6a",
+     "sf_in": 1945,
+     "sf_out": 2119,
+     "label": "v10 · The Hidden Evils of Lost Media"
+    }
+   ],
+   "use": "Naming the video's theme once, after the hook (35-71 s in).",
+   "avoid": "At 0:00.",
+   "kind": "title-card",
+   "why": "States the promise once the viewer is hooked.",
+   "situation": "Open a section or chapter",
+   "fit": "yes"
+  },
+  {
+   "id": "g-d48c243a",
+   "title": "Case title card",
+   "text": "Dark grey flat card, plain small white serif 'Case 1', then the case name replaces it ('Interesting Hobby'). About 3 s each, about 6 s total. v10 only.",
+   "source": "refs",
+   "evidence": [
+    {
+     "clip": "c1a1cbbe75bd52b6",
+     "sf_in": 2290,
+     "sf_out": 2478,
+     "label": "v10 · Case 1 title"
+    },
+    {
+     "clip": "c1a1cbc0bf0057cb",
+     "sf_in": 13638,
+     "sf_out": 13826,
+     "label": "v10 · Case 2 title"
+    },
+    {
+     "clip": "c1a1cbc3a0108ed7",
+     "sf_in": 24860,
+     "sf_out": 25048,
+     "label": "v10 · Case 3 title card"
+    }
+   ],
+   "use": "A list video with a fixed ritual per case.",
+   "avoid": "Videos that date each case; the date card does the job.",
+   "kind": "title-card",
+   "why": "Clean chapter mark.",
+   "situation": "Open a section or chapter",
+   "fit": "yes"
+  },
+  {
+   "id": "g-fd67882e",
+   "title": "Content warning card",
+   "text": "Black to a dark card, red glowing 'Content Warning' header and three lines of tiny white text, about 3 s (v10). Lighter form: small red 'viewer discretion' label on the footage (v01).",
+   "source": "refs",
+   "evidence": [
+    {
+     "clip": "c1a1cbbe75bd0d96",
+     "sf_in": 2128,
+     "sf_out": 2289,
+     "label": "v10 · Content warning card"
+    },
+    {
+     "clip": "c1a1cbbf630e6896",
+     "sf_in": 258,
+     "sf_out": 601,
+     "label": "v01 · Vertical video, discretion warning"
+    }
+   ],
+   "use": "Before graphic material.",
+   "avoid": "As decoration; once per video.",
+   "kind": "text-card",
+   "why": "Warns and builds dread.",
+   "situation": "Credit, warn or disclose",
+   "fit": "yes"
+  },
+  {
+   "id": "g-9407a1c3",
+   "title": "VCR PLAY tag and card",
+   "text": "Grey or white 'PLAY' camcorder label top-left on tape footage, or a blue VCR screen with PLAY, SP and a running timecode (00:00:00), 1-4 s, glitch out to black. 3 of 15 (plus a PLAY label in v06).",
+   "source": "refs",
+   "evidence": [
+    {
+     "clip": "c1a1cbc0bf00b746",
+     "sf_in": 13833,
+     "sf_out": 13909,
+     "label": "v10 · VCR PLAY screen"
+    },
+    {
+     "clip": "c1a1cbbe75bdc29a",
+     "sf_in": 2485,
+     "sf_out": 2547,
+     "label": "v10 · VCR PLAY screen"
+    },
+    {
+     "clip": "c1a1cbbfd3aa829f",
+     "sf_in": 1547,
+     "sf_out": 1683,
+     "label": "v08 · VHS PLAY, Pedro"
+    },
+    {
+     "clip": "c1a1cbc118efcf93",
+     "sf_in": 23045,
+     "sf_out": 23200,
+     "label": "v06 · PLAY camcorder B/W"
+    },
+    {
+     "clip": "c1a1cbc0199427fd",
+     "sf_in": 0,
+     "sf_out": 301,
+     "label": "v15 · Cold open, fade up"
+    }
+   ],
+   "use": "The clip is a home tape or a recovered recording.",
+   "avoid": "Phone or stream footage.",
+   "kind": "glitch",
+   "why": "Says 'this is a tape' in one second.",
+   "situation": "Show a video in its context (platform, CCTV, phone, file)",
+   "fit": "yes"
+  },
+  {
+   "id": "g-dfade2a9",
+   "title": "Black-and-white STOP / colour drain",
+   "text": "Same clip turns black and white (nearly frozen) with a vignette or a camcorder STOP icon top-left. 2-4 s.",
+   "source": "refs",
+   "evidence": [
+    {
+     "clip": "c1a1cbc2b9a16bb1",
+     "sf_in": 1621,
+     "sf_out": 1690,
+     "label": "v12 · B&W STOP overlay"
+    },
+    {
+     "clip": "c1a1cbc0fc25f93b",
+     "sf_in": 11210,
+     "sf_out": 11407,
+     "label": "v14 · Black and white freeze"
+    },
+    {
+     "clip": "c1a1cbc0e924e2c0",
+     "sf_in": 18833,
+     "sf_out": 19223,
+     "label": "v08 · Storm's last footage"
+    },
+    {
+     "clip": "c1a1cbc4f223e98f",
+     "sf_in": 26540,
+     "sf_out": 26823,
+     "label": "v11 · Brittany photo, fade to grey"
+    }
+   ],
+   "use": "The moment before a death or disaster.",
+   "avoid": "Ordinary scares.",
+   "kind": "glitch",
+   "why": "Freezes the last normal moment.",
+   "situation": "Something breaks, goes wrong or feels uncanny",
+   "fit": "yes"
+  },
+  {
+   "id": "g-3a9f36ee",
+   "title": "Tilt-shift aerial with label",
+   "text": "Tilted 3D or tilt-shift aerial of the place, slow drift, soft edges; optional red circle and curved text label ('one of the best candy shops in the area'). 3-8 s; fade from black or crossfade.",
+   "source": "refs",
+   "evidence": [
+    {
+     "clip": "c1a1cbbffaa66c3c",
+     "sf_in": 332,
+     "sf_out": 463,
+     "label": "v05 · Aerial map with text arc"
+    },
+    {
+     "clip": "c1a1cbc00f6dc6dc",
+     "sf_in": 1384,
+     "sf_out": 1532,
+     "label": "v02 · Aerial Cleveland, tilt-shift"
+    },
+    {
+     "clip": "c1a1cbbf793e073c",
+     "sf_in": 7559,
+     "sf_out": 7714,
+     "label": "v06 · 3D aerial of the school"
+    },
+    {
+     "clip": "c1a1cbc055b5d076",
+     "sf_in": 15040,
+     "sf_out": 15140,
+     "label": "v03 · Aerial view of factory"
+    }
+   ],
+   "use": "A place is named.",
+   "avoid": "When the exact route matters; use the satellite map.",
+   "kind": "map",
+   "why": "Puts the scene somewhere real.",
+   "situation": "Name a place or move to a new place",
+   "fit": "yes"
+  },
+  {
+   "id": "g-0b561b51",
+   "title": "Aerial map with pin, photo or clip",
+   "text": "Darkened aerial, slow drift; a framed photo or clip thumbnail pins onto the house, or a red pin and route draw on. 7-14 s.",
+   "source": "refs",
+   "evidence": [
+    {
+     "clip": "c1a1cbc0199419bc",
+     "sf_in": 1631,
+     "sf_out": 1869,
+     "label": "v15 · Aerial with photo pin"
+    },
+    {
+     "clip": "c1a1cbc03028a5ed",
+     "sf_in": 5089,
+     "sf_out": 5520,
+     "label": "v15 · Aerial Chicago, footage pin"
+    },
+    {
+     "clip": "c1a1cbc4cee9d679",
+     "sf_in": 13386,
+     "sf_out": 13848,
+     "label": "v12 · Aerial map, pin and route"
+    },
+    {
+     "clip": "c1a1cbc16c734082",
+     "sf_in": 17869,
+     "sf_out": 18049,
+     "label": "v10 · Aerial map with red pin"
+    }
+   ],
+   "use": "Opening or locating a case at a specific address.",
+   "avoid": "A general region.",
+   "kind": "map",
+   "why": "Links the footage to the spot.",
+   "situation": "Name a place or move to a new place",
+   "fit": "yes"
+  },
+  {
+   "id": "g-b4942b2d",
+   "title": "Satellite map with labels and red arrow",
+   "text": "Google-Earth style satellite push or fly-in, serif labels ('11 Days Earlier', '30 Minutes Later 5:27 PM'), red arrow animating along a path. 3-15 s.",
+   "source": "refs",
+   "evidence": [
+    {
+     "clip": "c1a1cbc19438c5b4",
+     "sf_in": 13570,
+     "sf_out": 13944,
+     "label": "v14 · Google Earth runway, red arrow"
+    },
+    {
+     "clip": "c1a1cbc58fe1cd68",
+     "sf_in": 18722,
+     "sf_out": 18865,
+     "label": "v09 · 11 Days Earlier map"
+    },
+    {
+     "clip": "c1a1cbc0e92430fd",
+     "sf_in": 17259,
+     "sf_out": 17682,
+     "label": "v08 · Satellite map, labels"
+    },
+    {
+     "clip": "c1a1cbc19438dee6",
+     "sf_in": 11861,
+     "sf_out": 12004,
+     "label": "v14 · Satellite map, Kathmandu to Pokhara"
+    }
+   ],
+   "use": "Explaining distance, a route or timing.",
+   "avoid": "When place alone matters.",
+   "kind": "map",
+   "why": "Shows how it happened, not just where.",
+   "situation": "Name a place or move to a new place",
+   "fit": "yes"
+  },
+  {
+   "id": "g-f166d7b5",
+   "title": "Street View sequence",
+   "text": "Street View stills of the building, hard cuts between them (one per business or year), or Street View pulling up to the aerial; orange tint and vignette possible.",
+   "source": "refs",
+   "evidence": [
+    {
+     "clip": "c1a1cbc236c74760",
+     "sf_in": 23322,
+     "sf_out": 23487,
+     "label": "v05 · Street View shop history"
+    },
+    {
+     "clip": "c1a1cbc236c7529c",
+     "sf_in": 23488,
+     "sf_out": 23725,
+     "label": "v05 · Street View to aerial"
+    },
+    {
+     "clip": "c1a1cbc0fc25e92b",
+     "sf_in": 6572,
+     "sf_out": 6830,
+     "label": "v14 · Location view of low wall"
+    }
+   ],
+   "use": "The history or look of one building.",
+   "avoid": "Remote places.",
+   "kind": "map",
+   "why": "Makes a real building familiar.",
+   "situation": "Name a place or move to a new place",
+   "fit": "yes"
+  },
+  {
+   "id": "g-bd8115d8",
+   "title": "911 call waveform",
+   "text": "Slow aerial or dimmed footage; a red glowing audio waveform runs across, real call lines as white serif captions, operator in blue or cyan. About 10 s (to 40-50 s). 4 of 15.",
+   "source": "refs",
+   "evidence": [
+    {
+     "clip": "c1a1cbc4aef6dc9b",
+     "sf_in": 14378,
+     "sf_out": 15635,
+     "label": "v01 · Aerial map, 911 call waveform"
+    },
+    {
+     "clip": "c1a1cbc58fe15718",
+     "sf_in": 19955,
+     "sf_out": 20535,
+     "label": "v09 · 911 audio waveform"
+    },
+    {
+     "clip": "c1a1cbbfd3aae944",
+     "sf_in": 10482,
+     "sf_out": 10975,
+     "label": "v08 · Audio waveform with captions"
+    }
+   ],
+   "use": "Playing a real emergency call or last audio.",
+   "avoid": "Audio that has its own video.",
+   "kind": "other",
+   "why": "Makes audio watchable and real.",
+   "situation": "Read a quote, comment or message",
+   "fit": "yes"
+  },
+  {
+   "id": "g-9e484b78",
+   "title": "Recreated phone message",
+   "text": "Dark phone screen; glowing blue iMessage bubble or voicemail with play bar and waveform, or a post typed line by line. Fades into the next shot.",
+   "source": "refs",
+   "evidence": [
+    {
+     "clip": "c1a1cbc0e924092c",
+     "sf_in": 16600,
+     "sf_out": 16975,
+     "label": "v08 · Text to grandmother"
+    },
+    {
+     "clip": "c1a1cbc1e7dca842",
+     "sf_in": 21929,
+     "sf_out": 22454,
+     "label": "v08 · Voicemail from Finn"
+    },
+    {
+     "clip": "c1a1cbc0bf00ae87",
+     "sf_in": 12570,
+     "sf_out": 13004,
+     "label": "v10 · YouTube search, clip removed"
+    }
+   ],
+   "use": "The last message or a voicemail is part of the story.",
+   "avoid": "When the real screenshot exists; show it as a page.",
+   "kind": "ui-typing",
+   "why": "Personal, quiet, sad.",
+   "situation": "Read a quote, comment or message",
+   "fit": "yes"
+  },
+  {
+   "id": "g-e3f23599",
+   "title": "Photo card with slow push",
+   "text": "Still on a dark or blurred-copy ground, soft shadow and vignette, slow push, cross-dissolve in and out. 3-9 s; couple photos 0.8-1 s each. 8 of 15.",
+   "source": "refs",
+   "evidence": [
+    {
+     "clip": "c1a1cbbf5dee8818",
+     "sf_in": 54,
+     "sf_out": 157,
+     "label": "v14 · Photo card dissolve"
+    },
+    {
+     "clip": "c1a1cbc2b9a14486",
+     "sf_in": 3416,
+     "sf_out": 3664,
+     "label": "v12 · Group photo, blurred bg push"
+    },
+    {
+     "clip": "c1a1cbc58fe1af83",
+     "sf_in": 22144,
+     "sf_out": 22233,
+     "label": "v09 · Couple photo on dark"
+    },
+    {
+     "clip": "c1a1cbc00c201ec0",
+     "sf_in": 6813,
+     "sf_out": 6927,
+     "label": "v10 · Dixon couple photo, push"
+    }
+   ],
+   "use": "Showing a person, place or object with no footage.",
+   "avoid": "When footage exists.",
+   "kind": "other",
+   "why": "Keeps stills alive.",
+   "situation": "Introduce a person or account",
+   "fit": "yes"
+  },
+  {
+   "id": "g-b798ebf9",
+   "title": "Vertical clip on blurred copy",
+   "text": "9:16 or 4:3 footage centred on a blurred, darkened, enlarged copy of itself (or dark pillarbox), soft vignette. Whole clip length. 6 of 15.",
+   "source": "refs",
+   "evidence": [
+    {
+     "clip": "c1a1cbc633a70241",
+     "sf_in": 24812,
+     "sf_out": 28217,
+     "label": "v01 · Vertical phone video, pillarbox"
+    },
+    {
+     "clip": "c1a1cbc01994d732",
+     "sf_in": 1018,
+     "sf_out": 1187,
+     "label": "v15 · Vertical doorbell, blur sides"
+    },
+    {
+     "clip": "c1a1cbbffaa68f58",
+     "sf_in": 2275,
+     "sf_out": 2370,
+     "label": "v05 · Pinata shop footage"
+    },
+    {
+     "clip": "c1a1cbbf5dee7121",
+     "sf_in": 0,
+     "sf_out": 53,
+     "label": "v14 · Raw POV, fade up"
+    }
+   ],
+   "use": "Phone, doorbell or tape footage that is not 16:9.",
+   "avoid": "Native 16:9 footage.",
+   "kind": "other",
+   "why": "Keeps the source honest; no crop.",
+   "situation": "Show a video in its context (platform, CCTV, phone, file)",
+   "fit": "yes"
+  },
+  {
+   "id": "g-6fe17b08",
+   "title": "PIP inset",
+   "text": "Second angle or portrait in a small dark-bordered or framed window in a corner over the main footage, 5-15 s.",
+   "source": "refs",
+   "evidence": [
+    {
+     "clip": "c1a1cbbf630efd4f",
+     "sf_in": 873,
+     "sf_out": 1339,
+     "label": "v01 · Bodycam inset over witness footage"
+    },
+    {
+     "clip": "c1a1cbc184cca348",
+     "sf_in": 12626,
+     "sf_out": 12901,
+     "label": "v07 · Inset camera view"
+    },
+    {
+     "clip": "c1a1cbc16c73f1f9",
+     "sf_in": 15421,
+     "sf_out": 16212,
+     "label": "v10 · Archive footage, victim inset"
+    },
+    {
+     "clip": "c1a1cbc40da7a227",
+     "sf_in": 6191,
+     "sf_out": 6394,
+     "label": "v12 · Webcam inset on blurred bg"
+    }
+   ],
+   "use": "Two cameras of one moment, or a victim present in archive footage.",
+   "avoid": "When both need full size; use a split.",
+   "kind": "layout",
+   "why": "Shows both views at once.",
+   "situation": "Compare or show many things",
+   "fit": "yes"
+  },
+  {
+   "id": "g-ec17a939",
+   "title": "Split compare and camera grid",
+   "text": "Red-outlined frames side by side (before/after) or a 2x2 CCTV grid with red tracking squares, 5-10 s, with a caption ('Someone...').",
+   "source": "refs",
+   "evidence": [
+    {
+     "clip": "c1a1cbc014d2b16b",
+     "sf_in": 7134,
+     "sf_out": 7304,
+     "label": "v07 · Door compare split"
+    },
+    {
+     "clip": "c1a1cbbffaa677d8",
+     "sf_in": 3268,
+     "sf_out": 3475,
+     "label": "v05 · CCTV four-grid"
+    },
+    {
+     "clip": "c1a1cbc118ef2c36",
+     "sf_in": 21444,
+     "sf_out": 21699,
+     "label": "v06 · Camera grid, red markers"
+    },
+    {
+     "clip": "c1a1cbc4d4037136",
+     "sf_in": 20200,
+     "sf_out": 20365,
+     "label": "v12 · Four-up with face boxes"
+    }
+   ],
+   "use": "Comparing two moments or several cameras.",
+   "avoid": "Single-shot evidence.",
+   "kind": "layout",
+   "why": "Lets the viewer spot the change.",
+   "situation": "Compare or show many things",
+   "fit": "yes"
+  },
+  {
+   "id": "g-6bdc964d",
+   "title": "Hand-drawn or chalk board",
+   "text": "Grey paper or dark chalk board; framed stills, handwriting and arrows appear step by step. 5-33 s. 3 of 15 (v06, v10, v11).",
+   "source": "refs",
+   "evidence": [
+    {
+     "clip": "c1a1cbc319232a2f",
+     "sf_in": 20383,
+     "sf_out": 21181,
+     "label": "v10 · Hand-drawn cut-out diagram"
+    },
+    {
+     "clip": "c1a1cbc09b25f3a1",
+     "sf_in": 14056,
+     "sf_out": 14320,
+     "label": "v06 · Clue recap on paper"
+    },
+    {
+     "clip": "c1a1cbc3ba9b3ecb",
+     "sf_in": 23142,
+     "sf_out": 24154,
+     "label": "v11 · Chalkboard relationship collage"
+    },
+    {
+     "clip": "c1a1cbc0fe1d5b7f",
+     "sf_in": 15468,
+     "sf_out": 15739,
+     "label": "v11 · Polaroid chalk note card"
+    }
+   ],
+   "use": "Explaining a plan, a deal, injuries or clues.",
+   "avoid": "Simple facts.",
+   "kind": "layout",
+   "why": "Makes a complex link easy to follow.",
+   "situation": "Compare or show many things",
+   "fit": "yes"
+  },
+  {
+   "id": "g-b2d1796d",
+   "title": "Red node diagram",
+   "text": "Dark red-tinted screen; framed screenshots or faces link up with red lines into a tree or web; pixel-build in, dissolve out. 4-8 s.",
+   "source": "refs",
+   "evidence": [
+    {
+     "clip": "c1a1cbbfe7a03234",
+     "sf_in": 5036,
+     "sf_out": 5267,
+     "label": "v11 · Joke diagram, red node tree"
+    },
+    {
+     "clip": "c1a1cbc037765d20",
+     "sf_in": 13818,
+     "sf_out": 14055,
+     "label": "v04 · Red web board"
+    },
+    {
+     "clip": "c1a1cbc050d2eccc",
+     "sf_in": 10117,
+     "sf_out": 10345,
+     "label": "v11 · Two-face link diagram"
+    },
+    {
+     "clip": "c1a1cbc00c20da92",
+     "sf_in": 8843,
+     "sf_out": 9309,
+     "label": "v10 · Similar murders diagram"
+    }
+   ],
+   "use": "Showing who is linked to whom.",
+   "avoid": "One person.",
+   "kind": "layout",
+   "why": "Shows the web of people.",
+   "situation": "Compare or show many things",
+   "fit": "yes"
+  },
+  {
+   "id": "g-400e8384",
+   "title": "RGB tear",
+   "text": "RGB split with a horizontal scan-line break, 8-13 frames (as short as 3 frames), hard on the cut; glitch zap SFX.",
+   "source": "refs",
+   "evidence": [
+    {
+     "clip": "c1a1cbc1061e9f00",
+     "sf_in": 643,
+     "sf_out": 650,
+     "label": "v09 · RGB glitch sting"
+    },
+    {
+     "clip": "c1a1cbc40da721aa",
+     "sf_in": 4362,
+     "sf_out": 4380,
+     "label": "v12 · RGB tear sting"
+    },
+    {
+     "clip": "c1a1cbbfe7a0bf29",
+     "sf_in": 7438,
+     "sf_out": 7447,
+     "label": "v11 · RGB tear sting"
+    },
+    {
+     "clip": "c1a1cbc1ad9916db",
+     "sf_in": 16160,
+     "sf_out": 16162,
+     "label": "v03 · Glitch tear"
+    }
+   ],
+   "use": "Graphic edges, jump cuts inside a clip, scares.",
+   "avoid": "Every cut.",
+   "kind": "glitch",
+   "why": "Hides the cut and adds unease.",
+   "situation": "Move between shots",
+   "fit": "yes"
+  },
+  {
+   "id": "g-20e03d20",
+   "title": "VHS static burst",
+   "text": "Full-frame TV static, 0.1-1 s, sometimes two in a row; into a tape, card, or new case. Static noise SFX.",
+   "source": "refs",
+   "evidence": [
+    {
+     "clip": "c1a1cbc3a010bfcc",
+     "sf_in": 25049,
+     "sf_out": 25054,
+     "label": "v10 · VHS static burst"
+    },
+    {
+     "clip": "c1a1cbc009ff5a30",
+     "sf_in": 10933,
+     "sf_out": 11000,
+     "label": "v06 · VHS static burst"
+    },
+    {
+     "clip": "c1a1cbc055b52bdd",
+     "sf_in": 1466,
+     "sf_out": 1470,
+     "label": "v03 · VHS static sting"
+    },
+    {
+     "clip": "c1a1cbc03776ce5d",
+     "sf_in": 1934,
+     "sf_out": 1978,
+     "label": "v04 · Static and black hit"
+    }
+   ],
+   "use": "Entering a tape or a new case.",
+   "avoid": "Inside a calm narration.",
+   "kind": "glitch",
+   "why": "Sounds and looks like a tape changing.",
+   "situation": "Move between shots",
+   "fit": "yes"
+  },
+  {
+   "id": "g-3b647b8a",
+   "title": "Glass shatter bridge",
+   "text": "Cracked-glass overlay builds over the shot in black and white shards, then fades off to the next angle. v15 only.",
+   "source": "refs",
+   "evidence": [
+    {
+     "clip": "c1a1cbc019945d0c",
+     "sf_in": 2092,
+     "sf_out": 2259,
+     "label": "v15 · Glass shatter dissolve"
+    }
+   ],
+   "use": "Into a violent crime.",
+   "avoid": "More than once a video.",
+   "kind": "glitch",
+   "why": "Breaks the calm.",
+   "situation": "Move between shots",
+   "fit": "yes"
+  },
+  {
+   "id": "g-bf6f25f6",
+   "title": "NOCTURN logo sting",
+   "text": "VHS static and red glitch blow in; glowing red NOCTURN condensed bold logo on black with a static bar, about 2 s, then 1 s static and glitch out to black. Once, about 49-62 s in (v05 only).",
+   "source": "refs",
+   "evidence": [
+    {
+     "clip": "c1a1cbbffaa67850",
+     "sf_in": 1476,
+     "sf_out": 1575,
+     "label": "v05 · NOCTURN logo sting"
+    }
+   ],
+   "use": "After the cold open of a narrated story.",
+   "avoid": "At 0:00 or at the end.",
+   "kind": "title-card",
+   "why": "Brands without delaying the hook.",
+   "situation": "Open a section or chapter",
+   "fit": "yes",
+   "media": [
+    {
+     "file": "ea360bc95c7c28d9.jpg",
+     "kind": "image",
+     "name": "nocturn_logo_sting.jpg"
+    }
+   ]
+  },
+  {
+   "id": "g-53dea93c",
+   "title": "Censor: blur, pixel, scribble",
+   "text": "Soft Gaussian blur patch, mosaic pixel block, or a red scribble line over bodies, blood, faces or private screens; tracks the area. 11 of 15.",
+   "source": "refs",
+   "evidence": [
+    {
+     "clip": "c1a1cbc1061ed573",
+     "sf_in": 3404,
+     "sf_out": 3802,
+     "label": "v09 · Cooler footage, push in"
+    },
+    {
+     "clip": "c1a1cbc09b2592d4",
+     "sf_in": 14663,
+     "sf_out": 14740,
+     "label": "v06 · Blurred blood floor"
+    },
+    {
+     "clip": "c1a1cbbf9585c4a6",
+     "sf_in": 3716,
+     "sf_out": 4021,
+     "label": "v13 · 911 call captions on footage"
+    },
+    {
+     "clip": "c1a1cbc4cee921a2",
+     "sf_in": 14502,
+     "sf_out": 14687,
+     "label": "v12 · Rifley stream, face blurred"
+    },
+    {
+     "clip": "c1a1cbc1ad9944ff",
+     "sf_in": 24672,
+     "sf_out": 26797,
+     "label": "v03 · Gunman confrontation, red subtitles"
+    }
+   ],
+   "use": "Bodies, gore, minors, private faces.",
+   "avoid": "Faces that are the story and already public.",
+   "kind": "raw-footage",
+   "why": "Stays watchable and within platform rules.",
+   "situation": "Hide or censor something",
+   "fit": "yes"
+  },
+  {
+   "id": "g-176e434b",
+   "title": "Burned-in subtitles",
+   "text": "One-line phrase captions (3-7 words) bottom centre; style per video (VCR mono on black box, or white sans with shadow); coloured by speaker, red for sounds; short tags like '*Broken audio*'.",
+   "source": "refs",
+   "evidence": [
+    {
+     "clip": "c1a1cbc055b59526",
+     "sf_in": 0,
+     "sf_out": 1339,
+     "label": "v03 · Cold open teaser"
+    },
+    {
+     "clip": "c1a1cbc0377678d5",
+     "sf_in": 0,
+     "sf_out": 1607,
+     "label": "v04 · Case 1 hook footage"
+    },
+    {
+     "clip": "c1a1cbbf95856bb5",
+     "sf_in": 0,
+     "sf_out": 334,
+     "label": "v13 · Cold open at the door"
+    },
+    {
+     "clip": "c1a1cbc00f6d3298",
+     "sf_in": 3673,
+     "sf_out": 5968,
+     "label": "v02 · Footage with audio captions"
+    }
+   ],
+   "use": "Any speech in raw footage.",
+   "avoid": "Narration.",
+   "kind": "raw-footage",
+   "why": "Raw audio is often unclear.",
+   "situation": "Read a quote, comment or message",
+   "fit": "yes",
+   "media": [
+    {
+     "file": "bcec53b5726f1d6b.jpg",
+     "kind": "image",
+     "name": "caption_vcr_mono_raw.jpg"
+    }
+   ]
+  },
+  {
+   "id": "g-e5e6b29a",
+   "title": "Punch-in and word strobe",
+   "text": "Punch-in zoom on a detail 1-4 s, or repeated pushes/strobe cuts of 2-10 frames in time with each spoken word; zoom blur with a soft ring on the target.",
+   "source": "refs",
+   "evidence": [
+    {
+     "clip": "c1a1cbc0da9698f8",
+     "sf_in": 16867,
+     "sf_out": 16990,
+     "label": "v13 · Punch-in on his face"
+    },
+    {
+     "clip": "c1a1cbc1a3a1eb00",
+     "sf_in": 23142,
+     "sf_out": 23214,
+     "label": "v04 · Word-synced strobe cuts"
+    },
+    {
+     "clip": "c1a1cbc009ffe986",
+     "sf_in": 13516,
+     "sf_out": 13768,
+     "label": "v06 · Word-by-word jump zoom"
+    },
+    {
+     "clip": "c1a1cbbf5deee37d",
+     "sf_in": 574,
+     "sf_out": 644,
+     "label": "v14 · Zoom blur, ring on ball"
+    }
+   ],
+   "use": "The voice names a detail in the clip.",
+   "avoid": "Long holds.",
+   "kind": "other",
+   "why": "Points without a graphic.",
+   "situation": "Point at a detail",
+   "fit": "yes"
+  },
+  {
+   "id": "g-625835f2",
+   "title": "Stream overlay kept",
+   "text": "Stream footage keeps its chat, LIVE tag, sub-goal bar, timer and gift pop-ups. 4 of 15.",
+   "source": "refs",
+   "evidence": [
+    {
+     "clip": "c1a1cbbfe7a0d964",
+     "sf_in": 0,
+     "sf_out": 918,
+     "label": "v11 · Livestream cold open"
+    },
+    {
+     "clip": "c1a1cbc2b9a1f8ae",
+     "sf_in": 156,
+     "sf_out": 350,
+     "label": "v12 · Kick stream, then sleeping room"
+    },
+    {
+     "clip": "c1a1cbc014d2e53d",
+     "sf_in": 376,
+     "sf_out": 1999,
+     "label": "v07 · Live stream footage, tight light"
+    },
+    {
+     "clip": "c1a1cbc09b259b32",
+     "sf_in": 20621,
+     "sf_out": 20807,
+     "label": "v06 · Night exterior, chat overlay"
+    }
+   ],
+   "use": "The clip is from a live stream.",
+   "avoid": "Do not fake an overlay.",
+   "kind": "raw-footage",
+   "why": "Shows it happened live with viewers.",
+   "situation": "Show a video in its context (platform, CCTV, phone, file)",
+   "fit": "yes"
+  }
+ ],
+ "graphics_summary": "Nocturn graphics are proof devices around raw footage: dates, source pages, maps, name tags and red callouts, each 2-10 s. Dark grounds, vignettes, white type and red accents; VHS static and RGB tears glue them to the footage. Pick by what the narration does; never add a graphic that does not prove, date, locate or point.",
+ "learnings": [
+  {
+   "id": "l-dd269fac",
+   "date": "2026-11-12",
+   "text": "Owner 2026-11-12: every style guide follows the same generic craft rules learned from Farrell (audio cutting, clips >= 3 s, SFX and music levels, loudness, transition hygiene) so the video is smooth and human; they live in styleguide/_shared/GENERIC_RULES.md. Every guide keeps a feedback loop: owner notes enter the rule book and Learnings the same day and the next build reads them.",
+   "status": "rulebook",
+   "target": "b-9ee52bce",
+   "note": "owner chat 2026-11-12: generic rules + feedback loop",
+   "update": ""
+  }
+ ],
+ "updates": [],
+ "meta": {
+  "name": "Nocturn",
+  "slug": "nocturn",
+  "port": 8768,
+  "intro": [
+   "Dark internet-horror compilation style, learned from 15 Nocturn videos (youtube.com/@Nocturn_real).",
+   "Follow it top to bottom on every Nocturn-style edit. The rule book comes first and is never skipped; then the categories; then pick graphics from the table."
+  ],
+  "legend": "How to read it: *(set by you)* marks the channel owner's own rules; the rest are learned from the references. Both are binding. \"see vNN · title\" names an example clip on the Nocturn board (productions/_boards/nocturn.json): v01 bodycam paranormal, v02 urban exploration, v03 psycho killers urbex, v04 forest encounters, v05 demon shopkeeper, v06 exploration encounters, v07 paranormal urbex, v08 YouTuber final moments, v09 body in cooler, v10 lost media, v11 streamer murdered, v12 live stream, v13 doorbell cam, v14 recorded final moments, v15 CCTV. \"N of 15\" counts the videos that show it. (est.) = judged by eye, not measured."
+ }
+}

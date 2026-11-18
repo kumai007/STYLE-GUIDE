@@ -1,0 +1,2 @@
+Source: https://github.com/Jadouminou/final-phase-lite (MIT), commit bf3114a, copied 2026-11-18.
+Local change: server.mjs folder-arg fix (optIndex < 0). Use via tools/case-build/preview.sh, not its own install/Render button.

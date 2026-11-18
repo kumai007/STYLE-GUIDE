@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "autoedit case edit file (cases/cNN.json)",
+  "type": "object",
+  "required": ["id", "role", "flow"],
+  "properties": {
+    "id": {"type": "string", "pattern": "^c\\d\\d$"},
+    "role": {"enum": ["intro", "case", "outro"]},
+    "case": {"type": "string", "description": "case id, e.g. C01 (role case only)"},
+    "title": {"type": "string"}, "credit": {"type": "string"}, "date": {"type": "string"},
+    "opener": {"type": "string", "description": "optional label; lint compares openers across cases"},
+    "card": {"type": "object", "description": "title card plate: {src, t} or {src, fz}"},
+    "sources": {"type": "object", "additionalProperties": {"type": "object", "properties": {
+      "mode": {"enum": ["cover", "blurfill"]}, "crop": {"type": ["array", "null"], "items": {"type": "number"}, "minItems": 4, "maxItems": 4},
+      "look": {"enum": ["sky_mute"]}}}},
+    "music": {"type": "object", "required": ["file"], "properties": {"file": {"type": "string"}, "offset": {"type": ["number", "null"]}}},
+    "flow": {"type": "array", "minItems": 1, "items": {"oneOf": [
+      {"type": "object", "required": ["vo", "beats"], "properties": {
+        "vo": {"type": "string"}, "tail_f": {"type": "integer"}, "min_s": {"type": "number"},
+        "beats": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/beat"}}}},
+      {"type": "object", "required": ["raw", "src", "in", "out"], "properties": {
+        "raw": {"type": "string"}, "src": {"type": "string"}, "in": {"type": "number"}, "out": {"type": "number"},
+        "captions": {"type": "array", "items": {"type": "array", "minItems": 3, "maxItems": 4}},
+        "bleeps": {"type": "array", "items": {"type": "array", "minItems": 2}},
+        "lufs": {"type": "number"}, "bed_db": {"type": "number"}, "gain_db": {"type": "number"},
+        "cabin": {"type": "boolean"}, "haar": {"type": "boolean"}}},
+      {"type": "object", "required": ["hold", "beats"], "properties": {
+        "hold": {"type": "string"}, "bed_db": {"type": "number"}, "audio": {"type": "string"},
+        "beats": {"type": "array", "items": {"allOf": [{"$ref": "#/$defs/beat"}, {"required": ["nf"]}]}}}},
+      {"type": "object", "required": ["dip"], "properties": {"dip": {"const": true}}}
+    ]}}
+  },
+  "$defs": {"beat": {"type": "object", "additionalProperties": false, "properties": {
+    "w": {"type": ["integer", "string"], "description": "word index of the cut in this VO take, or 's<N>' = sentence N start; not on beat 0"},
+    "say": {"type": "string", "description": "the words at w (lint checks)"},
+    "nudge_f": {"type": "integer"}, "nf": {"type": "integer", "description": "hold beats only"},
+    "src": {"type": "string"}, "in": {"type": ["number", "null"]}, "out": {"type": ["number", "null"]},
+    "fit": {"const": "end", "description": "footage ends exactly at out (a raw follows); in = earliest allowed"},
+    "speed": {"type": "number", "minimum": 0.25, "maximum": 2}, "head": {"type": "integer"},
+    "push": {"type": "number"}, "zoom": {"type": "object", "properties": {"s": {"type": "number"}, "cx": {"type": "number"}, "cy": {"type": "number"}}},
+    "mode": {"enum": ["cover", "blurfill"]}, "crop": {"type": "array"},
+    "cabin": {"type": "boolean"}, "zones_extra": {"type": "array"}, "haar": {"type": "boolean"},
+    "date": {"type": "boolean"}, "credit_case": {"type": "string"}, "tint": {"type": "string"},
+    "xfade": {"type": "integer"}, "tr": {"enum": ["cut", "dip"]},
+    "still": {"type": "object", "properties": {"t": {"type": "number"}, "fz": {"type": "string"}, "s": {"type": "number"},
+      "cx": {"type": "number"}, "cy": {"type": "number"}, "drift": {"type": "array"}, "s_end": {"type": "number"}}},
+    "page": {"type": "object", "required": ["id"], "properties": {"id": {"type": "string"}, "hl": {"type": ["integer", "null"]}, "box": {"type": "array"}}},
+    "map": {"type": "object", "required": ["tiles", "lat", "lon", "label"]},
+    "list": {"const": true}, "note": {"type": "string"}, "x": {"type": "object"}
+  }}}
+}

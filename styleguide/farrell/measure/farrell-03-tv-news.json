@@ -1,0 +1,370 @@
+{
+ "prod": "farrell-03-tv-news",
+ "src": "9PpAtUQfSKs.mp4",
+ "fps": 29.97,
+ "duration_s": 2370.6,
+ "edit": {
+  "clips": 189,
+  "clips_per_min": 4.78,
+  "clip_len_s": {
+   "p10": 4.8,
+   "median": 9.0,
+   "p90": 25.8
+  },
+  "motion_graphic_share": 0.545,
+  "categories": {
+   "raw-footage": {
+    "clips": 76,
+    "time_share": 0.571,
+    "median_s": 16.4,
+    "title_words": [
+     "footage",
+     "bbc",
+     "news",
+     "interview",
+     "suncoast",
+     "gate",
+     "clips",
+     "broadcast"
+    ]
+   },
+   "other": {
+    "clips": 68,
+    "time_share": 0.288,
+    "median_s": 8.3,
+    "title_words": [
+     "photo",
+     "host",
+     "camera",
+     "framed",
+     "jodi",
+     "silhouette",
+     "push",
+     "sketch"
+    ]
+   },
+   "page-3d": {
+    "clips": 22,
+    "time_share": 0.086,
+    "median_s": 8.8,
+    "title_words": [
+     "tilt",
+     "article",
+     "newspaper",
+     "script",
+     "clipping",
+     "youtube",
+     "upload",
+     "report"
+    ]
+   },
+   "text-card": {
+    "clips": 6,
+    "time_share": 0.029,
+    "median_s": 10.8,
+    "title_words": [
+     "transcript",
+     "broadcast",
+     "dialogue",
+     "quote",
+     "terribly",
+     "depressed",
+     "end",
+     "patrons"
+    ]
+   },
+   "glitch": {
+    "clips": 7,
+    "time_share": 0.01,
+    "median_s": 3.5,
+    "title_words": [
+     "vhs",
+     "static",
+     "colour",
+     "bars",
+     "transition",
+     "tape",
+     "start",
+     "broadcast"
+    ]
+   },
+   "title-card": {
+    "clips": 6,
+    "time_share": 0.007,
+    "median_s": 2.2,
+    "title_words": [
+     "fight",
+     "back",
+     "bleeds",
+     "leads",
+     "archive",
+     "caption",
+     "viewfinder",
+     "hooliganism"
+    ]
+   },
+   "map": {
+    "clips": 2,
+    "time_share": 0.005,
+    "median_s": 5.7,
+    "title_words": [
+     "pen",
+     "sinclair",
+     "stations",
+     "map",
+     "callout"
+    ]
+   },
+   "layout": {
+    "clips": 1,
+    "time_share": 0.003,
+    "median_s": 6.4,
+    "title_words": [
+     "three",
+     "acquitted",
+     "faces"
+    ]
+   },
+   "comments": {
+    "clips": 1,
+    "time_share": 0.002,
+    "median_s": 5.5,
+    "title_words": [
+     "reddit",
+     "comment"
+    ]
+   }
+  }
+ },
+ "voice": {
+  "words": 6891,
+  "wpm": 177.7,
+  "pauses_ge_0_6s_per_min": 7.5,
+  "pause_median_s": 0.86,
+  "pauses_ge_2s": 14
+ },
+ "sound": {
+  "mix": {
+   "I_lufs": -16.8,
+   "LRA_lu": 3.4
+  }
+ },
+ "picture": {
+  "all": {
+   "frames": 1185,
+   "luma": 65.82,
+   "p10": 5.0,
+   "p90": 141.31,
+   "contrast": 52.54,
+   "sat": 26.02,
+   "tint_rb": 4.31,
+   "tint_g": 0.11,
+   "vignette": 0.39,
+   "grain": 10.84,
+   "luma_p10_p90": [
+    25.4,
+    112.6
+   ],
+   "dark_share": 0.2,
+   "black_share": 0.008
+  },
+  "cat:comments": {
+   "frames": 2,
+   "luma": 41.03,
+   "p10": 0.0,
+   "p90": 98.1,
+   "contrast": 40.6,
+   "sat": 9.28,
+   "tint_rb": -2.41,
+   "tint_g": 1.02,
+   "vignette": 1.27,
+   "grain": 7.84,
+   "luma_p10_p90": [
+    40.9,
+    41.1
+   ],
+   "dark_share": 0.0,
+   "black_share": 0.0
+  },
+  "cat:glitch": {
+   "frames": 13,
+   "luma": 3.87,
+   "p10": 0.0,
+   "p90": 3.0,
+   "contrast": 20.62,
+   "sat": 1.84,
+   "tint_rb": -0.0,
+   "tint_g": -0.11,
+   "vignette": 0.42,
+   "grain": 8.57,
+   "luma_p10_p90": [
+    0.3,
+    65.0
+   ],
+   "dark_share": 0.692,
+   "black_share": 0.538
+  },
+  "cat:layout": {
+   "frames": 3,
+   "luma": 86.1,
+   "p10": 14.66,
+   "p90": 195.03,
+   "contrast": 65.37,
+   "sat": 26.92,
+   "tint_rb": 2.6,
+   "tint_g": -8.56,
+   "vignette": 0.41,
+   "grain": 13.06,
+   "luma_p10_p90": [
+    86.0,
+    86.2
+   ],
+   "dark_share": 0.0,
+   "black_share": 0.0
+  },
+  "cat:map": {
+   "frames": 7,
+   "luma": 83.21,
+   "p10": 6.34,
+   "p90": 160.72,
+   "contrast": 49.22,
+   "sat": 8.62,
+   "tint_rb": 6.45,
+   "tint_g": -0.26,
+   "vignette": 0.48,
+   "grain": 13.52,
+   "luma_p10_p90": [
+    41.7,
+    157.8
+   ],
+   "dark_share": 0.0,
+   "black_share": 0.0
+  },
+  "cat:other": {
+   "frames": 339,
+   "luma": 70.59,
+   "p10": 9.65,
+   "p90": 157.42,
+   "contrast": 55.35,
+   "sat": 22.77,
+   "tint_rb": 0.39,
+   "tint_g": 1.38,
+   "vignette": 0.46,
+   "grain": 9.28,
+   "luma_p10_p90": [
+    23.2,
+    116.7
+   ],
+   "dark_share": 0.298,
+   "black_share": 0.003
+  },
+  "cat:page-3d": {
+   "frames": 103,
+   "luma": 103.57,
+   "p10": 8.0,
+   "p90": 209.11,
+   "contrast": 71.52,
+   "sat": 10.44,
+   "tint_rb": -10.58,
+   "tint_g": -1.2,
+   "vignette": 0.47,
+   "grain": 15.67,
+   "luma_p10_p90": [
+    33.6,
+    164.2
+   ],
+   "dark_share": 0.117,
+   "black_share": 0.0
+  },
+  "cat:raw-footage": {
+   "frames": 678,
+   "luma": 63.77,
+   "p10": 0.0,
+   "p90": 135.33,
+   "contrast": 51.37,
+   "sat": 30.05,
+   "tint_rb": 9.51,
+   "tint_g": 0.39,
+   "vignette": 0.34,
+   "grain": 10.22,
+   "luma_p10_p90": [
+    37.2,
+    95.6
+   ],
+   "dark_share": 0.14,
+   "black_share": 0.003
+  },
+  "cat:text-card": {
+   "frames": 33,
+   "luma": 27.97,
+   "p10": 0.0,
+   "p90": 118.0,
+   "contrast": 34.27,
+   "sat": 0.71,
+   "tint_rb": 0.0,
+   "tint_g": -0.73,
+   "vignette": 0.58,
+   "grain": 17.89,
+   "luma_p10_p90": [
+    12.5,
+    92.6
+   ],
+   "dark_share": 0.576,
+   "black_share": 0.0
+  },
+  "cat:title-card": {
+   "frames": 7,
+   "luma": 48.4,
+   "p10": 0.0,
+   "p90": 117.66,
+   "contrast": 45.08,
+   "sat": 28.48,
+   "tint_rb": 17.59,
+   "tint_g": -0.51,
+   "vignette": 0.28,
+   "grain": 9.83,
+   "luma_p10_p90": [
+    38.9,
+    63.7
+   ],
+   "dark_share": 0.143,
+   "black_share": 0.0
+  },
+  "raw": {
+   "frames": 678,
+   "luma": 63.77,
+   "p10": 0.0,
+   "p90": 135.33,
+   "contrast": 51.37,
+   "sat": 30.05,
+   "tint_rb": 9.51,
+   "tint_g": 0.39,
+   "vignette": 0.34,
+   "grain": 10.22,
+   "luma_p10_p90": [
+    37.2,
+    95.6
+   ],
+   "dark_share": 0.14,
+   "black_share": 0.003
+  },
+  "treated": {
+   "frames": 507,
+   "luma": 73.6,
+   "p10": 8.0,
+   "p90": 160.0,
+   "contrast": 55.7,
+   "sat": 17.03,
+   "tint_rb": -0.01,
+   "tint_g": 0.0,
+   "vignette": 0.46,
+   "grain": 11.83,
+   "luma_p10_p90": [
+    22.8,
+    127.1
+   ],
+   "dark_share": 0.28,
+   "black_share": 0.016
+  }
+ }
+}

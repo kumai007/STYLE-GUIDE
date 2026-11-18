@@ -1,0 +1,122 @@
+{
+ "rulebook": [
+  "Mood is horror, always. Every picture, text, movement and sound adds dread or unease. Nothing bright, cute or playful unless it is glitched, desaturated or distorted so it feels wrong.",
+  "All text you add uses the VCR OSD Mono font: titles, dates, labels, captions, chapter cards. No second font. Captured pages, posts and broadcasts keep their own fonts.",
+  "Between shots, either cut straight or use one of four transitions: crossfade, dip to black, VHS (tape start, rewind, tracking, static) or glitch. A light leak counts as a crossfade. No wipes, slides, spins, zoom transitions or shape reveals.",
+  "Shot size is mostly medium. Use close-up or extreme close-up only to point at a detail (a face, a word, a figure in the frame).",
+  "Compose to the centre: the subject, title or key line sits on the centre of the frame.",
+  "High contrast, dark grade, vintage texture. Treated shots sit at a median brightness of 70-90 on a 0-255 scale. Before the first edit, pick 3-5 texture types for the video (film grain, VHS noise and tracking lines, CRT scanlines and curvature, dust and scratches, light leak), list them in the edit notes, and put at least one on every treated shot.",
+  "Every graphic shot moves: pan, zoom or push, tracking, 3D tilt, or wide angle, sometimes with lens distortion. No still graphics.",
+  "Raw clip audio: start the audio 2.0 s before its picture cut (pre-roll; less if the source has no 2.0 s of head) and end it with the picture. Fade in over the first 6.44 s and out over the last 2.74 s. If the audio clip is shorter than 9.18 s, multiply both fade lengths by (clip length / 9.18) x 0.98.",
+  "Crossfade inside a montage. Dip to black between sections (a new date, place or time period). Mark a chapter change with VHS (tape start, rewind or static)."
+ ],
+ "categories": {
+  "overall-aesthetic": {
+   "summary": "A dark, archival internet-horror documentary. Most of the running time is web pages, comments and photos laid out as tilted 3D sheets on a dark ground, cut against long stretches of raw source footage. Graphics are desaturated and grainy; raw footage keeps its own colour and age. In the 5 references, motion graphics make up 45-80% of the clips.",
+   "rules": [
+    {"text": "Show evidence as the thing itself: the real web page, comment, file name or broadcast, in 3D on a dark ground, never a re-typed version.", "source": "refs", "evidence": ["c1a1b9415b59d778", "c1a1b9cb0712866b", "c1a1b9ce27d5f9b1"]},
+    {"text": "Alternate treated graphics with long runs of untouched raw footage; raw footage keeps its own colour and period look.", "source": "refs", "evidence": ["c1a1b9d04bf5a166", "c1a1b940575424a9"]},
+    {"text": "High contrast and vintage texture on every treated shot (rule 6).", "source": "user", "evidence": ["c1a1b940575458fb", "c1a1b9cb0712a55e"]}
+   ]
+  },
+  "mood-emotion": {
+   "summary": "Horror, built from restraint rather than shocks: dark pages that drift, a calm narrator, and moments where the narration stops so the real footage or audio plays on its own. Dread comes from the evidence being real and the viewer being made to look closely at it.",
+   "rules": [
+    {"text": "Build dread slowly: a dark page that drifts or pushes in while the narration states the unsettling fact plainly.", "source": "refs", "evidence": ["c1a1b940575458fb", "c1a1b94057467f1b"]},
+    {"text": "At the key moment, stop explaining: hold on the real footage with no graphics or text over it (sound: see Music & sound).", "source": "refs", "evidence": ["c1a1b9ccbb728f4d", "c1a1b9cbb8c098d6"]},
+    {"text": "Re-create events nobody filmed with dark silhouettes, never with actors' faces.", "source": "refs", "evidence": ["c1a1b9d2feeb6089", "c1a1b9d2feeb815a"]}
+   ]
+  },
+  "color-palette": {
+   "summary": "Near-black grounds, desaturated pages and two accent colours. Treated shots measure 14-19% saturation against 20-42% for raw footage, with a neutral tint. Gold marks names, dates and titles; red marks warnings and circles on evidence; green and red/blue splits appear only in glitches.",
+   "rules": [
+    {"text": "Desaturate graphics to 15-20% saturation; leave raw footage at its own colour.", "source": "refs", "evidence": ["c1a1b94057533d03", "c1a1b9cb0712866b"]},
+    {"text": "Use gold for names, years and titles over a blurred background.", "source": "refs", "evidence": ["c1a1b9405756f6eb", "c1a1b94256d4f52d"]},
+    {"text": "Use red only to warn or to point: a red chapter word or a red circle on the figure.", "source": "refs", "evidence": ["c1a1b9d411edfccb", "c1a1b9ca0a6b6a92", "c1a1b9cb0712a55e"]},
+    {"text": "Keep green and red/blue split colour for glitch moments only.", "source": "refs", "evidence": ["c1a1b9405755c56c", "c1a1b9415b5b2a87"]}
+   ]
+  },
+  "lighting": {
+   "summary": "Lighting is built in the edit: dark grounds, a vignette on almost every graphic and pools of light on the subject. In the references the edges of treated shots are 10-34% darker than the centre, and about 1 in 5 treated frames is near-black (brightness under 40 of 255).",
+   "rules": [
+    {"text": "Put a vignette on every graphic so the edges fall 10-35% darker than the centre.", "source": "refs", "evidence": ["c1a1b94057533d03", "c1a1b94057527351"]},
+    {"text": "Pages and photos sit on near-black, never on white or a bright colour.", "source": "refs", "evidence": ["c1a1b94057467f1b", "c1a1b946ea528ecd"]},
+    {"text": "Darken and blur the page behind any title or overlay so the text is the brightest thing on screen.", "source": "refs", "evidence": ["c1a1b9405757557f", "c1a1b94858a6060d"]}
+   ]
+  },
+  "camera-angles": {
+   "summary": "Mostly medium framing: a page section, a comment, a person from the chest up. Close-ups and extreme close-ups are saved for a detail the narration names, usually reached by zooming in on the same image. Pages are shown at an angle (3D tilt) rather than flat on.",
+   "rules": [
+    {"text": "Medium shot by default (rule 4): enough of the page or person to read the context.", "source": "user", "evidence": ["c1a1b940575603bf", "c1a1b94057540e96"]},
+    {"text": "Reach a close-up by zooming into the same image, on the detail the narration names (rule 4).", "source": "user", "evidence": ["c1a1b9ca0a6b6a92", "c1a1b94057524a7c"]},
+    {"text": "Show pages and posts at a 3D angle, tilted away from the viewer, not flat on.", "source": "refs", "evidence": ["c1a1b9405751430e", "c1a1b946ea4d778e"]}
+   ]
+  },
+  "camera-movement": {
+   "summary": "Every graphic moves (rule 7). Push-ins dominate: in a 60 s sample, 64% of all shots moved (raw footage included) and 77% of the moves were zoom-ins. Add pans across pages, tilts and slow drifts, tracking along maps and Street View, and the occasional wide-angle or distorted move.",
+   "rules": [
+    {"text": "Push in slowly on the page as the narration gets to the point.", "source": "refs", "evidence": ["c1a1b94256d45509", "c1a1b940575458fb"]},
+    {"text": "Pan or tilt across long pages and newspaper clippings to read them.", "source": "user", "evidence": ["c1a1b94057554ace", "c1a1b9415b5c069e"]},
+    {"text": "Track along maps, satellite views and Street View to place the story.", "source": "user", "evidence": ["c1a1b9cd8dacc474", "c1a1b9cd8dacb3e3"]},
+    {"text": "Use a 3D tilt with a slow drift for comment threads and posts; sometimes a wide-angle or distorted move for unease.", "source": "user", "evidence": ["c1a1b946ea4d778e", "c1a1b94057467f1b"]}
+   ]
+  },
+  "shot-composition": {
+   "summary": "Centred and layered: a blurred, darkened copy of the page fills the frame, and the item that matters (a title, comment, file name or photo) sits in the middle on top. Old TV footage is placed inside a CRT frame or composited into rooms instead of being stretched.",
+   "rules": [
+    {"text": "Centre the subject (rule 5): titles, labels and key comments sit in the middle of the frame.", "source": "user", "evidence": ["c1a1b9405757557f", "c1a1b9ca0a6b2a18"]},
+    {"text": "Layer: blurred page behind, the item that matters on top in the centre.", "source": "refs", "evidence": ["c1a1b94858a6060d", "c1a1b9415b5c89a8"]},
+    {"text": "Isolate a single line, URL or reply on black and highlight the word that matters.", "source": "refs", "evidence": ["c1a1b946ea528ecd", "c1a1b94858ac2644"]},
+    {"text": "Place old TV and video inside a CRT or screen frame rather than stretching it to fill.", "source": "refs", "evidence": ["c1a1b9cbb8c001e9", "c1a1b9caa44b67e3"]}
+   ]
+  },
+  "editing-rhythm": {
+   "summary": "A block is a run of shots with one look (for example, all tilted-page shots), ending when the look changes. Expect 4-6 blocks per minute. Graphic blocks run 8-11 s; raw-footage blocks run 11-16 s and up to 27 s; title cards 2-4 s. Inside a block the picture keeps changing, so the cut still feels quick (the 60 s sample averaged 1.4 s per shot).",
+   "rules": [
+    {"text": "Hold graphic blocks 8-11 s and raw-footage blocks 11-16 s; let a raw moment run to 25 s or more when it is the evidence.", "source": "refs", "evidence": ["c1a1b9d04bf5a166", "c1a1b94256d5b02d"]},
+    {"text": "Keep title and date cards to 2-4 s.", "source": "refs", "evidence": ["c1a1b9d136966061", "c1a1b9405756f6eb"]},
+    {"text": "Change the picture inside a block (a new page, photo or push) every 1-3 s while narration runs.", "source": "refs", "evidence": ["c1a1b9cb0712a55e", "c1a1b94858ac578b"]},
+    {"text": "Never run narration over empty black: if the ground is black, something sits on it (text, a page, a photo).", "source": "refs", "evidence": ["c1a1b94057540730"]}
+   ]
+  },
+  "transitions": {
+   "summary": "Most edits are straight cuts (31 of 34 in the 60 s sample); a straight cut is not a transition. Each transition has one job (rules 3 and 9): VHS for a chapter change, dip to black for a new date, place or time period, crossfade inside a montage, glitch when something breaks.",
+   "rules": [
+    {"text": "Cut straight unless one of the jobs below applies.", "source": "refs", "evidence": []},
+    {"text": "Mark a chapter change with VHS static, a tape start or a rewind.", "source": "user", "evidence": ["c1a1b9d04bf511af", "c1a1b9d122c27240"]},
+    {"text": "Use a short glitch (1-4 s) when a broadcast cuts out or the story jumps.", "source": "user", "evidence": ["c1a1b9d04bf52b21", "c1a1b9d1339e23da", "c1a1b94256d0aff3"]},
+    {"text": "Dip to black between sections: before a new date, place or time period.", "source": "user", "evidence": ["c1a1b94256d4f52d"]},
+    {"text": "Crossfade between shots inside a montage; a light leak counts as a crossfade.", "source": "user", "evidence": ["c1a1b9415b5cf8f8", "c1a1b94256d5f462"]}
+   ]
+  },
+  "typography": {
+   "summary": "All added text is VCR OSD Mono (rule 2). The references use text sparingly: one-word chapter titles, years and dates, file-name labels and names, each centred and held for 2-4 s, plus on-screen typing into search boxes.",
+   "rules": [
+    {"text": "Set every added title, date, label and caption in VCR OSD Mono (rule 2).", "source": "user", "evidence": ["c1a1b9cb0712e935", "c1a1b9cf4c36a04f"]},
+    {"text": "Chapter titles are one or two words in capitals, centred over blurred, darkened footage.", "source": "refs", "evidence": ["c1a1b9d136966061", "c1a1b9ca0a6b2a18", "c1a1b9d411edfccb"]},
+    {"text": "Label names, years and titles in gold; file names and translations of foreign text in white.", "source": "refs", "evidence": ["c1a1b94256d5d4c0", "c1a1b9ca0a6bccff"]},
+    {"text": "Show searches by typing them into the real search box, letter by letter.", "source": "refs", "evidence": ["c1a1b9405758e3b6", "c1a1b9415b5b2ba9"]}
+   ]
+  },
+  "music-sound": {
+   "summary": "Narration leads. Loudness is measured in LUFS (the average loudness of the whole mix on a loudness meter): the references sit at -17.6 to -14.4 LUFS, 4 of the 5 near -17. The voice is calm, 155-195 words per minute, with 4-8 pauses of 0.6 s or more per minute (median 0.8 s). Music is a low bed (8.4 dB under the voice in the 60 s sample). Raw clips bring their own sound, faded by rule 8.",
+   "rules": [
+    {"text": "Master to -17 LUFS integrated; keep the voice clear and steady.", "source": "refs", "evidence": []},
+    {"text": "Keep music 8 dB under the narration on the loudness meter, as a dark ambient bed, not a melody.", "source": "refs", "evidence": []},
+    {"text": "Let the raw footage's own sound play when it is the evidence, with the narration silent.", "source": "refs", "evidence": ["c1a1b9ccbb728f4d", "c1a1b9cbb8c098d6"]},
+    {"text": "Leave a pause of 0.8 s after a disturbing line before the next sentence.", "source": "refs", "evidence": []},
+    {"text": "Fade raw clip audio by rule 8.", "source": "user", "evidence": []}
+   ]
+  },
+  "storytelling": {
+   "summary": "An investigation told in order of discovery: a cold open on the most disturbing material, the host on camera to set up the question, then the evidence trail (searches, archived pages, comments, broadcasts) one step at a time, chapter titles at each turn, and a sign-off with credits. The host returns on camera at chapter turns.",
+   "rules": [
+    {"text": "Open cold on the most disturbing footage, broken up with glitch tears, before any introduction; then bring in the host to pose the question.", "source": "refs", "evidence": ["c1a1b9ca0a6afaed", "c1a1b9d04bf511af"]},
+    {"text": "Follow the evidence in the order it was found: search, archived page, post, comment, footage.", "source": "refs", "evidence": ["c1a1b9415b5b2ba9", "c1a1b9415b5779e4", "c1a1b9415b5a7c6f"]},
+    {"text": "Bring the host back on camera at chapter turns.", "source": "refs", "evidence": ["c1a1b946ea4d46dc", "c1a1b9415b5b0cf1"]},
+    {"text": "Name each chapter with a short title card.", "source": "refs", "evidence": ["c1a1b9d136966061", "c1a1b9d04bf5a911"]},
+    {"text": "End with the host's sign-off, then an end card and credits.", "source": "refs", "evidence": ["c1a1b94a536bb816", "c1a1b94a536b8265", "c1a1b9cf39b13cbb"]}
+   ]
+  }
+ }
+}

@@ -1,0 +1,11 @@
+# Narration template for `python algrow_voice.py file templates/narration_template.txt -o out/narration`
+# Lines starting with # are skipped. Blank lines are fine. Text over 3500 chars is split at sentence ends
+# automatically and joined back into one wav, with word timings carried across the chunks.
+# Tips (from real runs): write numbers and dates the way they should be said ("nineteen ninety-four"),
+# end every sentence with . ! or ? (that is where chunks are cut), and avoid stage directions in brackets.
+
+On the night of October twelfth, nineteen ninety-four, a white van stopped at the edge of Lake Hollow.
+
+The driver was never seen again. Police found the engine still running, and the headlights pointed at the water.
+
+Brendan could at least see the headlights coming. The next couple spent their evening listening to the trees.

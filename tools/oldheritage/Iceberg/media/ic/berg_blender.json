@@ -1,0 +1,19 @@
+{
+ "src": "ic/berg_blender.jpg",
+ "aspect": 1.7777777777777777,
+ "waterline": 0.1311,
+ "bars": [
+  0.1311,
+  0.2759,
+  0.4207,
+  0.5655,
+  0.7104,
+  0.8552
+ ],
+ "bottom": 1.0,
+ "bergX": [
+  0.3346,
+  0.6235
+ ],
+ "credit": "Blender render, Disasters2/art (original, no third-party imagery)"
+}

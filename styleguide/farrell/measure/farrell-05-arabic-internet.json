@@ -1,0 +1,340 @@
+{
+ "prod": "farrell-05-arabic-internet",
+ "src": "_6tAKi26WKs.mp4",
+ "fps": 24.0,
+ "duration_s": 1473.0,
+ "edit": {
+  "clips": 108,
+  "clips_per_min": 4.4,
+  "clip_len_s": {
+   "p10": 3.9,
+   "median": 10.9,
+   "p90": 27.3
+  },
+  "motion_graphic_share": 0.454,
+  "categories": {
+   "raw-footage": {
+    "clips": 49,
+    "time_share": 0.583,
+    "median_s": 14.5,
+    "title_words": [
+     "footage",
+     "figure",
+     "audio",
+     "hassan",
+     "video",
+     "source",
+     "witch",
+     "abdullah"
+    ]
+   },
+   "page-3d": {
+    "clips": 28,
+    "time_share": 0.21,
+    "median_s": 8.7,
+    "title_words": [
+     "youtube",
+     "ghost",
+     "video",
+     "channel",
+     "real",
+     "article",
+     "again",
+     "hassan"
+    ]
+   },
+   "other": {
+    "clips": 17,
+    "time_share": 0.14,
+    "median_s": 8.1,
+    "title_words": [
+     "host",
+     "camera",
+     "old",
+     "photo",
+     "crt",
+     "jinns",
+     "jinn",
+     "ghost"
+    ]
+   },
+   "comments": {
+    "clips": 6,
+    "time_share": 0.025,
+    "median_s": 5.1,
+    "title_words": [
+     "comment",
+     "reddit",
+     "arabic",
+     "old",
+     "spam",
+     "comments",
+     "pixel",
+     "edges"
+    ]
+   },
+   "layout": {
+    "clips": 3,
+    "time_share": 0.017,
+    "median_s": 8.0,
+    "title_words": [
+     "split",
+     "screen",
+     "two",
+     "channel",
+     "headers",
+     "blur",
+     "witch",
+     "video"
+    ]
+   },
+   "text-card": {
+    "clips": 2,
+    "time_share": 0.014,
+    "median_s": 10.3,
+    "title_words": [
+     "cicada",
+     "style",
+     "ascii",
+     "screen",
+     "end",
+     "credits"
+    ]
+   },
+   "ui-typing": {
+    "clips": 2,
+    "time_share": 0.008,
+    "median_s": 6.2,
+    "title_words": [
+     "translated",
+     "third",
+     "video",
+     "selected"
+    ]
+   },
+   "title-card": {
+    "clips": 1,
+    "time_share": 0.002,
+    "median_s": 2.7,
+    "title_words": [
+     "arab",
+     "ghost",
+     "hunting"
+    ]
+   }
+  }
+ },
+ "voice": {
+  "words": 3759,
+  "wpm": 155.4,
+  "pauses_ge_0_6s_per_min": 4.3,
+  "pause_median_s": 0.8,
+  "pauses_ge_2s": 20
+ },
+ "sound": {
+  "mix": {
+   "I_lufs": -17.0,
+   "LRA_lu": 9.5
+  }
+ },
+ "picture": {
+  "all": {
+   "frames": 736,
+   "luma": 59.28,
+   "p10": 4.23,
+   "p90": 130.72,
+   "contrast": 49.2,
+   "sat": 30.28,
+   "tint_rb": 0.99,
+   "tint_g": -0.28,
+   "vignette": 0.56,
+   "grain": 8.11,
+   "luma_p10_p90": [
+    10.5,
+    143.3
+   ],
+   "dark_share": 0.326,
+   "black_share": 0.053
+  },
+  "cat:comments": {
+   "frames": 18,
+   "luma": 42.9,
+   "p10": 19.0,
+   "p90": 85.7,
+   "contrast": 32.53,
+   "sat": 10.05,
+   "tint_rb": -1.98,
+   "tint_g": -0.36,
+   "vignette": 0.76,
+   "grain": 11.41,
+   "luma_p10_p90": [
+    22.9,
+    204.7
+   ],
+   "dark_share": 0.5,
+   "black_share": 0.0
+  },
+  "cat:layout": {
+   "frames": 12,
+   "luma": 68.19,
+   "p10": 6.17,
+   "p90": 159.27,
+   "contrast": 56.36,
+   "sat": 23.49,
+   "tint_rb": 11.12,
+   "tint_g": 0.92,
+   "vignette": 0.61,
+   "grain": 8.18,
+   "luma_p10_p90": [
+    36.8,
+    111.5
+   ],
+   "dark_share": 0.167,
+   "black_share": 0.0
+  },
+  "cat:other": {
+   "frames": 105,
+   "luma": 56.44,
+   "p10": 3.77,
+   "p90": 110.66,
+   "contrast": 46.71,
+   "sat": 48.82,
+   "tint_rb": -18.98,
+   "tint_g": 3.12,
+   "vignette": 0.81,
+   "grain": 8.84,
+   "luma_p10_p90": [
+    37.5,
+    104.4
+   ],
+   "dark_share": 0.152,
+   "black_share": 0.038
+  },
+  "cat:page-3d": {
+   "frames": 157,
+   "luma": 128.2,
+   "p10": 0.34,
+   "p90": 239.0,
+   "contrast": 78.77,
+   "sat": 11.96,
+   "tint_rb": -0.28,
+   "tint_g": -0.03,
+   "vignette": 1.2,
+   "grain": 15.78,
+   "luma_p10_p90": [
+    33.6,
+    198.6
+   ],
+   "dark_share": 0.134,
+   "black_share": 0.006
+  },
+  "cat:raw-footage": {
+   "frames": 427,
+   "luma": 53.33,
+   "p10": 6.78,
+   "p90": 124.42,
+   "contrast": 47.19,
+   "sat": 32.75,
+   "tint_rb": 2.39,
+   "tint_g": -0.8,
+   "vignette": 0.4,
+   "grain": 5.24,
+   "luma_p10_p90": [
+    9.3,
+    112.5
+   ],
+   "dark_share": 0.417,
+   "black_share": 0.075
+  },
+  "cat:text-card": {
+   "frames": 9,
+   "luma": 10.32,
+   "p10": 0.0,
+   "p90": 38.0,
+   "contrast": 30.96,
+   "sat": 0.0,
+   "tint_rb": 0.0,
+   "tint_g": 0.0,
+   "vignette": 2.48,
+   "grain": 19.38,
+   "luma_p10_p90": [
+    5.0,
+    10.8
+   ],
+   "dark_share": 1.0,
+   "black_share": 0.222
+  },
+  "cat:title-card": {
+   "frames": 2,
+   "luma": 26.39,
+   "p10": 3.15,
+   "p90": 50.21,
+   "contrast": 35.37,
+   "sat": 36.82,
+   "tint_rb": -0.54,
+   "tint_g": -0.31,
+   "vignette": 0.35,
+   "grain": 13.31,
+   "luma_p10_p90": [
+    17.5,
+    35.3
+   ],
+   "dark_share": 1.0,
+   "black_share": 0.0
+  },
+  "cat:ui-typing": {
+   "frames": 6,
+   "luma": 56.44,
+   "p10": 0.0,
+   "p90": 136.76,
+   "contrast": 57.03,
+   "sat": 13.97,
+   "tint_rb": -10.08,
+   "tint_g": -1.26,
+   "vignette": 1.38,
+   "grain": 12.34,
+   "luma_p10_p90": [
+    28.0,
+    99.0
+   ],
+   "dark_share": 0.5,
+   "black_share": 0.0
+  },
+  "raw": {
+   "frames": 427,
+   "luma": 53.33,
+   "p10": 6.78,
+   "p90": 124.42,
+   "contrast": 47.19,
+   "sat": 32.75,
+   "tint_rb": 2.39,
+   "tint_g": -0.8,
+   "vignette": 0.4,
+   "grain": 5.24,
+   "luma_p10_p90": [
+    9.3,
+    112.5
+   ],
+   "dark_share": 0.417,
+   "black_share": 0.075
+  },
+  "treated": {
+   "frames": 309,
+   "luma": 68.96,
+   "p10": 3.63,
+   "p90": 163.13,
+   "contrast": 55.47,
+   "sat": 18.61,
+   "tint_rb": -0.39,
+   "tint_g": 0.04,
+   "vignette": 0.9,
+   "grain": 11.93,
+   "luma_p10_p90": [
+    22.7,
+    186.3
+   ],
+   "dark_share": 0.201,
+   "black_share": 0.023
+  }
+ }
+}

@@ -1,0 +1,37 @@
+- [WM_POL50 project](wm-pol50-project.md) — 20-case Warrior Mind police+2h video, built 50:47, awaiting owner review/render; open decisions
+- [Owner quality bar](owner-quality-bar.md) — critique vs Nocturn/Farrell refs before showing renders; checklists alone failed
+- [Interrupt kills builders](interrupt-kills-builders.md) — owner interrupt stops all bg agents; ListAgents + CPU check after any interrupt
+- [WM_P25 project](wm-p25-project.md) — 25-case WM video delivered 2026-10-17 to D:/Warrior Mind/FINAL VIDEO (singular); assembly gotchas
+- [WM_ZOO project](wm-zoo-project.md) — 20 zoo incidents WM video; VO+plan done, no cases built; delivers to D:/404 Rendrer/iceberg
+- [WM_20OCT research](wm-20oct-research.md) — next WM video's 25-case research pack done 2026-10-20; all 25 verified, 4 repeat WM_25 (01,02,10,20)
+- [Case source picks](case-source-picks.md) — never 4TH WALL; prefer small channels with one good incident
+- [WM_GHOST build](wm-ghost-project.md) — delivered 2026-10-21 "2 hour of paranormal activity"; full handoff at D:/EncountersEditor_v5.7/WARRIOR_MIND_HANDOFF.md
+- [Usage budget](usage-budget.md) — GHOST burned 96% weekly via 17 agents; keep fan-out lean, check get_usage first
+- [Design system cheatsheet](design-system-cheatsheet.md) — templates/motion/design condensed; WM vs 404 looks differ (handwritten card)
+- [GX SCARY8 project](gx-scary8-project.md) — 8 scary videos / 8 editor kits, voice "new", TikTok via VPN+impersonate; state 2026-10-22
+- [Patch, don't restart](feedback-patch-not-restart.md) — owner: on change requests fix only what's named; never cancel whole builds/agents
+- [GX SCARY8 render gotchas](gx-scary8-render.md) — No frame found → x264 -bf 0 -g 15; --timeout; slim --public-dir vs ENOSPC
+- [Bukigham project](bukigham-project.md) — 2 camping-horror benchmark videos, root channels/bukigham, BUKIGHAM_BRIEF.md has everything
+- [Measure refs before designing](feedback-measure-refs.md) — derive look from measured reference clips in motion, then adapt; never generic 'original' graphics
+- [Bukigham pacing rules](feedback-bukigham-pacing.md) — Nocturn model, intro first, channel SS per case, cut TTS pauses, ease everything
+- [Device variety cap](feedback-device-variety.md) — never repeat one template; kinetic text max 1/case, vary comment cards
+- [First-try efficiency](feedback-first-try-efficiency.md) — no stills loops; pilot → recipe → batch-build cases first try
+- [No invented devices](feedback-no-invented-devices.md) — only approved library treatments; no icons on black/decor text; ≤3 s shots under VO
+- [WM_27OCT research](wm-27oct-research.md) — 35-case pack 2026-10-27, 16 repeats flagged; TikTok works via --impersonate chrome
+- [Exclusion list rule](feedback-exclusion-list.md) — only never-used clips; check vs published-transcripts file + delivered cut sheets before ranking
+- [Niche + small creators](feedback-niche-small-creators.md) — only paranormal caught-on-camera from small one-incident creators; no encounters/ghost-hunter/big channels
+- [WM27 pilot critique](feedback-wm27-pilot.md) — no kid blur, no decorative Blender sets (explain only), raws must include what VO sets up, card # = title
+- [WM_27OCT v3 rebuild](wm-27oct-v3-rebuild.md) — first 40 min replaced by 9 new cases at 45:55, ~2:09; order, files, open flags
+- [Case opener templates](feedback-case-opener-templates.md) — opener VO needs channel SS + map/Blender location, every case, from the first brief
+- [404 thread lost media](lostmedia-404thread.md) — 2h lost-media doc for 404 thread (not WM), 36 cases; intro+case 1 first; Obscure Collab; code from owner's 404_BRAIN
+- [Smooth + lit camera](feedback-smooth-lit-camera.md) — lost media: spline camera (no keyframe jerks), Lit light pool, varied lit 3D treatments, 1.8 s title breath
+- [Templates from refs](feedback-templates-from-refs.md) — invented reel was 'mid'; Farrell=SS, fern/LEMMiNO=3D, VV=3D anim; vary measured axes (core/vary.ts)
+- [Director anti-template](director-anti-template.md) — per-video planner (director.ts) picks template+variation per beat, ledger avoids repeats across uploads
+- [AE camera over Blender](feedback-ae-camera-over-blender.md) — Blender optional; default to AE-style 3-D camera motion in Remotion (faster)
+- [O5 auto-assembly rejected](feedback-o5-autoassembly-rejected.md) — 180-template random mix = rough, mixed grades, meaningless SS; small coherent polished set + one grade + approval per case first
+- [O5 approved style](o5-approved-style.md) — Jellyfish v3 APPROVED 2026-11-01: rules (footage-only-when-shown, VV explainers, clip maps, one grade, no chrome) for all 5 videos
+- [OUTLINES5 handoff](../../../../404 Rendrer/OUTLINES5/HANDOFF.md) — see D:/404 Rendrer/OUTLINES5/HANDOFF.md for exact pipeline state + next steps (5 videos rollout)
+- [O5 rulebook](feedback-o5-rulebook.md) — IH case 1 rejected as templated 2026-11-01; ALL owner corrections = OUTLINES5/OWNER_RULES.md, enforce in code
+- [O5 improve not remake](feedback-o5-improve-not-remake.md) — post-audit: patch cases (improve_case.py), channel SS opener every case, slow Epidemic beds rotated
+- [O5 detailing](feedback-o5-detailing.md) — no uploader channel SS (launch SS instead), show creator photo, gameplay only for gameplay lines, blog SS + real VV for facts
+- [Variations first](feedback-variations-first.md) — owner's #1 rule: every element feels made from scratch; rotate looks across whole video, light blur, no repeated name cards

@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>ref board</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="/app.css">
+</head>
+<body>
+<header id="top">
+  <b class="logo">ref board</b>
+  <select id="boardpick" title="Board"></select>
+  <button id="newboard" title="Create a new board">+ Board</button>
+  <select id="addvid" title="Add a reference video to this board"><option value="">+ Add video…</option></select>
+  <span id="status" class="muted">loading…</span>
+  <span class="grow"></span>
+  <button id="undo" title="Undo (Ctrl+Z)">↶</button>
+  <button id="redo" title="Redo (Ctrl+Shift+Z)">↷</button>
+  <button id="fit" title="Zoom to fit (Shift+1)">Fit</button>
+  <button id="zsel" title="Zoom to selection (Shift+2)">Sel</button>
+  <span id="zoomlabel" class="muted" title="Ctrl+wheel or pinch to zoom">100%</span>
+  <button id="helpbtn" title="Keys">?</button>
+</header>
+
+<nav id="tools">
+  <button data-tool="select" class="on" title="Select / move (V)">➤<small>V</small></button>
+  <button data-tool="hand" title="Hand: pan (H, or hold Space, or middle-drag)">✋<small>H</small></button>
+  <button data-tool="connect" title="Connect: drag from one node to another (C)">⤳<small>C</small></button>
+  <div id="drawtools" class="off" title="Open a screenshot, or pause a video in focus, to draw">
+    <hr>
+    <button data-draw="move" title="Pick / move a drawing; Delete removes it (V in focus)">⬚<small>V</small></button>
+    <button data-draw="pen" title="Pen (P)">✎<small>P</small></button>
+    <button data-draw="hl" title="Highlighter, see-through (G)">▬<small>G</small></button>
+    <button data-draw="arrow" title="Arrow (A)">↗<small>A</small></button>
+    <button data-draw="box" title="Box (B)">▭<small>B</small></button>
+    <button data-draw="circle" title="Circle / ellipse (E)">◯<small>E</small></button>
+    <button data-draw="text" title="Text label (T)">T<small>T</small></button>
+    <button data-draw="ruler" title="Measure ruler: length as % of frame height / width (R)">📏<small>R</small></button>
+    <div id="swatches"></div>
+  </div>
+</nav>
+
+<main id="main">
+  <div id="viewport">
+    <canvas id="gl"></canvas>
+      <div id="world"><svg id="edges" width="1" height="1"></svg><div id="elabels"></div><div id="nodes"></div></div>
+    <svg id="tempedge"><path></path></svg>
+    <div id="marquee" hidden></div>
+    <canvas id="minimap" width="220" height="150" title="Minimap: click or drag to move"></canvas>
+  </div>
+
+  <section id="focus" hidden>
+    <div id="fbar">
+      <button id="fclose" title="Back to board (Esc)">← Board</button>
+      <span id="fcrumb"></span><span class="grow"></span><span id="fhint" class="muted"></span>
+    </div>
+    <div id="fstage">
+      <video id="fvid" preload="auto" playsinline></video>
+      <img id="fimg" alt="" draggable="false" hidden>
+      <svg id="overlay"></svg>
+      <div id="fmsg" hidden></div>
+    </div>
+    <div id="transport">
+      <button data-act="back1s" title="Shift+←">−1s</button>
+      <button data-act="back1f" title="←">−1f</button>
+      <button data-act="play" id="playbtn" title="Space">▶</button>
+      <button data-act="fwd1f" title="→">+1f</button>
+      <button data-act="fwd1s" title="Shift+→">+1s</button>
+      <span id="clock"></span>
+      <select id="rate" title="Playback speed"><option>0.25</option><option>0.5</option><option selected>1</option><option>1.5</option><option>2</option></select>
+      <span class="grow"></span>
+      <span id="inout" class="muted"></span>
+      <button data-act="in" class="key" title="I">In (I)</button>
+      <button data-act="out" class="key" title="O: makes the clip">Out (O)</button>
+      <button data-act="point" class="key" title="M">Point (M)</button>
+      <button data-act="shot" class="key" title="S">Screenshot (S)</button>
+    </div>
+    <div id="tlwrap">
+      <div id="tlbar"><span class="muted">Timeline</span>
+        <button id="zout">−</button><button id="zin">+</button><button id="zfit">Fit</button>
+        <span id="zlabel" class="muted"></span></div>
+      <div id="tl"><div id="ruler"></div><div id="lanes"></div><div id="draftzone"></div><div id="playhead"></div></div>
+    </div>
+  </section>
+</main>
+
+<aside id="panel"></aside>
+
+<div id="dialog" hidden><div class="box"><p id="dlgtext"></p><div class="row" id="dlgbtns"></div></div></div>
+<div id="help" hidden><div class="box">
+  <h3>Board</h3>
+  <table>
+    <tr><td>Scroll / two-finger swipe</td><td>pan</td></tr>
+    <tr><td>Space+drag · middle-drag · H</td><td>pan</td></tr>
+    <tr><td>Ctrl+wheel · pinch</td><td>zoom at the cursor (5%–800%)</td></tr>
+    <tr><td>Shift+1 / Shift+2</td><td>zoom to fit / to selection</td></tr>
+    <tr><td>Click · Shift+click · drag on empty</td><td>select · add to selection · box-select</td></tr>
+    <tr><td>Drag a node</td><td>move (edges follow)</td></tr>
+    <tr><td>Drag the ● on a node's right edge · C</td><td>draw your own link to another node</td></tr>
+    <tr><td>Double-click · Enter</td><td>open the node (player / drawing)</td></tr>
+    <tr><td>Delete</td><td>remove from board (asks about files)</td></tr>
+    <tr><td>Ctrl+Z · Ctrl+Shift+Z</td><td>undo · redo</td></tr>
+    <tr><td>1–9</td><td>toggle preset tag on the selection</td></tr>
+  </table>
+  <h3>Player (video open)</h3>
+  <table>
+    <tr><td>Space</td><td>play / pause</td></tr>
+    <tr><td>← / → · Shift+← / →</td><td>one frame · one second</td></tr>
+    <tr><td>I then O (or Enter)</td><td>make a clip (a range on the source) → new node</td></tr>
+    <tr><td>I / O (clip open)</td><td>move that clip's in / out to the playhead (outside it = extend)</td></tr>
+    <tr><td>Shift+I then Shift+O (clip open)</td><td>make a new clip inside the open clip</td></tr>
+    <tr><td>Drag either end of a clip bar</td><td>extend / shorten that clip (shown live from the source)</td></tr>
+    <tr><td>[ · ]</td><td>move the selected clip's in · out to the playhead (or trim the open clip)</td></tr>
+    <tr><td>M · S</td><td>point note · screenshot node</td></tr>
+    <tr><td>1–9</td><td>tags on the node shown in the side panel</td></tr>
+    <tr><td>P G A B E T R · V</td><td>pen, highlighter, arrow, box, circle, text, ruler · pick/move</td></tr>
+    <tr><td>Esc</td><td>back to the board</td></tr>
+  </table>
+  <p class="muted">Shortcuts never fire while you type in a text box (Esc leaves the box).</p>
+  <button id="helpclose">Close</button>
+</div></div>
+
+<script src="/vendor/pixi.min.js"></script>
+<script src="/grid.js"></script>
+<script src="/thumbs.js"></script>
+<script src="/scene.js"></script>
+<script src="/common.js"></script>
+<script src="/draw.js"></script>
+<script src="/focus.js"></script>
+<script src="/app.js"></script>
+</body>
+</html>

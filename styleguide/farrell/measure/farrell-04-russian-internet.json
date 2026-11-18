@@ -1,0 +1,401 @@
+{
+ "prod": "farrell-04-russian-internet",
+ "src": "CpNBEYBdO_Y.mp4",
+ "fps": 29.97,
+ "duration_s": 1645.3,
+ "edit": {
+  "clips": 132,
+  "clips_per_min": 4.81,
+  "clip_len_s": {
+   "p10": 4.3,
+   "median": 9.5,
+   "p90": 22.9
+  },
+  "motion_graphic_share": 0.803,
+  "categories": {
+   "page-3d": {
+    "clips": 52,
+    "time_share": 0.34,
+    "median_s": 10.1,
+    "title_words": [
+     "video",
+     "youtube",
+     "russian",
+     "channel",
+     "wiki",
+     "translated",
+     "results",
+     "post"
+    ]
+   },
+   "other": {
+    "clips": 30,
+    "time_share": 0.227,
+    "median_s": 9.9,
+    "title_words": [
+     "host",
+     "mine",
+     "photo",
+     "camera",
+     "mirny",
+     "street",
+     "patreon",
+     "perks"
+    ]
+   },
+   "raw-footage": {
+    "clips": 16,
+    "time_share": 0.21,
+    "median_s": 10.8,
+    "title_words": [
+     "game",
+     "video",
+     "full",
+     "footage",
+     "station",
+     "desktop",
+     "play",
+     "cropped"
+    ]
+   },
+   "comments": {
+    "clips": 14,
+    "time_share": 0.092,
+    "median_s": 8.3,
+    "title_words": [
+     "thread",
+     "post",
+     "replies",
+     "coordinates",
+     "comments",
+     "image",
+     "board",
+     "askarussian"
+    ]
+   },
+   "map": {
+    "clips": 7,
+    "time_share": 0.052,
+    "median_s": 8.5,
+    "title_words": [
+     "mirny",
+     "satellite",
+     "view",
+     "coordinates",
+     "google",
+     "maps",
+     "outline",
+     "zoom"
+    ]
+   },
+   "text-card": {
+    "clips": 5,
+    "time_share": 0.041,
+    "median_s": 13.9,
+    "title_words": [
+     "screen",
+     "not",
+     "afraid",
+     "rabbit",
+     "triangle",
+     "instruction",
+     "list",
+     "translated"
+    ]
+   },
+   "layout": {
+    "clips": 1,
+    "time_share": 0.019,
+    "median_s": 31.9,
+    "title_words": [
+     "split",
+     "video",
+     "screenshots"
+    ]
+   },
+   "title-card": {
+    "clips": 4,
+    "time_share": 0.01,
+    "median_s": 4.4,
+    "title_words": [
+     "label",
+     "station",
+     "mkv",
+     "file",
+     "sgu",
+     "legless",
+     "video"
+    ]
+   },
+   "ui-typing": {
+    "clips": 2,
+    "time_share": 0.009,
+    "median_s": 7.1,
+    "title_words": [
+     "translating",
+     "sign",
+     "wayback",
+     "calendar"
+    ]
+   },
+   "glitch": {
+    "clips": 1,
+    "time_share": 0.001,
+    "median_s": 1.0,
+    "title_words": [
+     "test",
+     "glitch"
+    ]
+   }
+  }
+ },
+ "voice": {
+  "words": 4234,
+  "wpm": 155.6,
+  "pauses_ge_0_6s_per_min": 6.0,
+  "pause_median_s": 0.88,
+  "pauses_ge_2s": 13
+ },
+ "sound": {
+  "mix": {
+   "I_lufs": -17.2,
+   "LRA_lu": 5.0
+  }
+ },
+ "picture": {
+  "all": {
+   "frames": 823,
+   "luma": 72.97,
+   "p10": 12.1,
+   "p90": 171.0,
+   "contrast": 47.21,
+   "sat": 14.79,
+   "tint_rb": 0.0,
+   "tint_g": 0.13,
+   "vignette": 0.76,
+   "grain": 10.51,
+   "luma_p10_p90": [
+    20.1,
+    192.9
+   ],
+   "dark_share": 0.211,
+   "black_share": 0.026
+  },
+  "cat:comments": {
+   "frames": 74,
+   "luma": 186.59,
+   "p10": 100.14,
+   "p90": 241.21,
+   "contrast": 35.62,
+   "sat": 8.12,
+   "tint_rb": -2.7,
+   "tint_g": 0.98,
+   "vignette": 0.8,
+   "grain": 11.53,
+   "luma_p10_p90": [
+    58.7,
+    221.8
+   ],
+   "dark_share": 0.041,
+   "black_share": 0.0
+  },
+  "cat:glitch": {
+   "frames": 1,
+   "luma": 56.78,
+   "p10": 2.69,
+   "p90": 126.14,
+   "contrast": 50.17,
+   "sat": 61.43,
+   "tint_rb": 23.14,
+   "tint_g": 5.31,
+   "vignette": 0.6,
+   "grain": 7.37,
+   "luma_p10_p90": [
+    56.8,
+    56.8
+   ],
+   "dark_share": 0.0,
+   "black_share": 0.0
+  },
+  "cat:layout": {
+   "frames": 16,
+   "luma": 40.69,
+   "p10": 6.89,
+   "p90": 99.08,
+   "contrast": 38.03,
+   "sat": 54.06,
+   "tint_rb": 21.69,
+   "tint_g": -2.9,
+   "vignette": 0.94,
+   "grain": 8.55,
+   "luma_p10_p90": [
+    34.9,
+    47.9
+   ],
+   "dark_share": 0.438,
+   "black_share": 0.0
+  },
+  "cat:map": {
+   "frames": 44,
+   "luma": 123.88,
+   "p10": 53.06,
+   "p90": 185.92,
+   "contrast": 45.28,
+   "sat": 29.23,
+   "tint_rb": -0.11,
+   "tint_g": 5.0,
+   "vignette": 0.93,
+   "grain": 7.24,
+   "luma_p10_p90": [
+    69.4,
+    162.9
+   ],
+   "dark_share": 0.0,
+   "black_share": 0.0
+  },
+  "cat:other": {
+   "frames": 187,
+   "luma": 73.03,
+   "p10": 12.4,
+   "p90": 174.02,
+   "contrast": 60.36,
+   "sat": 51.05,
+   "tint_rb": -2.41,
+   "tint_g": 4.94,
+   "vignette": 0.59,
+   "grain": 7.32,
+   "luma_p10_p90": [
+    49.8,
+    160.3
+   ],
+   "dark_share": 0.075,
+   "black_share": 0.032
+  },
+  "cat:page-3d": {
+   "frames": 282,
+   "luma": 118.83,
+   "p10": 7.45,
+   "p90": 233.0,
+   "contrast": 63.17,
+   "sat": 11.77,
+   "tint_rb": 0.04,
+   "tint_g": -0.2,
+   "vignette": 1.05,
+   "grain": 15.54,
+   "luma_p10_p90": [
+    29.5,
+    215.9
+   ],
+   "dark_share": 0.191,
+   "black_share": 0.011
+  },
+  "cat:raw-footage": {
+   "frames": 171,
+   "luma": 38.83,
+   "p10": 2.71,
+   "p90": 80.0,
+   "contrast": 30.04,
+   "sat": 20.25,
+   "tint_rb": 0.0,
+   "tint_g": 0.0,
+   "vignette": 0.62,
+   "grain": 4.31,
+   "luma_p10_p90": [
+    9.9,
+    105.4
+   ],
+   "dark_share": 0.503,
+   "black_share": 0.07
+  },
+  "cat:text-card": {
+   "frames": 33,
+   "luma": 47.95,
+   "p10": 21.76,
+   "p90": 125.81,
+   "contrast": 46.64,
+   "sat": 13.23,
+   "tint_rb": 4.06,
+   "tint_g": 1.17,
+   "vignette": 0.5,
+   "grain": 21.52,
+   "luma_p10_p90": [
+    38.4,
+    52.5
+   ],
+   "dark_share": 0.152,
+   "black_share": 0.0
+  },
+  "cat:title-card": {
+   "frames": 7,
+   "luma": 38.38,
+   "p10": 1.0,
+   "p90": 88.0,
+   "contrast": 46.36,
+   "sat": 1.94,
+   "tint_rb": 0.54,
+   "tint_g": -0.2,
+   "vignette": 0.85,
+   "grain": 12.78,
+   "luma_p10_p90": [
+    27.3,
+    78.0
+   ],
+   "dark_share": 0.571,
+   "black_share": 0.0
+  },
+  "cat:ui-typing": {
+   "frames": 8,
+   "luma": 228.06,
+   "p10": 194.0,
+   "p90": 252.0,
+   "contrast": 24.06,
+   "sat": 0.4,
+   "tint_rb": -0.25,
+   "tint_g": -0.01,
+   "vignette": 0.84,
+   "grain": 7.62,
+   "luma_p10_p90": [
+    77.9,
+    229.9
+   ],
+   "dark_share": 0.125,
+   "black_share": 0.0
+  },
+  "raw": {
+   "frames": 171,
+   "luma": 38.83,
+   "p10": 2.71,
+   "p90": 80.0,
+   "contrast": 30.04,
+   "sat": 20.25,
+   "tint_rb": 0.0,
+   "tint_g": 0.0,
+   "vignette": 0.62,
+   "grain": 4.31,
+   "luma_p10_p90": [
+    9.9,
+    105.4
+   ],
+   "dark_share": 0.503,
+   "black_share": 0.07
+  },
+  "treated": {
+   "frames": 652,
+   "luma": 83.13,
+   "p10": 13.0,
+   "p90": 180.3,
+   "contrast": 50.95,
+   "sat": 14.29,
+   "tint_rb": -0.08,
+   "tint_g": 0.38,
+   "vignette": 0.8,
+   "grain": 12.02,
+   "luma_p10_p90": [
+    33.6,
+    212.1
+   ],
+   "dark_share": 0.135,
+   "black_share": 0.014
+  }
+ }
+}

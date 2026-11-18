@@ -1,0 +1,882 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Farrell Motion Lab</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+<style>
+/* Layout: one dark lab bench. Header, sticky vote bar, then sections of looping 16:9 demo tiles. */
+:root{__IMG__}
+@font-face{font-family:"VCR OSD Mono";src:url(data:font/ttf;base64,__VCR__) format("truetype");font-display:block}
+:root{
+  --bg:#0c0b0a; --panel:#141311; --panel2:#1b1a17; --line:#2c2924; --fg:#e8e4da; --muted:#9d978c;
+  --gold:#c9a54a; --red:#b3261e; --ok:#8fa37a; --warn:#d0a15a;
+  --vcr:"VCR OSD Mono","Courier New",monospace; --body:Inter,"Segoe UI",system-ui,sans-serif;
+  color-scheme:dark;
+}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.5}
+.wrap{max-width:1320px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header.top{padding-block:40px 20px}
+h1{font-family:var(--vcr);font-weight:400;font-size:clamp(30px,5vw,54px);letter-spacing:.06em;margin:0;color:var(--fg)}
+h1 span{color:var(--gold)}
+.lede{max-width:68ch;color:var(--muted);margin:12px 0 0}
+.lede b{color:var(--fg);font-weight:500}
+.legend{display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:16px;font-size:13px;color:var(--muted)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:rgba(12,11,10,.94);backdrop-filter:blur(6px);border-block:1px solid var(--line)}
+.bar .wrap{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;padding-block:10px}
+.count{font-family:var(--vcr);font-size:14px;letter-spacing:.04em;font-variant-numeric:tabular-nums}
+.count .ca{color:var(--ok)} .count .cr{color:#e0675f} .count .cu{color:var(--muted)}
+.filters{display:flex;gap:4px;flex-wrap:wrap}
+.btn{font:500 13px var(--body);color:var(--fg);background:var(--panel2);border:1px solid var(--line);border-radius:4px;padding:6px 11px;cursor:pointer}
+.btn:hover{border-color:#4a453c}
+.btn:focus-visible,.stage:focus-visible,input:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.btn[aria-pressed="true"]{background:#2a271f;border-color:var(--gold);color:#f1e2b6}
+.save{font-size:12px;color:var(--muted);margin-left:auto}
+section.grp{padding-block:34px 6px;scroll-margin-top:60px}
+section.grp h2{font-family:var(--vcr);font-weight:400;font-size:22px;letter-spacing:.05em;margin:0;color:var(--gold);text-wrap:balance}
+section.grp .gi{color:var(--muted);max-width:72ch;margin:6px 0 18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,370px),1fr));gap:18px}
+.item{background:var(--panel);border:1px solid var(--line);border-radius:6px;overflow:hidden;display:flex;flex-direction:column;min-width:0}
+.item.yes{border-color:#5d6d4c} .item.no{border-color:#6a2b26}
+.meta{padding:13px 15px 15px;display:flex;flex-direction:column;gap:8px;flex:1}
+.mh{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.item h3{margin:0;font-size:15px;font-weight:600}
+.code{font-family:var(--vcr);font-size:12px;color:var(--muted);letter-spacing:.05em;white-space:nowrap}
+.what{margin:0;color:#cbc6bb;font-size:14px}
+.spec{display:flex;align-items:center;gap:10px;font-size:12.5px;color:var(--muted)}
+.spec svg{flex:none;width:46px;height:30px;background:var(--panel2);border-radius:3px}
+.tag{font-size:12.5px;padding:4px 8px;border-radius:3px;align-self:flex-start;border:1px solid}
+.tag.fits{color:#b6c4a5;border-color:#3d4733;background:#181c14}
+.tag.ok{color:#e3c58e;border-color:#57462a;background:#1e1912}
+.tag.change{color:#ef9a93;border-color:#5a2723;background:#1f1211}
+.vote{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;padding-top:6px}
+.vote .btn.y[aria-pressed="true"]{background:#26301d;border-color:var(--ok);color:#d5e4c3}
+.vote .btn.n[aria-pressed="true"]{background:#331513;border-color:var(--red);color:#f3c4bf}
+.vote input{flex:1 1 140px;min-width:0;font:13px var(--body);color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:6px 9px}
+footer{padding-block:40px 60px;color:var(--muted);font-size:13px}
+#copybox{width:100%;height:140px;margin-top:10px;background:var(--panel);color:var(--fg);border:1px solid var(--line);font:12px var(--vcr)}
+
+/* ---------- the stage (a little 16:9 edit monitor) ---------- */
+.stage{position:relative;aspect-ratio:16/9;max-width:100%;container-type:inline-size;overflow:hidden;background:#050505;cursor:pointer}
+.stage .paused{position:absolute;right:2cqw;top:2cqw;z-index:70;font:2.4cqw var(--vcr);color:#fff;background:rgba(0,0,0,.6);padding:.4cqw 1cqw;display:none}
+.stage.is-paused .paused{display:block}
+.plate,.shot,.layer{position:absolute;inset:0}
+.plate{inset:-5%;filter:blur(1.4cqw) brightness(.55) saturate(.3)}
+.plate.sharp{filter:blur(.15cqw) brightness(.62) saturate(.25)}
+.plate.room{background:radial-gradient(ellipse 14% 34% at 50% 55%,#8c8877,transparent 70%),radial-gradient(ellipse 50% 40% at 30% 25%,#4a4337,transparent 70%),radial-gradient(ellipse 40% 50% at 80% 70%,#2d2a24,transparent 70%),linear-gradient(#26221c,#0d0c0a)}
+.plate.forest{background:repeating-linear-gradient(90deg,transparent 0 6%,rgba(0,0,0,.55) 6% 7.5%,transparent 7.5% 13%,rgba(0,0,0,.4) 13% 13.8%),radial-gradient(ellipse 60% 40% at 50% 85%,#3f4a44,transparent 70%),linear-gradient(#1b2321,#070908)}
+.plate.screen{background:radial-gradient(ellipse 60% 50% at 50% 45%,#55606a,transparent 70%),linear-gradient(#1b1f24,#090a0c)}
+.plate.map{filter:blur(.1cqw) brightness(.6) saturate(.25) contrast(1.1);background:repeating-radial-gradient(circle at 30% 40%,transparent 0 2.2cqw,rgba(220,220,200,.06) 2.2cqw 2.35cqw),repeating-radial-gradient(circle at 75% 70%,transparent 0 1.8cqw,rgba(220,220,200,.05) 1.8cqw 1.95cqw),radial-gradient(ellipse 30% 20% at 20% 70%,#3b4635,transparent 70%),radial-gradient(ellipse 25% 30% at 75% 30%,#4a4a3c,transparent 70%),linear-gradient(120deg,#2d332b,#1c1f1a 50%,#2a2a24)}
+.plate.black{background:radial-gradient(ellipse at 50% 45%,#1c1a17,#060606 70%)}
+.dim{position:absolute;inset:0;background:#000;opacity:0;z-index:2}
+.center{position:absolute;inset:0;display:grid;place-items:center;z-index:5}
+.center>*{grid-area:1/1}
+.col{display:flex;flex-direction:column;align-items:center;gap:1.4cqw}
+.fx{position:absolute;inset:0;z-index:50;pointer-events:none;background:radial-gradient(ellipse at center,transparent 42%,rgba(0,0,0,.6) 100%)}
+.grain{position:absolute;inset:0;z-index:51;pointer-events:none;opacity:.16;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.scanov{position:absolute;inset:0;z-index:49;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(0,0,0,.28) 0 .25cqw,transparent .25cqw .55cqw)}
+.dip{position:absolute;inset:0;background:#000;z-index:60}
+svg.ov{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.draw{fill:none;stroke-dasharray:1;stroke-dashoffset:1;stroke-linecap:round;stroke-linejoin:round}
+
+/* figure in a doorway (stand-in subject) */
+.fig{position:absolute;width:12cqw;height:24cqw;margin-left:-6cqw;margin-top:-12cqw}
+.fig .door{position:absolute;inset:0;background:linear-gradient(#7c7866,#4d4a3e);box-shadow:0 0 5cqw rgba(170,160,130,.35);filter:blur(.12cqw)}
+.fig .man{position:absolute;left:31%;right:31%;top:23%;bottom:0;background:#0b0a08;border-radius:45% 45% 8% 8%/28% 28% 4% 4%;filter:blur(.22cqw)}
+.fig .head{position:absolute;left:39%;width:22%;top:9%;height:15%;background:#0b0a08;border-radius:50%;filter:blur(.22cqw)}
+.fig.small{width:7cqw;height:14cqw;margin-left:-3.5cqw;margin-top:-7cqw}
+.fig.nodoor .door{display:none}
+
+/* comment card (stands in for a real comment screenshot) */
+.cc{position:relative;width:54cqw;background:#181818;border:1px solid #2c2c2c;border-radius:.9cqw;padding:2cqw 2.3cqw;font:400 1.85cqw/1.45 Roboto,"Segoe UI",Arial,sans-serif;color:#d6d6d6;box-shadow:0 2cqw 5cqw rgba(0,0,0,.7)}
+.cc-h{display:flex;align-items:center;gap:1cqw;margin-bottom:.8cqw;font-size:1.6cqw;color:#9a9a9a}
+.cc-h b{color:#eee;font-weight:500}
+.av{width:3.2cqw;height:3.2cqw;border-radius:50%;background:radial-gradient(circle at 40% 35%,#666,#1d1d1d);flex:none}
+.cc p{margin:0}
+.cc-f{margin-top:1cqw;font-size:1.4cqw;color:#878787;letter-spacing:.02em}
+.key{background:linear-gradient(rgba(201,165,74,.34),rgba(201,165,74,.34)) no-repeat 0 0/0% 100%;padding:0 .1em}
+.scanln{position:absolute;left:-1.5cqw;right:-1.5cqw;top:0;height:.3cqw;background:#e8eef8;box-shadow:0 0 1.6cqw #b9cdf0}
+
+/* titles and labels (all added text is VCR) */
+.ttl{font-family:var(--vcr);color:var(--gold);font-size:8cqw;letter-spacing:.12em;text-shadow:0 0 2cqw rgba(201,165,74,.35);white-space:nowrap}
+.ttl.sm{font-size:4.6cqw}
+.ttl.white{color:#ece9e2;text-shadow:none}
+.glint{background:linear-gradient(100deg,var(--gold) 0 42%,#fff2cc 50%,var(--gold) 58% 100%);background-size:300% 100%;background-position:100% 0;-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:none}
+.mask{overflow:hidden;padding:0 .2em}
+.gline{height:.28cqw;width:24cqw;background:var(--gold);transform-origin:50% 50%}
+.vcr{font-family:var(--vcr)}
+.row{display:flex;align-items:stretch;font-family:var(--vcr)}
+.cell{padding:0 2.2cqw;display:grid;gap:.6cqw;text-align:center}
+.cell small{font-size:1.5cqw;color:#a39d90;letter-spacing:.14em}
+.cell span{font-size:3cqw;color:#ece9e2;white-space:nowrap}
+.cell span.g{color:var(--gold)}
+.sep{width:.15cqw;background:rgba(236,233,226,.45)}
+.osd{position:absolute;z-index:6;font-family:var(--vcr);color:#eeeeea;font-size:2.8cqw;letter-spacing:.06em;text-shadow:.18cqw .18cqw 0 rgba(0,0,0,.6)}
+.tbox{position:absolute;width:17cqw;height:29cqw}
+.cn{position:absolute;width:3cqw;height:3cqw;border:0 solid #ece9e2}
+.cn.a{left:0;top:0;border-left-width:.3cqw;border-top-width:.3cqw}
+.cn.b{right:0;top:0;border-right-width:.3cqw;border-top-width:.3cqw}
+.cn.c{left:0;bottom:0;border-left-width:.3cqw;border-bottom-width:.3cqw}
+.cn.d{right:0;bottom:0;border-right-width:.3cqw;border-bottom-width:.3cqw}
+.tagrow{position:absolute;left:0;right:0;display:flex;justify-content:center}
+.tag2{font-family:var(--vcr);font-size:2.2cqw;color:#ece9e2;letter-spacing:.06em;text-shadow:0 0 1cqw #000}
+.lead{position:absolute;font-family:var(--vcr)}
+.lead b{display:block;font-weight:400;font-size:3.8cqw;color:var(--gold);letter-spacing:.08em}
+.lead i{display:block;font-style:normal;font-size:1.6cqw;color:#ddd8cc;letter-spacing:.1em}
+.win{width:46cqw;background:#101010;border:.15cqw solid #4a4a4a;box-shadow:0 2cqw 5cqw rgba(0,0,0,.7)}
+.wbar{display:flex;justify-content:space-between;padding:.6cqw 1cqw;background:#2a2a2a;font-family:var(--vcr);font-size:1.8cqw;color:#e8e8e8}
+.wbody{position:relative;height:24cqw;overflow:hidden;background:radial-gradient(ellipse 30% 50% at 50% 60%,#55554a,transparent 70%),linear-gradient(#1c1b17,#090908)}
+.wprog{position:absolute;left:1.2cqw;right:1.2cqw;bottom:1.2cqw;height:.4cqw;background:#333}
+.wprog i{display:block;height:100%;width:38%;background:#cfcfcf}
+
+/* pages */
+.pgwin{width:58cqw;height:42cqw;overflow:hidden;border-radius:.4cqw;box-shadow:0 2cqw 5cqw rgba(0,0,0,.75)}
+.pg{height:92cqw;background:#cdc9c0;color:#2a2826;padding:2.4cqw 3cqw;font:1.8cqw/1.5 Arial,sans-serif;position:relative}
+.pg .crumb{font-size:1.3cqw;color:#6c6860;margin-bottom:1.2cqw}
+.pg h4{margin:0 0 1.6cqw;font-size:2.6cqw;color:#1b1a18}
+.bars i{display:block;height:1.05cqw;background:#9e9a91;border-radius:.2cqw;margin:1cqw 0}
+.pg .keyline{position:absolute;left:3cqw;right:3cqw;top:58cqw;font-weight:bold;color:#1b1a18}
+.mk{background:linear-gradient(rgba(201,165,74,.75),rgba(201,165,74,.75)) no-repeat 0 0/0% 100%;mix-blend-mode:multiply}
+.mini{width:40cqw;background:#cdc9c0;color:#1b1a18;padding:1.8cqw 2.2cqw;font:1.5cqw/1.4 Arial,sans-serif;box-shadow:0 2cqw 4cqw rgba(0,0,0,.7)}
+.mini b{display:block;font-size:2cqw;margin-bottom:1cqw}
+.mini.dark{background:#1d1d1d;color:#ddd}
+.mini.dark .bars i{background:#4a4a4a}
+.crt{width:60cqw;height:44cqw;background:linear-gradient(#24221e,#141310);border-radius:2.6cqw;padding:3cqw;box-shadow:0 3cqw 6cqw rgba(0,0,0,.8)}
+.scr{position:relative;width:100%;height:100%;border-radius:3cqw/4cqw;overflow:hidden;background:#0f1312;padding:3cqw 4cqw;color:#c7d0cc;font:1.7cqw/1.5 Arial,sans-serif}
+.scr b{display:block;font-size:2.4cqw;margin-bottom:1.4cqw;color:#e2ebe7}
+.scr .bars i{background:#3e4744}
+.scr::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,.35) 0 .22cqw,transparent .22cqw .5cqw);box-shadow:inset 0 0 5cqw rgba(0,0,0,.95)}
+
+/* map */
+.hl,.vl{position:absolute;background:rgba(233,223,196,.6);z-index:4}
+.hl{left:0;right:0;height:.14cqw}
+.vl{top:0;bottom:0;width:.14cqw}
+.pin{position:absolute;width:2cqw;height:2cqw;margin:-1cqw 0 0 -1cqw;border:.25cqw solid var(--gold);z-index:4}
+
+/* quotes and numbers */
+.quote{font-family:var(--vcr);font-size:3.1cqw;line-height:1.55;color:#77736a;max-width:66cqw;text-align:center}
+.quote.w{color:#d8d4ca}
+.u{background:linear-gradient(#c62a20,#c62a20) no-repeat 0 100%/0% .14em;padding-bottom:.08em}
+.r{background:linear-gradient(#050505,#050505) no-repeat 100% 0/100% 100%;color:#050505;padding:0 .1em}
+.big{font-family:var(--vcr);font-size:15cqw;line-height:1;color:#ece9e2}
+
+/* new looks */
+.folder{position:relative;width:62cqw;height:38cqw;background:linear-gradient(#5d5747,#48433a);border-radius:.6cqw;box-shadow:0 3cqw 6cqw rgba(0,0,0,.8)}
+.folder::before{content:"";position:absolute;left:3cqw;top:-2.2cqw;width:16cqw;height:2.4cqw;background:#5d5747;border-radius:.6cqw .6cqw 0 0}
+.ph{position:absolute;left:5cqw;top:4cqw;width:23cqw;height:29cqw;background:#d9d4c7;padding:1.2cqw 1.2cqw 4.2cqw;box-shadow:0 1cqw 2cqw rgba(0,0,0,.5)}
+.phimg{position:relative;width:100%;height:100%;background:radial-gradient(ellipse 22% 40% at 50% 60%,#77735f,transparent 70%),linear-gradient(#2a2620,#0e0d0b);overflow:hidden}
+.clip{position:absolute;left:9cqw;top:-1.6cqw;width:3cqw;height:7cqw;border:.4cqw solid #9a9a96;border-radius:1.5cqw;z-index:2}
+.strip{position:absolute;right:4.5cqw;top:5cqw;width:25cqw;background:#e4dfd2;color:#1d1b17;font-family:var(--vcr);font-size:1.7cqw;line-height:1.6;padding:1.2cqw 1.4cqw}
+.stamp{position:absolute;right:7cqw;bottom:5cqw;border:.35cqw solid #b3261e;color:#b3261e;font-family:var(--vcr);font-size:3.4cqw;padding:.3cqw 1.2cqw;letter-spacing:.08em}
+.term{width:72cqw;font-family:var(--vcr);font-size:2.1cqw;color:#cfd3cc;line-height:1.8;text-shadow:0 0 .8cqw rgba(200,210,200,.35)}
+.term .bad{color:#d0473d;text-shadow:0 0 .8cqw rgba(208,71,61,.4)}
+.cur{display:inline-block;width:1.2cqw;height:2.2cqw;background:#cfd3cc;vertical-align:middle}
+.vhs{position:relative;width:56cqw;height:32cqw;background:linear-gradient(#1c1c1c,#0b0b0b);border-radius:1cqw;box-shadow:0 3cqw 6cqw rgba(0,0,0,.85),inset 0 .2cqw 0 #333}
+.vwin{position:absolute;left:14cqw;right:14cqw;top:5cqw;height:9cqw;background:#050505;border-radius:.6cqw;display:flex;justify-content:space-around;align-items:center}
+.reel{width:6.5cqw;height:6.5cqw;border-radius:50%;background:radial-gradient(circle,#2b2b2b 0 22%,#151515 23% 60%,#3a2f22 61%)}
+.vlab{position:absolute;left:5cqw;right:5cqw;bottom:3.5cqw;height:11cqw;background:repeating-linear-gradient(#e7e2d4 0 2.6cqw,#cdc6b4 2.6cqw 2.75cqw);color:#1d1b17;font-family:var(--vcr);display:grid;place-items:center;font-size:2.5cqw;text-align:center;line-height:1.35}
+.sb{width:64cqw;height:34cqw;border:.25cqw solid rgba(236,233,226,.5);display:grid;place-items:center;align-content:center;gap:1.4cqw;background:rgba(0,0,0,.4);font-family:var(--vcr);position:relative;overflow:hidden}
+.sb .s1{font-size:1.8cqw;color:#a8a296;letter-spacing:.3em}
+.sb .s2{font-size:7cqw;color:#ece9e2;letter-spacing:.1em}
+.sb .s3{font-size:2cqw;color:var(--gold);letter-spacing:.2em}
+.trk{position:absolute;left:0;right:0;height:2cqw;top:0;background:linear-gradient(transparent,rgba(255,255,255,.14),transparent)}
+/* ---------- round 2 looks ---------- */
+.bw{width:62cqw;background:#1a1a1a;border-radius:.6cqw;overflow:hidden;box-shadow:0 2cqw 5cqw rgba(0,0,0,.75)}
+.bw-bar{display:flex;align-items:center;gap:1cqw;padding:.9cqw 1.2cqw;background:#2b2b2b}
+.bw-dots{display:flex;gap:.5cqw}.bw-dots i{width:1cqw;height:1cqw;border-radius:50%;background:#555}
+.bw-url{flex:1;min-width:0;background:#151515;border-radius:1.2cqw;padding:.5cqw 1.4cqw;font:1.6cqw var(--vcr);color:#cfcfcf;white-space:nowrap;overflow:hidden}
+.bw-body{position:relative;height:26cqw;background:#cdc9c0;overflow:hidden}
+.snap{position:absolute;inset:0;padding:2cqw 2.6cqw;font:1.6cqw/1.4 Arial,sans-serif;color:#2a2826}
+.snap h4{margin:0 0 1.2cqw;font-size:2.4cqw;color:#1b1a18}
+.snap .sbox{height:8cqw;width:40%;background:#8d887d;margin-bottom:1cqw}
+.snap.dead{background:#111;display:grid;place-items:center;font:2.6cqw var(--vcr);color:#d0473d;letter-spacing:.1em}
+.cal{display:flex;width:62cqw;margin-top:.4cqw;font-family:var(--vcr);font-size:1.7cqw;color:#a39d90;position:relative}
+.cal span{position:relative;width:20%;padding:.8cqw 0 2cqw;text-align:center}
+.cal span::after{content:"";position:absolute;left:50%;bottom:.6cqw;width:.9cqw;height:.9cqw;margin-left:-.45cqw;border-radius:50%;background:#6a665c}
+.cal .mkr{position:absolute;top:0;left:0;width:20%;height:100%;border:.2cqw solid var(--gold);box-sizing:border-box}
+.chain{display:grid;gap:1.5cqw;font-family:var(--vcr);font-size:2.6cqw;color:#ddd8cc}
+.chain small{font-size:1.6cqw;color:var(--gold);letter-spacing:.2em}
+.hop{display:flex;gap:1.4cqw;white-space:nowrap}.hop span{color:var(--gold)}.hop.bad,.hop.bad span{color:#d0473d}
+.pl{position:relative;width:58cqw;height:32.6cqw;background:#000;box-shadow:0 2cqw 5cqw rgba(0,0,0,.75);overflow:hidden}
+.pl.sm{width:46cqw;height:25.9cqw}
+.pl .pic{position:absolute;inset:0;background:radial-gradient(ellipse 30% 50% at 50% 60%,#6d6a5a,transparent 70%),linear-gradient(#26231d,#0b0a09)}
+.pl .pbar{position:absolute;left:0;right:0;bottom:0;height:.6cqw;background:rgba(255,255,255,.2)}
+.pl .pbar i{display:block;height:100%;width:0;background:#c9281e}
+.pl .gone{position:absolute;inset:0;display:grid;place-content:center;gap:1cqw;text-align:center;background:#0f0f0f;font:500 2.4cqw Roboto,Arial,sans-serif;color:#f1f1f1}
+.pl .gone small{font-size:1.6cqw;color:#9a9a9a;font-weight:400}
+.pl .gone .ic{width:6cqw;height:6cqw;margin:0 auto 1cqw;border:.4cqw solid #777;border-radius:50%;position:relative;box-sizing:border-box}
+.pl .gone .ic::after{content:"";position:absolute;left:50%;top:12%;bottom:12%;width:.4cqw;margin-left:-.2cqw;background:#777;transform:rotate(45deg)}
+.row.sm .cell span{font-size:2.4cqw}
+.cell span.rd{color:#d0473d}
+.tr{position:relative;display:grid}.tr>span{grid-area:1/1}
+.tr .scanln{opacity:0}
+.tlab{font:1.6cqw var(--vcr);color:var(--gold);letter-spacing:.18em}
+.idx{width:60cqw;background:#e9e6df;color:#1b1a18;padding:2cqw 2.6cqw;font:1.7cqw/1.9 "Courier New",monospace;box-shadow:0 2cqw 5cqw rgba(0,0,0,.75);box-sizing:border-box}
+.idx h5{margin:0 0 1cqw;font:bold 2.6cqw Arial,sans-serif}
+.idx .ln{display:grid;grid-template-columns:1fr 1.3fr .4fr;white-space:nowrap;padding:0 .6cqw}
+.idx .ln span:last-child{text-align:right}
+.idx .hd{border-bottom:.15cqw solid #999;margin-bottom:.4cqw;color:#555}
+.idx .hit{background:linear-gradient(rgba(201,165,74,.6),rgba(201,165,74,.6)) no-repeat 0 0/0% 100%}
+.win.wide{width:54cqw}
+.props{display:grid;grid-template-columns:auto 1fr;gap:1.1cqw 3cqw;padding:2.4cqw 3cqw;font-family:var(--vcr);font-size:2cqw;background:#101010;color:#ece9e2;white-space:nowrap}
+.props .l{color:#8d887d;letter-spacing:.08em}
+.cs{display:grid;grid-template-columns:repeat(4,13cqw);gap:1.2cqw}
+.fr{position:relative;height:7.3cqw;background:radial-gradient(ellipse 18% 40% at var(--x) 60%,#7a7664,transparent 70%),linear-gradient(#2a2620,#0e0d0b);outline:.12cqw solid #3a3833}
+.fr b{position:absolute;left:.4cqw;bottom:.2cqw;font:400 1.05cqw var(--vcr);color:#ddd}
+.fr .fb{position:absolute;left:47%;top:28%;width:7%;height:52%;background:#0b0a08;border-radius:40% 40% 10% 10%;filter:blur(.08cqw)}
+.hex i{font-style:normal}
+.print{width:30cqw;background:#d9d4c7;padding:1.4cqw 1.4cqw 0;box-shadow:0 2cqw 4cqw rgba(0,0,0,.7)}
+.print .phimg{height:30cqw}
+.print .cap{font:1.8cqw var(--vcr);color:#2a2826;text-align:center;padding:1.2cqw 0 1.4cqw;letter-spacing:.1em}
+.print.sm{width:22cqw;padding-bottom:1.4cqw}.print.sm .phimg{height:26cqw}
+.fwin{position:relative;width:72cqw;height:38cqw;overflow:hidden;background:#141412;border-radius:1cqw;box-shadow:0 2cqw 5cqw rgba(0,0,0,.75);display:flex;align-items:center}
+.fwin::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 42%,rgba(0,0,0,.8));pointer-events:none}
+.fstrip{flex:none;display:flex;gap:2cqw}
+.fp{flex:none;width:24cqw;height:32cqw;background:#cfc6a8;color:#2a2620;padding:1.6cqw;font:1.3cqw/1.4 Georgia,serif;box-sizing:border-box}
+.fp b{display:block;font:bold 1.9cqw Georgia,serif;margin-bottom:1cqw;border-bottom:.15cqw solid #2a2620;padding-bottom:.6cqw}
+.fp .bars i{background:#8d846b;height:.8cqw;margin:.7cqw 0}
+.fp p{margin:1cqw 0;font-weight:bold}
+.slot{width:46cqw}
+.slot .sl{height:1.6cqw;background:#0a0a0a;border-radius:.8cqw;box-shadow:0 0 0 .3cqw #2a2824}
+.slot .feed{overflow:hidden;margin:0 2cqw}
+.paper{background:#e4dfd2;color:#1d1b17;padding:2cqw 2.4cqw;font:1.75cqw/1.6 "Courier New",monospace}
+.paper .p1{font:2.2cqw var(--vcr);letter-spacing:.08em}
+.paper .p2{font:1.5cqw var(--vcr);color:#6b665c;margin-bottom:1.2cqw}
+.paper p{margin:0 0 1cqw}
+.tline{position:relative;width:70cqw;height:22cqw;font-family:var(--vcr)}
+.tline .ax{position:absolute;left:0;right:0;top:50%;height:.2cqw;background:rgba(236,233,226,.6);transform-origin:0 50%}
+.tline .tk{position:absolute;top:50%;width:0}
+.tline .tk::before{content:"";position:absolute;left:-.1cqw;top:-1.4cqw;width:.2cqw;height:2.8cqw;background:#ece9e2}
+.tline .tk b{position:absolute;bottom:2.2cqw;left:0;transform:translateX(-50%);font-weight:400;font-size:2.2cqw;color:var(--gold);white-space:nowrap}
+.tline .tk i{position:absolute;top:2.2cqw;left:0;transform:translateX(-50%);font-style:normal;font-size:1.6cqw;color:#cfc9bb;white-space:nowrap;letter-spacing:.06em}
+.tline .tk.bad b,.tline .tk.bad i{color:#d0473d}
+.tline .dot{position:absolute;top:50%;left:0;width:1.6cqw;height:1.6cqw;margin:-.8cqw 0 0 -.8cqw;border-radius:50%;background:var(--gold);box-shadow:0 0 1.2cqw rgba(201,165,74,.7)}
+.offln{position:absolute;left:0;right:0;top:50%;height:.4cqw;margin-top:-.2cqw;background:#fff;box-shadow:0 0 2cqw #fff,0 0 5cqw rgba(200,220,255,.6);z-index:6;opacity:0}
+.plab{position:absolute;z-index:5;transform:translate(-50%,calc(-100% - 1.8cqw));font-family:var(--vcr);font-size:2.4cqw;color:#ece9e2;letter-spacing:.08em;text-shadow:0 0 1cqw #000;white-space:nowrap}
+.plab.sm{font-size:1.6cqw;color:var(--gold);transform:translate(-50%,0)}
+.plab.rd{color:#d0473d}
+.node{position:absolute;width:1.2cqw;height:1.2cqw;margin:-.6cqw 0 0 -.6cqw;background:#ece9e2;z-index:4}
+.ring{position:absolute;width:10cqw;height:10cqw;margin:-5cqw 0 0 -5cqw;border:.25cqw solid #c9281e;border-radius:50%;z-index:4;background:rgba(201,40,30,.08);box-sizing:border-box}
+.ls{display:flex;align-items:center;gap:4cqw}
+.lst{display:grid;gap:1.2cqw;font-family:var(--vcr)}
+.lst b{font-weight:400;font-size:5cqw;color:var(--gold);letter-spacing:.1em}
+.lst span{font-size:2.4cqw;color:#ece9e2;letter-spacing:.06em}
+.lst .gr{font-size:1.8cqw;color:#a39d90}
+.cst{display:grid;gap:1.6cqw;width:58cqw;font-family:var(--vcr)}
+.cst>b{font-weight:400;font-size:3.4cqw;color:var(--gold);letter-spacing:.08em;text-align:center}
+.cst .gline,.oq .gline{width:100%}
+.kv{display:flex;justify-content:space-between;align-items:center;font-size:2.4cqw;color:#ece9e2;border-bottom:.12cqw dashed rgba(236,233,226,.25);padding-bottom:1cqw}
+.kv span:first-child{color:#a39d90;letter-spacing:.12em;font-size:1.9cqw}
+.stp{border:.3cqw solid #c9281e;color:#d0473d;padding:.2cqw 1.2cqw;letter-spacing:.1em;display:inline-block}
+.oq{display:grid;gap:1.8cqw;font-family:var(--vcr);font-size:2.7cqw;color:#ece9e2;width:62cqw}
+.oq b{font-weight:400;font-size:2.2cqw;color:var(--gold);letter-spacing:.25em}
+.cbox{display:flex;gap:1.2cqw}
+.cbox i{width:4.4cqw;height:4.4cqw;display:grid;place-items:center;font:normal 2cqw var(--vcr);border:.2cqw solid rgba(236,233,226,.35);color:#6f6b62;box-sizing:border-box}
+.cbox i.d{background:rgba(201,165,74,.28);border-color:rgba(201,165,74,.5);color:#c9a54a}
+.cbox i.c{border-color:#c9a54a;color:#c9a54a}
+
+
+/* ========== v4 REAL: real stills and real-looking pages. Film grain and scratches go on the video, not on the graphics ========== */
+.stage{background:#030303}
+.fx{background:radial-gradient(ellipse 80% 75% at 50% 50%,transparent 45%,rgba(0,0,0,.45) 78%,rgba(0,0,0,.85) 100%)}
+.stage:not(.on) *{animation-play-state:paused!important}
+
+/* plates: real frames from the reference videos */
+.plate.room{background:var(--im-room0) 50% 50%/cover;filter:blur(.8cqw) brightness(.42)}
+.plate.room.v1{background-image:var(--im-room1)}
+.plate.room.v2{background-image:var(--im-room2)}
+.plate.room.sharp,.plate.forest.sharp{background:var(--im-night) 50% 50%/cover;filter:brightness(.82)}
+.plate.forest.sharp{filter:grayscale(1) contrast(1.25) brightness(.8)}
+.plate.screen{background:var(--im-page) 50% 30%/cover;filter:blur(.5cqw) brightness(.4)}
+.plate.map{background:var(--im-sat) 50% 50%/cover;filter:brightness(.72) saturate(.85)}
+.plate.black{background:radial-gradient(ellipse 60% 50% at 50% 42%,#1c1a17,#080807 65%,#030303);filter:none}
+
+/* the person: a real cut-out from the same frame, soft edges */
+.fig{width:13.2cqw;height:26.4cqw;margin-left:-6.6cqw;margin-top:-13.2cqw;background:var(--im-person) 50% 50%/100% 100% no-repeat;filter:brightness(.82);
+ -webkit-mask-image:linear-gradient(90deg,transparent,#000 18%,#000 82%,transparent),linear-gradient(transparent,#000 5%,#000 95%,transparent);-webkit-mask-composite:source-in;
+ mask-image:linear-gradient(90deg,transparent,#000 18%,#000 82%,transparent),linear-gradient(transparent,#000 5%,#000 95%,transparent);mask-composite:intersect}
+.fig.small{width:7.7cqw;height:15.4cqw;margin-left:-3.85cqw;margin-top:-7.7cqw}
+.stage.cctv .fig{filter:grayscale(1) contrast(1.25) brightness(.8)}
+/* photos and video pictures show the real frame with the person in it */
+.phimg,.pl .pic,.wbody,.snap .sbox,.tpic{background:var(--im-still) 50% 50%/cover}
+.phimg .fig,.pl .pic .fig,.wbody .fig{display:none}
+
+/* real text instead of grey bars */
+.txt{overflow:hidden;font-size:1.45cqw;line-height:2.05cqw;margin:.5cqw 0}
+.fp .txt{font-size:1.02cqw;line-height:1.5cqw;column-count:2;column-gap:1.2cqw;text-align:justify;hyphens:auto}
+
+/* forum thread page, about 2005 */
+.pg{background:#eef1f6;color:#222;font:1.5cqw/1.45 Verdana,Tahoma,sans-serif}
+.pg .fhd{margin:-2.4cqw -3cqw 1.4cqw;padding:1.1cqw 3cqw;background:linear-gradient(#41639a,#253f69);color:#fff;font:bold 1.9cqw Verdana,sans-serif;display:flex;justify-content:space-between;align-items:baseline}
+.pg .fhd small{font:1.2cqw Verdana,sans-serif;color:#c9d6ee}
+.pg .crumb{font-size:1.2cqw;color:#555}
+.pg .crumb u{color:#1f4f9a}
+.pg h4{font:bold 2.2cqw Verdana,sans-serif;color:#14305e;margin-bottom:1.2cqw}
+.who{display:flex;gap:1.2cqw;align-items:baseline;background:#d6deeb;border-top:.12cqw solid #b6c2d6;padding:.45cqw 1cqw;font-size:1.3cqw}
+.who b{color:#1f4f9a}.who small{color:#5d6470;font-size:1.05cqw}
+.pg .who2{position:absolute;left:3cqw;right:3cqw;top:54.2cqw}
+.pg .keyline{font-weight:bold;color:#111}
+.mini{font-family:Verdana,Tahoma,sans-serif;background:#f1f1ee}
+.mini b{font-family:Verdana,sans-serif;color:#14305e}
+.mini.dark{background:#121212;color:#d8d8d8}.mini.dark b{color:#f1f1f1}
+.stk{display:grid;place-items:center;transform-style:preserve-3d}
+.stk .mini{will-change:transform,filter;backface-visibility:hidden}
+.mini .mh{display:block;margin:-1.8cqw -2.2cqw 1.3cqw;padding:.75cqw 2.2cqw;font:bold 1.05cqw Verdana,sans-serif;letter-spacing:.05em}
+.mini.news .mh{background:#7d1f1f;color:#f4e8e6;border-bottom:.25cqw solid #4e1010}
+.mini.forum .mh{background:linear-gradient(#41639a,#253f69);color:#fff}
+.mini.arch .mh{background:#2a2a2a;color:#a9a9a9;border-bottom:.12cqw solid #3d3d3d}
+.mini .kl{margin:1.2cqw 0 0;font-weight:bold;color:#f1f1f1}
+.mini .kl .mk{mix-blend-mode:normal;background-image:linear-gradient(rgba(201,165,74,.5),rgba(201,165,74,.5));padding:0 .2cqw}
+/* old website on the monitor */
+.scr{background:#f2efe6;color:#111;font:1.6cqw/1.4 "Times New Roman",Times,serif;text-shadow:none}
+.scr b{color:#0000cc;text-decoration:underline;font:bold 2.6cqw "Times New Roman",serif}
+.scr .ctr{margin-top:1cqw;font:1.3cqw Arial,sans-serif;color:#444}
+.scr .ctr span{font:bold 1.4cqw "Courier New",monospace;background:#000;color:#3f3;padding:0 .4cqw;letter-spacing:.15em}
+.scr::after{background:repeating-linear-gradient(0deg,rgba(0,0,0,.08) 0 .2cqw,transparent .2cqw .45cqw);box-shadow:inset 0 0 4cqw rgba(0,0,0,.75)}
+.crt{background:linear-gradient(150deg,#d9d4c6,#b9b3a3 55%,#9d978a);box-shadow:0 3cqw 6cqw rgba(0,0,0,.85),inset 0 .3cqw .3cqw rgba(255,255,255,.4),inset 0 -.8cqw 1.4cqw rgba(0,0,0,.25)}
+
+/* gold titles */
+.ttl:not(.white):not(.glint){background:linear-gradient(180deg,#fff3cf 8%,#e9c873 34%,#a87d2c 50%,#d9b25b 64%,#f6e3a8 86%);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:none;filter:drop-shadow(0 0 1.3cqw rgba(201,165,74,.42)) drop-shadow(0 .25cqw .15cqw rgba(0,0,0,.85))}
+.glint{background-image:linear-gradient(100deg,transparent 0 42%,rgba(255,252,235,.95) 50%,transparent 58% 100%),linear-gradient(180deg,#fff3cf 8%,#e9c873 34%,#a87d2c 50%,#d9b25b 64%,#f6e3a8 86%);background-size:300% 100%,100% 100%;filter:drop-shadow(0 0 1.3cqw rgba(201,165,74,.42)) drop-shadow(0 .25cqw .15cqw rgba(0,0,0,.85))}
+.ttl.white{color:#efece4;text-shadow:0 0 1.2cqw rgba(255,255,255,.25)}
+.lead b,.lst b,.cst>b,.tlab,.sb .s3,.cell span.g,.oq b,.chain small,.tline .tk b,.hop span{text-shadow:0 0 1cqw rgba(201,165,74,.45),0 .15cqw .1cqw rgba(0,0,0,.8)}
+.gline{background:linear-gradient(90deg,transparent,#f1d48a 18%,#c9a54a 50%,#f1d48a 82%,transparent);box-shadow:0 0 1cqw rgba(201,165,74,.55)}
+.osd,.tag2,.plab,.term,.quote.w,.big,.cell span,.props,.chain,.lst span,.kv{text-shadow:0 0 1cqw rgba(0,0,0,.8)}
+
+/* comment: dark video-site comment */
+.cc{background:#0f0f0f;border-color:#272727;box-shadow:0 2.5cqw 6cqw rgba(0,0,0,.85)}
+.cc-h{font-size:1.45cqw;color:#aaa}.cc-h b{font-size:1.6cqw;color:#f1f1f1}
+.av{display:grid;place-items:center;width:3.6cqw;height:3.6cqw;font:500 1.8cqw Roboto,Arial,sans-serif;color:#fff;background:#5c6bc0}
+.cc-f{display:flex;align-items:center;gap:1.8cqw;font:500 1.35cqw Roboto,Arial,sans-serif;color:#aaa;letter-spacing:0}
+.cc-f .lk{display:flex;align-items:center;gap:.6cqw}
+.cc-f svg{width:2cqw;height:2cqw;fill:#f1f1f1}
+.cc-f .dn svg{transform:scaleY(-1)}
+.cc-f .rp{color:#f1f1f1;background:#272727;border-radius:2cqw;padding:.4cqw 1.4cqw}
+
+/* video player with real controls */
+.pl .pbar{left:1.2cqw;right:1.2cqw;bottom:4.2cqw;height:.45cqw;background:rgba(255,255,255,.3);z-index:2}
+.pl .pbar i{position:relative}
+.pl .pbar i::after{content:"";position:absolute;right:-.7cqw;top:50%;width:1.4cqw;height:1.4cqw;margin-top:-.7cqw;border-radius:50%;background:#e62117}
+.pl .pbar i{background:#e62117}
+.pl .ctl{position:absolute;left:0;right:0;bottom:0;height:4.2cqw;padding:0 1.4cqw;display:flex;align-items:center;gap:1.6cqw;background:linear-gradient(transparent,rgba(0,0,0,.8));font:1.35cqw Roboto,Arial,sans-serif;color:#eee;z-index:2}
+.pl .ctl svg{width:2.2cqw;height:2.2cqw;fill:#fff;flex:none}
+.pl .ctl .sp{flex:1}
+.pl .gone{z-index:4}
+
+/* old-PC windows */
+.win{background:#d4d0c8;border:.18cqw solid;border-color:#fff #404040 #404040 #fff;padding:.3cqw;box-shadow:0 3cqw 7cqw rgba(0,0,0,.85)}
+.wbar{background:linear-gradient(90deg,#0a246a,#3a6ea5 70%,#a6caf0);font:bold 1.5cqw Tahoma,"Segoe UI",sans-serif;color:#fff;padding:.4cqw .4cqw .4cqw .8cqw;align-items:center}
+.wbtn{display:flex;gap:.25cqw}
+.wbtn i{display:grid;place-items:center;width:2cqw;height:1.7cqw;background:#d4d0c8;color:#000;border:.12cqw solid;border-color:#fff #404040 #404040 #fff;font:bold 1.15cqw/1 Tahoma,sans-serif;font-style:normal}
+.wbody{margin-top:.3cqw;border:.15cqw solid;border-color:#808080 #fff #fff #808080}
+.wprog{background:#fff;border:.1cqw solid #808080;height:.9cqw;left:1.2cqw;right:1.2cqw}
+.wprog i{background:repeating-linear-gradient(90deg,#0a246a 0 .9cqw,transparent .9cqw 1.15cqw)}
+.win .props{background:#d4d0c8;color:#000;font:1.65cqw Tahoma,"Segoe UI",sans-serif;text-shadow:none;margin-top:.3cqw}
+.win .props .l{color:#333;letter-spacing:0}
+
+/* browser, about 2005 */
+.bw{background:#d4d0c8;box-shadow:0 3cqw 7cqw rgba(0,0,0,.85)}
+.bw-bar{background:linear-gradient(#f4f3ee,#d9d6cc);border-bottom:.12cqw solid #9d9a90}
+.bw-dots i{background:#9d9a90}
+.bw-url{background:#fff;color:#222;font:1.5cqw Arial,sans-serif;border:.12cqw solid #7f9db9;border-radius:0}
+.snap{font-family:Verdana,Tahoma,sans-serif}.snap h4{color:#14305e;font-family:Verdana,sans-serif}
+
+/* contact sheet: real frames */
+.fr{background-size:cover;background-position:50% 50%;outline:.12cqw solid #111}
+.cs{background:#111;padding:1.2cqw;outline:.15cqw solid #2a2a2a}
+
+/* newspaper on microfiche */
+.fp{background:#e9e4d6;color:#1a1a1a}
+.fp .mh{font:bold .95cqw Georgia,serif;letter-spacing:.08em;border-bottom:.08cqw solid #1a1a1a;padding-bottom:.3cqw;margin-bottom:.6cqw;text-align:center}
+.fp b{font:900 2cqw/1.05 Georgia,"Times New Roman",serif;border-bottom:.3cqw double #1a1a1a}
+.fp .fph{height:7cqw;background:var(--im-still) 50% 45%/cover;filter:grayscale(1) contrast(1.35);margin:.6cqw 0 .3cqw}
+.fwin{background:radial-gradient(ellipse at center,#1f2420,#0b0d0b)}
+
+/* police print-out: tractor-feed paper */
+.paper{background:radial-gradient(circle at 1.2cqw 1.2cqw,#1a1916 .42cqw,transparent .48cqw) 0 0/100% 2.4cqw repeat-y,radial-gradient(circle at calc(100% - 1.2cqw) 1.2cqw,#1a1916 .42cqw,transparent .48cqw) 0 0/100% 2.4cqw repeat-y,#f1efe6;padding:2cqw 4cqw}
+.paper .p1{font:bold 2cqw Arial,sans-serif;letter-spacing:.06em;border-bottom:.2cqw solid #111;padding-bottom:.4cqw}
+.paper .fld{display:grid;grid-template-columns:auto 1fr auto 1fr;gap:.4cqw 1.2cqw;font-size:1.4cqw;margin:0 0 1.2cqw}
+.paper .fld span{color:#555}.paper .fld i{font-style:normal;border-bottom:.1cqw solid #777}
+.paper .sig{margin-top:1.6cqw;font-size:1.4cqw;color:#555}
+
+/* folder, tape */
+.folder{background:linear-gradient(#c9b27c,#b39a62);box-shadow:0 3cqw 6cqw rgba(0,0,0,.85),inset 0 .2cqw 0 rgba(255,250,230,.35)}
+.folder::before{background:#c9b27c}
+.ph{background:#f4f2ec}
+.strip{background:#f6f3ea}
+.stamp,.stp{rotate:-3deg}
+.vhs{background:linear-gradient(#262626,#0e0e0e);box-shadow:0 3cqw 6cqw rgba(0,0,0,.85),inset 0 .2cqw 0 #3a3a3a,inset 0 -.4cqw .8cqw rgba(0,0,0,.8)}
+.vhs::before{content:"T-120 · SP 2 HRS · HIGH GRADE";position:absolute;left:5cqw;top:1.5cqw;font:bold 1.25cqw Arial,sans-serif;letter-spacing:.2em;color:#8a8a8a}
+.vhs::after{content:"";position:absolute;inset:1.2cqw;pointer-events:none;background:radial-gradient(circle,#5a5a5a .3cqw,#1a1a1a .45cqw,transparent .5cqw) 0 0/1.2cqw 1.2cqw no-repeat,radial-gradient(circle,#5a5a5a .3cqw,#1a1a1a .45cqw,transparent .5cqw) 100% 0/1.2cqw 1.2cqw no-repeat,radial-gradient(circle,#5a5a5a .3cqw,#1a1a1a .45cqw,transparent .5cqw) 0 100%/1.2cqw 1.2cqw no-repeat,radial-gradient(circle,#5a5a5a .3cqw,#1a1a1a .45cqw,transparent .5cqw) 100% 100%/1.2cqw 1.2cqw no-repeat}
+.vlab{background:#f2ecda;color:#1d2f73;font:2.6cqw/1.3 "Segoe Print","Bradley Hand","Comic Sans MS",cursive;box-shadow:inset 0 0 0 .3cqw #e6dcc0}
+.reel{background:radial-gradient(circle,#e8e8e8 0 9%,#2b2b2b 10% 20%,#4a3424 21% 66%,#1a120b 67% 70%,#0c0c0c 71%)}
+.vwin{box-shadow:inset 0 .4cqw 1cqw rgba(0,0,0,.9)}
+.slot .sl{background:linear-gradient(#000,#161513);box-shadow:0 0 0 .3cqw #2a2824,0 .3cqw .6cqw rgba(0,0,0,.6)}
+
+/* marks */
+svg.ov{filter:drop-shadow(0 .2cqw .3cqw rgba(0,0,0,.6))}
+.ring{filter:drop-shadow(0 0 .8cqw rgba(201,40,30,.55))}
+.hl,.vl{background:rgba(240,230,200,.75);box-shadow:0 0 .8cqw rgba(240,230,200,.55)}
+.pin{box-shadow:0 0 1.2cqw rgba(201,165,74,.7),inset 0 0 .6cqw rgba(201,165,74,.5)}
+.node{box-shadow:0 0 1cqw rgba(236,233,226,.7)}
+.tline .ax{box-shadow:0 0 .8cqw rgba(236,233,226,.45)}
+.snap.dead{text-shadow:0 0 1.2cqw rgba(208,71,61,.6)}
+
+/* timeline: dated evidence frames, camera moves along them */
+.tmrow{position:absolute;left:50%;top:50%;display:flex;gap:6cqw;align-items:flex-start}
+.tmrow::before{content:"";position:absolute;left:13cqw;right:13cqw;top:3.4cqw;height:.15cqw;background:rgba(236,233,226,.4)}
+.tmc{position:relative;flex:none;width:26cqw;font-family:var(--vcr);text-align:center}
+.tmc::before{content:"";position:absolute;left:50%;top:2.95cqw;width:1.05cqw;height:1.05cqw;margin-left:-.52cqw;border-radius:50%;background:#ece9e2}
+.tmc.bad::before{background:#d0473d}
+.tmd{height:2.4cqw;margin-bottom:2.4cqw;font-size:2.1cqw;color:var(--gold);letter-spacing:.06em;white-space:nowrap}
+.tme{margin-top:1.2cqw;font-size:1.7cqw;color:#e8e4da;letter-spacing:.08em;white-space:nowrap}
+.tmc.bad .tmd,.tmc.bad .tme{color:#d0473d}
+.tmf{position:relative;height:16cqw;overflow:hidden;background:#111;text-align:left;box-shadow:0 1.6cqw 3.6cqw rgba(0,0,0,.8)}
+.tmf.still{background:var(--im-still) 50% 50%/cover}
+.tmf.still span{position:absolute;left:1cqw;bottom:.8cqw;font:1.2cqw var(--vcr);color:#fff;text-shadow:0 0 .4cqw #000}
+.tmf.up{background:#fff;padding:1cqw;font:1.05cqw/1.3 Arial,sans-serif;color:#111}
+.tmf.up .tpic{position:relative;height:9.4cqw}
+.tmf.up .tpic i{position:absolute;right:.4cqw;bottom:.4cqw;background:rgba(0,0,0,.85);color:#fff;font:1cqw Arial,sans-serif;font-style:normal;padding:0 .3cqw}
+.tmf.up b{display:block;margin:.6cqw 0 .2cqw;font-size:1.25cqw}
+.tmf.up small{color:#606060;font-size:1cqw}
+.tmf.gone{background:#f9f9f9;display:grid;place-content:center;gap:.8cqw;text-align:center;font:1.35cqw Arial,sans-serif;color:#0f0f0f}
+.tmf.gone small{color:#606060;font-size:1cqw}
+.tmf.gone .gi{width:4cqw;height:4cqw;margin:0 auto;border:.35cqw solid #909090;border-radius:50%;position:relative;box-sizing:border-box}
+.tmf.gone .gi::after{content:"";position:absolute;left:50%;top:10%;bottom:10%;width:.35cqw;margin-left:-.17cqw;background:#909090;transform:rotate(45deg)}
+.tmf.arc{background:#ece9e2;font:1.05cqw/1.35 Arial,sans-serif;color:#222}
+.tmf.arc .au{background:#2d2d2d;color:#ddd;padding:.5cqw .8cqw;font:1cqw Arial,sans-serif;white-space:nowrap;overflow:hidden}
+.tmf.arc .ab{padding:.8cqw 1.1cqw}
+.tmf.arc .ab b{display:block;font:bold 1.7cqw "Times New Roman",serif;color:#0000cc;text-decoration:underline;margin-bottom:.5cqw}
+.cfr{background:var(--im-night) 50% 100%/135% auto no-repeat;filter:blur(.3cqw) brightness(.62);-webkit-mask-image:linear-gradient(transparent 60%,#000 82%);mask-image:linear-gradient(transparent 60%,#000 82%)}
+.tmf.arc .ab .er{display:block;margin-top:.6cqw;color:#b3261e;font-weight:bold}
+
+/* ---------- page sections: dividers, video map, rules ---------- */
+.jump{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:16px;font-size:14px}
+.jump a{color:#e3c58e}
+.divh{font-family:var(--vcr);font-weight:400;font-size:clamp(22px,3vw,30px);letter-spacing:.05em;margin:48px 0 0;padding-top:22px;border-top:1px solid var(--line);color:var(--fg);scroll-margin-top:60px}
+.divh small{display:block;font:14px/1.5 var(--body);color:var(--muted);letter-spacing:0;margin-top:6px;max-width:72ch}
+.item{scroll-margin-top:70px}
+#where{scroll-margin-top:60px}
+.vmap{display:grid;gap:12px;margin-top:18px}
+.stg{display:grid;grid-template-columns:130px 1fr;gap:16px;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:14px 16px}
+.stg .when{font-family:var(--vcr);color:var(--gold);font-size:13px;letter-spacing:.03em}
+.stg .when b{display:block;font-weight:400;color:var(--fg);font-size:24px;line-height:1.1}
+.stg h3{margin:0 0 4px;font-size:15px;font-weight:600}
+.stg p{margin:0 0 10px;color:#cbc6bb;font-size:14px;max-width:80ch}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.chip{font:12.5px var(--body);padding:3px 9px;border-radius:3px;border:1px solid var(--line);background:var(--panel2);color:var(--fg);text-decoration:none}
+a.chip:hover{border-color:#6a6355}
+.chip.new{border-color:#8a6d33;color:#f1e2b6}
+.chip.guide{color:var(--muted);border-style:dashed}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:4px 18px;font-size:13px;color:var(--muted)}
+.facts b{color:var(--fg);font-weight:500}
+.keyrow{display:flex;flex-wrap:wrap;gap:8px 14px;margin-top:12px;font-size:13px;color:var(--muted);align-items:center}
+.h3x{font-family:var(--vcr);font-weight:400;font-size:20px;color:var(--gold);letter-spacing:.05em;margin:34px 0 12px}
+.rules{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:12px;padding:0;margin:0;list-style:none}
+.rules li{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:12px 14px;font-size:14px;color:#cbc6bb}
+.rules li b{display:block;color:var(--fg);font-weight:600;margin-bottom:2px}
+.src{font-size:13px;color:var(--muted);margin-top:18px;max-width:100ch;overflow-wrap:anywhere}
+.src a{color:#cbb98f}
+@media (max-width:560px){.stg{grid-template-columns:1fr;gap:6px}.stg .when b{display:inline;margin-right:8px;font-size:18px}}
+@media (prefers-reduced-motion: reduce){.stage{cursor:pointer}}
+@media (max-width:700px){section.grp,.divh,#where{scroll-margin-top:150px}.item{scroll-margin-top:160px}}
+.fwin.full{position:absolute;inset:0;width:auto;height:auto;border-radius:0;box-shadow:none;display:block}
+.fzoom{position:absolute;inset:0;display:flex;align-items:center;transform-origin:50% 50%;will-change:transform}
+.fwin.full .fp{width:32cqw;height:50cqw;padding:2.2cqw;font-size:1.7cqw;overflow:hidden}
+.fwin.full .fp .mh{font-size:1.15cqw}
+.fwin.full .fp b{font-size:2.7cqw}
+.fwin.full .fp .fph{height:13cqw}
+.fwin.full .fp .bars i{height:.9cqw;margin:.85cqw 0}
+.fwin.full .fp p{font-size:1.9cqw}
+.pulse{background:transparent!important;box-shadow:none!important;filter:none!important;pointer-events:none}
+.node.pulse{border:.15cqw solid #ece9e2;box-sizing:border-box}
+.vband{position:absolute;inset:0;z-index:4;opacity:0;overflow:hidden}
+.vband>.plate,.vband>.shot{transform:none!important;opacity:1!important}
+.vnoise{position:absolute;inset:0;z-index:6;opacity:0;pointer-events:none;background-size:55% 70%;mix-blend-mode:screen;image-rendering:pixelated}
+.vroll{position:absolute;left:0;right:0;height:9cqw;top:105%;z-index:6;background-size:100% 400%;mix-blend-mode:screen;filter:brightness(1.6) contrast(1.4);opacity:0;-webkit-mask:linear-gradient(transparent,#000 30%,#000 70%,transparent);mask:linear-gradient(transparent,#000 30%,#000 70%,transparent)}
+.vflash{position:absolute;inset:0;z-index:6;background:#dfe6ff;mix-blend-mode:overlay;opacity:0;pointer-events:none}
+.rew{position:absolute;inset:0;background:var(--im-rew) 0 0/100% 4800% no-repeat;filter:brightness(1.05) contrast(1.05) saturate(.9)}
+.ffoc{position:absolute;inset:0;z-index:2;opacity:0;pointer-events:none;-webkit-backdrop-filter:blur(.45cqw) brightness(.32);backdrop-filter:blur(.45cqw) brightness(.32);-webkit-mask-composite:source-over;mask-composite:add}
+
+/* v6: p-scroll full screen + lens */
+.pgfull{position:absolute;inset:0;z-index:5;overflow:hidden;background:#eef1f6;filter:url(#lens-ps)}
+.bbar{position:relative;z-index:2;height:4.6cqw;display:flex;align-items:center;gap:.7cqw;padding:0 1.6cqw;background:linear-gradient(#ececec,#c8c8c8);border-bottom:.12cqw solid #8d8d8d;font:1.35cqw Tahoma,Verdana,sans-serif;color:#333}
+.bbar i{width:1.1cqw;height:1.1cqw;border-radius:50%;background:#a9a9a9;box-shadow:inset 0 .1cqw .2cqw rgba(0,0,0,.4)}
+.bbar span{flex:1;margin-left:1.2cqw;background:#fff;border:.1cqw solid #7f9db9;padding:.35cqw .8cqw;white-space:nowrap;overflow:hidden}
+.pgfull .pg{height:auto;zoom:1.3;padding:2.4cqw 7cqw 30cqw}
+.pgfull .fhd{margin:-2.4cqw -7cqw 1.4cqw;padding:1.1cqw 7cqw}
+.pgfull .txt{height:auto!important}
+.pgfull .who2,.pgfull .keyline{position:static}
+.pgfull .keyline{margin:.8cqw 0 .4cqw;font-size:1.6cqw}
+.pst{font-size:1.45cqw;line-height:2.05cqw;margin:.5cqw 0}
+.acts{font-size:1.1cqw;color:#5a6f95;text-align:right;border-top:.1cqw solid #c9d0dc;padding:.4cqw 0 1.4cqw}
+.lensvig{position:absolute;inset:0;z-index:6;pointer-events:none;background:radial-gradient(ellipse 72% 72% at 50% 50%,transparent 50%,rgba(0,0,0,.6) 100%),linear-gradient(160deg,rgba(255,255,255,.06),transparent 35%)}
+/* v6: s-tape 3D cassette */
+.vscene{position:relative;width:56cqw;height:31cqw;perspective:120cqw}
+.vspin,.vbox{position:absolute;inset:0;transform-style:preserve-3d}
+.vbox>div{position:absolute}
+.vf{inset:0;transform:translateZ(3.6cqw);border-radius:.6cqw;overflow:hidden;background:linear-gradient(172deg,#2b2b2b,#161616 45%,#0f0f0f);box-shadow:inset 0 .15cqw 0 rgba(255,255,255,.1),inset 0 -.25cqw .5cqw rgba(0,0,0,.7)}
+.vk{inset:0;transform:rotateY(180deg) translateZ(3.6cqw);border-radius:.6cqw;background:#101010}
+.vt,.vbo{left:0;width:56cqw;height:7.2cqw;margin-top:-3.6cqw;background:linear-gradient(#0b0b0b,#1e1e1e 44%,#050505 49% 51%,#1b1b1b 56%,#0c0c0c)}
+.vt{top:0;transform:rotateX(90deg)}
+.vbo{top:100%;transform:rotateX(-90deg)}
+.vle,.vri{top:0;width:7.2cqw;height:31cqw;margin-left:-3.6cqw;background:linear-gradient(90deg,#0b0b0b,#1c1c1c 44%,#050505 49% 51%,#1a1a1a 56%,#0b0b0b)}
+.vle{left:0;transform:rotateY(-90deg)}
+.vri{left:100%;transform:rotateY(90deg)}
+.vsp{position:absolute;left:7cqw;right:7cqw;top:1.3cqw;bottom:1.3cqw;background:linear-gradient(#efe8d3,#ddd2b3);color:#1f2f78;font:2.2cqw/1 "Segoe Print","Bradley Hand","Comic Sans MS",cursive;display:grid;place-items:center;transform:rotate(-.4deg);box-shadow:0 0 .2cqw rgba(0,0,0,.6)}
+.vl2{position:absolute;left:5.5cqw;right:5.5cqw;top:2cqw;height:9.4cqw;padding-top:1.4cqw;box-sizing:border-box;background:linear-gradient(175deg,#f2ebd7,#e4dabd 70%,#d6c9a5);transform:rotate(-1.1deg);box-shadow:0 .12cqw .3cqw rgba(0,0,0,.7);color:#1f2f78;font:2.5cqw/1.25 "Segoe Print","Bradley Hand","Comic Sans MS",cursive;display:grid;place-items:center;text-align:center;text-shadow:0 0 .06cqw rgba(31,47,120,.7)}
+.vl2::before{content:"VIDEO CASSETTE \00B7  T-120";position:absolute;left:1.1cqw;top:.6cqw;font:bold .95cqw Arial,sans-serif;letter-spacing:.18em;color:#8a7f66;text-shadow:none}
+.vl2::after{content:"";position:absolute;inset:0;pointer-events:none;mix-blend-mode:multiply;background:repeating-linear-gradient(transparent 0 2.45cqw,rgba(70,110,170,.25) 2.45cqw 2.56cqw) 0 2.3cqw/100% calc(100% - 2.3cqw) no-repeat,radial-gradient(ellipse 30% 45% at 86% 72%,rgba(140,95,35,.22),transparent 70%),radial-gradient(ellipse 20% 30% at 8% 20%,rgba(120,90,40,.12),transparent 70%),linear-gradient(135deg,transparent 93%,rgba(0,0,0,.3) 93% 93.6%,#262626 93.6%)}
+.vw2{position:absolute;left:15.5cqw;right:15.5cqw;top:13cqw;height:9.6cqw;border-radius:.7cqw;overflow:hidden;background:radial-gradient(ellipse at 50% 30%,#1c1712,#060504);box-shadow:inset 0 .4cqw 1cqw rgba(0,0,0,.95),0 0 0 .3cqw #090909,0 0 0 .45cqw #2c2c2c}
+.vw2::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(112deg,rgba(255,255,255,.16) 0 16%,transparent 28% 62%,rgba(255,255,255,.06) 70%,transparent 80%)}
+.rl{position:absolute;top:50%;border-radius:50%;transform:translate(-50%,-50%);background:repeating-radial-gradient(circle,#3b291c 0 .14cqw,#2a1c12 .14cqw .28cqw);box-shadow:0 0 .5cqw rgba(0,0,0,.9)}
+.rl.a{left:27%;width:12cqw;height:12cqw}
+.rl.b{left:73%;width:5.2cqw;height:5.2cqw}
+.rl::after{content:"";position:absolute;left:50%;top:50%;width:3.2cqw;height:3.2cqw;margin:-1.6cqw 0 0 -1.6cqw;border-radius:50%;background:radial-gradient(circle,#070707 0 20%,transparent 21%),repeating-conic-gradient(#e2e2e2 0 16deg,#a9a9a9 16deg 22deg,#e2e2e2 22deg 60deg);box-shadow:0 0 0 .22cqw #c9c9c9,0 0 .4cqw .2cqw rgba(0,0,0,.6)}
+.vrb{position:absolute;top:13cqw;height:9.6cqw;width:8.5cqw;border-radius:.3cqw;background:repeating-linear-gradient(90deg,#1e1e1e 0 .32cqw,#0a0a0a .32cqw .48cqw,#272727 .48cqw .66cqw)}
+.vrb.l{left:4.6cqw}.vrb.r{right:4.6cqw}
+.vmo{position:absolute;left:0;right:0;bottom:2.3cqw;text-align:center;font:bold 1.25cqw Arial,sans-serif;letter-spacing:.5em;color:#1b1b1b;text-shadow:0 .08cqw 0 #383838,0 -.06cqw 0 #000}
+.vf::before{content:"";position:absolute;left:1.6cqw;right:1.6cqw;bottom:5.6cqw;height:.18cqw;background:#050505;box-shadow:0 .12cqw 0 #2e2e2e}
+.vf::after{content:"";position:absolute;inset:1.1cqw;pointer-events:none;background:radial-gradient(circle,#555 .28cqw,#141414 .42cqw,transparent .48cqw) 0 0/1.1cqw 1.1cqw no-repeat,radial-gradient(circle,#555 .28cqw,#141414 .42cqw,transparent .48cqw) 100% 0/1.1cqw 1.1cqw no-repeat,radial-gradient(circle,#555 .28cqw,#141414 .42cqw,transparent .48cqw) 0 100%/1.1cqw 1.1cqw no-repeat,radial-gradient(circle,#555 .28cqw,#141414 .42cqw,transparent .48cqw) 100% 100%/1.1cqw 1.1cqw no-repeat,radial-gradient(circle,#555 .28cqw,#141414 .42cqw,transparent .48cqw) 50% 100%/1.1cqw 1.1cqw no-repeat}
+.vsh{position:absolute;inset:0;pointer-events:none;mix-blend-mode:screen;background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.08) 47%,rgba(255,255,255,.17) 50%,rgba(255,255,255,.08) 53%,transparent 60%) 100% 0/300% 100% no-repeat}
+.vshd{position:absolute;left:6cqw;right:6cqw;bottom:-7cqw;height:4.5cqw;border-radius:50%;background:radial-gradient(ellipse,rgba(0,0,0,.85),transparent 70%);filter:blur(1cqw)}
+/* v6: tm-strip camera */
+.tmcam{position:absolute;inset:0}
+/* v6: CRT dot */
+.offdot{position:absolute;left:50%;top:50%;width:2.2cqw;height:2.2cqw;margin:-1.1cqw 0 0 -1.1cqw;border-radius:50%;z-index:6;opacity:0;pointer-events:none;background:radial-gradient(circle,#fff 0 28%,rgba(225,238,255,.9) 42%,rgba(180,210,255,0) 72%);box-shadow:0 0 3cqw 1cqw rgba(200,222,255,.55),0 0 9cqw 2cqw rgba(150,185,255,.25)}
+</style>
+
+<header class="top wrap">
+  <h1>FARRELL <span>MOTION LAB</span></h1>
+  <p class="lede"><b>Round 2 is at the top:</b> 22 new moves for found web pages, files, timelines and case endings. Under them is a map of a Farrell video: which moves go where, how long they stay on screen and how often. Each picture loops. <b>Click a picture to pause it.</b> Pick <b>Approve</b> or <b>Reject</b> under each new one, and add a note if you want a change. Your choices save on their own.</p>
+  <div class="legend"><span class="tag fits">Fits the rule book</span><span class="tag ok">New idea: needs your OK</span><span class="tag change">Needs a rule change</span></div>
+  <nav class="jump"><a href="#r2">Round 2: 22 new moves</a><a href="#where">Where and how to use them</a><a href="#r1">Round 1: approved</a></nav>
+</header>
+
+<div class="bar"><div class="wrap">
+  <div class="count" id="count">0 approved · 0 rejected · 0 left</div>
+  <div class="filters" role="group" aria-label="Show">
+    <button class="btn" data-f="all" aria-pressed="true">All</button>
+    <button class="btn" data-f="open" aria-pressed="false">Not picked</button>
+    <button class="btn" data-f="yes" aria-pressed="false">Approved</button>
+    <button class="btn" data-f="no" aria-pressed="false">Rejected</button>
+  </div>
+  <button class="btn" id="copy">Copy my choices</button>
+  <span class="save" id="save">Saving in this browser</span>
+</div></div>
+
+<main class="wrap" id="main"></main>
+<footer class="wrap">
+  The pictures are real frames from the five Farrell reference videos, used here only to show the look. Pages, comments, players and papers are built to look like the real sites and documents of the time. Film grain, dust and scratches go on the video track in the edit, not on these graphics. All timings are at 30 fps.
+  <textarea id="copybox" hidden readonly aria-label="Your choices"></textarea>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>
+(function(){
+const EN={'power2.inOut':'ease-in-out cubic','power3.out':'ease-out quart','power4.out':'ease-out quint','expo.out':'ease-out expo','sine.inOut':'ease-in-out sine','power2.out':'ease-out cubic','power1.inOut':'ease-in-out quad','none':'linear','power2.in':'ease-in cubic','power3.inOut':'ease-in-out quart'};
+function h(p,cls,html,tag){const e=document.createElement(tag||'div');if(cls)e.className=cls;if(html!=null)e.innerHTML=html;if(p)p.appendChild(e);return e;}
+function svg(p,inner){const w=document.createElementNS('http://www.w3.org/2000/svg','svg');w.setAttribute('viewBox','0 0 160 90');w.setAttribute('class','ov');w.innerHTML=inner;p.appendChild(w);return w;}
+function fig(p,x,y,cls){const f=h(p,'fig '+(cls||''));f.style.left=x+'%';f.style.top=y+'%';return f;}
+const CA='<div class="cc-h"><span class="av"></span><b>@nightshift_archive</b><span>14 years ago</span></div><p>I found this tape in my grandfather\'s attic. <span class="key">The date on the label is two years after he died.</span></p><div class="cc-f"><span class="lk"><svg viewBox="0 0 24 24"><path d="M2 21h4V9H2v12zM22 10c0-1.1-.9-2-2-2h-6.3l1-4.6v-.3c0-.4-.2-.8-.4-1.1L13.2 1 6.6 7.6C6.2 8 6 8.5 6 9v10c0 1.1.9 2 2 2h9c.8 0 1.5-.5 1.8-1.2l3-7.1c.1-.2.2-.5.2-.7v-2z"/></svg>2.1K</span><span class="lk dn"><svg viewBox="0 0 24 24"><path d="M2 21h4V9H2v12zM22 10c0-1.1-.9-2-2-2h-6.3l1-4.6v-.3c0-.4-.2-.8-.4-1.1L13.2 1 6.6 7.6C6.2 8 6 8.5 6 9v10c0 1.1.9 2 2 2h9c.8 0 1.5-.5 1.8-1.2l3-7.1c.1-.2.2-.5.2-.7v-2z"/></svg></span><span class="rp">Reply</span></div>';
+const CB='<div class="cc-h"><span class="av"></span><b>@lowtide_88</b><span>14 years ago</span></div><p>Same tape. Same label. Mine was left on the porch. Nobody in my house knows who brought it.</p><div class="cc-f"><span class="lk"><svg viewBox="0 0 24 24"><path d="M2 21h4V9H2v12zM22 10c0-1.1-.9-2-2-2h-6.3l1-4.6v-.3c0-.4-.2-.8-.4-1.1L13.2 1 6.6 7.6C6.2 8 6 8.5 6 9v10c0 1.1.9 2 2 2h9c.8 0 1.5-.5 1.8-1.2l3-7.1c.1-.2.2-.5.2-.7v-2z"/></svg>864</span><span class="lk dn"><svg viewBox="0 0 24 24"><path d="M2 21h4V9H2v12zM22 10c0-1.1-.9-2-2-2h-6.3l1-4.6v-.3c0-.4-.2-.8-.4-1.1L13.2 1 6.6 7.6C6.2 8 6 8.5 6 9v10c0 1.1.9 2 2 2h9c.8 0 1.5-.5 1.8-1.2l3-7.1c.1-.2.2-.5.2-.7v-2z"/></svg></span><span class="rp">Reply</span></div>';
+function card(s,html){return h(s.center,'cc',html||CA);}
+function out(tl,els,wait){tl.to(els,{opacity:0,scale:.98,duration:.6,ease:'power2.inOut'},'+='+(wait==null?2.2:wait));}
+function enter(tl,c,ease,dur){tl.fromTo(c,{yPercent:70,opacity:0,scale:.96},{yPercent:0,opacity:1,scale:1,duration:dur,ease:ease});}
+function dim(s,tl,v,pos){const d=h(s.stage,'dim');tl.fromTo(d,{opacity:0},{opacity:v,duration:1,ease:'sine.inOut'},pos||'<');return d;}
+function trim(tl,ps,g,dur,ease,pos){const p=ps[0],L=p.getTotalLength(),o={t:0};const mv=()=>{const q=p.getPointAtLength(L*o.t);g.setAttribute('transform','translate('+q.x.toFixed(2)+' '+q.y.toFixed(2)+')');};tl.fromTo(g,{opacity:0},{opacity:1,duration:.12,ease:'none'},pos);tl.fromTo(ps,{strokeDashoffset:1},{strokeDashoffset:0,autoRound:false,duration:dur,ease:ease},'<');tl.fromTo(o,{t:0},{t:1,duration:dur,ease:ease,onUpdate:mv,onStart:mv},'<');tl.to(g,{opacity:0,duration:.25,ease:'power2.out'});return tl;}
+function pop(tl,e,sc,pos){const pu=e.cloneNode(false);pu.classList.add('pulse');e.parentNode.insertBefore(pu,e);tl.fromTo(e,{opacity:0,scale:.2},{opacity:1,scale:1,duration:.55,ease:'expo.out'},pos);tl.fromTo(pu,{opacity:0,scale:1},{opacity:.9,duration:.01,ease:'none'},'<');tl.to(pu,{opacity:0,scale:sc||3,duration:1,ease:'power2.out'},'>');return tl;}
+function head(v,col,id){const g=document.createElementNS('http://www.w3.org/2000/svg','g');g.innerHTML='<circle r="2.6" fill="'+col+'" opacity=".22" filter="url(#'+id+')"/><circle r="1.1" fill="'+col+'" opacity=".55"/><circle r=".55" fill="#fffbe9"/>';v.appendChild(g);g.style.opacity=0;return g;}
+const GLOWF=id=>'<defs><filter id="'+id+'" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation=".7"/></filter></defs>';
+function LENS(){if(document.getElementById('lens-ps'))return;const N=256,c=document.createElement('canvas');c.width=c.height=N;const x=c.getContext('2d'),d=x.createImageData(N,N);for(let j=0;j<N;j++)for(let i=0;i<N;i++){const nx=i/(N/2-.5)-1,ny=j/(N/2-.5)-1,ex=1-nx*nx,ey=1-ny*ny,k=(j*N+i)*4;d.data[k]=Math.round(127.5-300*nx*ex*ey);d.data[k+1]=Math.round(127.5-300*ny*ey*ex);d.data[k+2]=128;d.data[k+3]=255;}x.putImageData(d,0,0);const u=c.toDataURL('image/png');const M=(n,r)=>'<feDisplacementMap in="SourceGraphic" in2="map" scale=".12" xChannelSelector="R" yChannelSelector="G" result="'+r+'"/>';const C=(i,r,m)=>'<feColorMatrix in="'+i+'" type="matrix" values="'+m+'" result="'+r+'"/>';const w=document.createElementNS('http://www.w3.org/2000/svg','svg');w.setAttribute('width','0');w.setAttribute('height','0');w.style.position='absolute';w.innerHTML='<filter id="lens-ps" x="0" y="0" width="1" height="1" primitiveUnits="objectBoundingBox" color-interpolation-filters="sRGB"><feImage x="0" y="0" width="1" height="1" preserveAspectRatio="none" href="'+u+'" result="map"/>'+M(0,'dr')+M(1,'dg')+M(2,'db')+C('dr','r','1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0')+C('dg','g','0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 1 0')+C('db','b','0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 1 0')+'<feBlend mode="screen" in="r" in2="g" result="rg"/><feBlend mode="screen" in="rg" in2="b"/></filter>';document.body.appendChild(w);}
+let _nz=null;function NOISE(){if(_nz)return _nz;const c=document.createElement('canvas');c.width=160;c.height=120;const x=c.getContext('2d'),d=x.createImageData(160,120);for(let y=0;y<120;y++){const base=Math.random()*90;let v=0;for(let i=0;i<160;i++){v=v*.55+(base+Math.random()*165)*.45;const j=(y*160+i)*4;d.data[j]=d.data[j+1]=d.data[j+2]=v|0;d.data[j+3]=255;}}x.putImageData(d,0,0);_nz=c.toDataURL('image/png');return _nz;}
+const RING='<path class="draw" pathLength="1" stroke="#c9281e" stroke-width=".9" d="M70 24 C88 18 97 30 96 46 C95 64 87 72 78 71 C66 70 62 56 63 44 C64 30 72 22 85 23"/>';
+
+const GROUPS=[
+ {id:'web',r:2,t:'A · Web pages and the archive',i:'Where the clip or page was found. For the Internet Archive, YouTube Kids, Russian and Arabic videos.'},
+ {id:'proof',r:2,t:'B · Files and proof',i:'The file, the frame, the photo, the paper. Show the proof, then point at the one fact that matters.'},
+ {id:'time',r:2,t:'C · Time and order',i:'When things happened, in order. And what to do when the story jumps in time.'},
+ {id:'place',r:2,t:'D · Routes and traces',i:'Two places, or a path between many. Use only what a source shows.'},
+ {id:'case',r:2,t:'E · Case status and endings',i:'How a case opens and ends: where we are, who is missing, what is still open.'},
+ {id:'ease',r:1,t:'1 · Easing: same move, four feels',i:'One comment card, one slide-up. Only the easing curve changes. This picks the "feel" for every card and title.'},
+ {id:'comment',r:1,t:'2 · Comment cards',i:'New ways for a comment screenshot to come in and leave. Rule 13 allows slide-up and slow 3D pan; these build on those two.'},
+ {id:'title',r:1,t:'3 · Gold titles, years and names',i:'Titles land whole (never typed on). These change how they settle.'},
+ {id:'date',r:1,t:'4 · Dates and data rows',i:'The guide says a date is a data row. Two ways to show one.'},
+ {id:'label',r:1,t:'5 · Name tags and file labels',i:'A person gets an anchored tag. A file gets a label.'},
+ {id:'mark',r:1,t:'6 · Look-here marks',i:'Silent marks that show the viewer where to look.'},
+ {id:'page',r:1,t:'7 · Pages and screenshots',i:'Ways to move across a captured web page.'},
+ {id:'quote',r:1,t:'8 · Quotes and numbers',i:'A quote the viewer already heard lands whole. Only the words that carry the story change.'},
+ {id:'new',r:1,t:'9 · New looks for Farrell',i:'Whole new devices that fit the dark archival style. Each one is new, so each needs your OK.'}
+];
+
+const ITEMS=[
+/* ---- easing ---- */
+{id:'e-cubic',g:'ease',name:'Even glide (now)',what:'Slow start, slow end, same speed both sides. This is what we use now.',ease:'power2.inOut',dur:1.0,fit:['fits','Fits the rule book (rule 14)'],plate:'room',hold:.3,
+ b(s,tl){const c=card(s);dim(s,tl,.3,0);enter(tl,c,'power2.inOut',1.0);out(tl,c);}},
+{id:'e-quart',g:'ease',name:'Quick lift, soft landing',what:'Moves fast at first, then slows down a long way before it stops. Feels more "placed".',ease:'power3.out',dur:1.1,fit:['fits','Fits the rule book'],plate:'room',hold:.3,
+ b(s,tl){const c=card(s);dim(s,tl,.3,0);enter(tl,c,'power3.out',1.1);out(tl,c);}},
+{id:'e-expo',g:'ease',name:'Long glide',what:'Very fast first frames, then a very long, slow settle. Feels calm and heavy.',ease:'expo.out',dur:1.5,fit:['fits','Fits the rule book'],plate:'room',hold:.3,
+ b(s,tl){const c=card(s);dim(s,tl,.3,0);enter(tl,c,'expo.out',1.5);out(tl,c);}},
+{id:'e-sine',g:'ease',name:'Drift',what:'The softest curve. Slow and dreamy. Good for sad or quiet beats.',ease:'sine.inOut',dur:1.5,fit:['fits','Fits the rule book'],plate:'room',hold:.3,
+ b(s,tl){const c=card(s);dim(s,tl,.3,0);enter(tl,c,'sine.inOut',1.5);out(tl,c);}},
+/* ---- comments ---- */
+{id:'c-focus',g:'comment',name:'Slide up + focus pull',what:'The card slides up out of focus and gets sharp as it lands. The footage behind gets darker at the same time.',ease:'power3.out',dur:1.3,fit:['fits','Fits the rule book (rules 13, 21)'],plate:'room',hold:.3,
+ b(s,tl){const c=card(s);const d=dim(s,tl,.42,0.4);tl.fromTo(c,{yPercent:55,opacity:0,scale:1.04,filter:'blur(6px)'},{yPercent:0,opacity:1,scale:1,filter:'blur(0px)',duration:1.3,ease:'power3.out'},'<');tl.to(c,{opacity:0,scale:.97,filter:'blur(3px)',duration:.7,ease:'power2.inOut'},'+=2.2');tl.to(d,{opacity:0,duration:.7,ease:'sine.inOut'},'<');}},
+{id:'c-depth',g:'comment',name:'Rise from depth',what:'The card comes from far back, tilted, and lands flat while the whole view drifts sideways in 3D.',ease:'power2.inOut',dur:1.7,fit:['fits','Fits the rule book (3D pan, rule 13)'],plate:'room',hold:.3,
+ b(s,tl){const w=h(s.center,'');const c=h(w,'cc',CA);gsap.set(w,{transformPerspective:800});gsap.set(c,{transformPerspective:800});dim(s,tl,.35,0);tl.fromTo(c,{z:-450,rotationX:30,opacity:0},{z:0,rotationX:12,opacity:1,duration:1.7,ease:'power2.inOut'},'<');tl.fromTo(w,{rotationY:-14},{rotationY:5,duration:5,ease:'none'},'<');tl.to(c,{opacity:0,z:-80,duration:.7,ease:'power2.inOut'},'-=1.2');}},
+{id:'c-sweep',g:'comment',name:'Slide up + key line sweep',what:'After the card lands, a soft gold bar sweeps behind the one line that matters.',ease:'power2.inOut',dur:1.0,fit:['fits','Fits the rule book (rule 13: highlight the main line)'],plate:'room',hold:.3,
+ b(s,tl){const c=card(s);const k=c.querySelector('.key');dim(s,tl,.35,0);enter(tl,c,'power2.inOut',1.0);tl.fromTo(k,{backgroundSize:'0% 100%',color:'#d6d6d6'},{backgroundSize:'100% 100%',color:'#ffffff',duration:1.0,ease:'power2.inOut'},'+=.3');out(tl,c,1.8);}},
+{id:'c-recede',g:'comment',name:'Two comments: old one sinks back',what:'The next comment slides up. The old one sinks back, blurs and fades, so the blur behind never breaks.',ease:'power2.inOut',dur:1.1,fit:['fits','Fits the rule book (rule 25)'],plate:'room',hold:.3,
+ b(s,tl){const c1=card(s,CA),c2=card(s,CB);dim(s,tl,.38,0);tl.fromTo(c1,{yPercent:70,opacity:0,scale:.96,filter:'blur(0px)'},{yPercent:0,opacity:1,scale:1,duration:1,ease:'power2.inOut'},'<');tl.fromTo(c2,{yPercent:80,opacity:0,scale:.96},{yPercent:0,opacity:1,scale:1,duration:1.1,ease:'power2.inOut'},'+=1.8');tl.to(c1,{scale:.86,yPercent:-8,opacity:0,filter:'blur(4px)',duration:1.1,ease:'power2.inOut'},'<');out(tl,c2);}},
+/* ---- titles ---- */
+{id:'t-track',g:'title',name:'Spacing settle',what:'The year fades in with wide letter spacing that closes up slowly. Calm and big.',ease:'power3.out',dur:1.8,fit:['fits','Fits the rule book'],plate:'room',hold:.3,
+ b(s,tl){const t=h(s.center,'ttl','1996');dim(s,tl,.35,0);tl.fromTo(t,{opacity:0,letterSpacing:'0.5em'},{opacity:1,letterSpacing:'0.12em',duration:1.8,ease:'power3.out'},'<');out(tl,t,1.8);}},
+{id:'t-depth',g:'title',name:'Out of the blur',what:'The title starts blurred and a little big, then comes into focus. Like a lens finding it.',ease:'power2.out',dur:1.4,fit:['fits','Fits the rule book'],plate:'room',hold:.3,
+ b(s,tl){const t=h(s.center,'ttl sm','THE INTERNET ARCHIVE');dim(s,tl,.35,0);tl.fromTo(t,{opacity:0,filter:'blur(10px) drop-shadow(0px 0px 14px rgba(201,165,74,0.45))',scale:1.08},{opacity:1,filter:'blur(0px) drop-shadow(0px 0px 14px rgba(201,165,74,0.45))',scale:1,duration:1.4,ease:'power2.out'},'<');out(tl,t,2);}},
+{id:'t-glint',g:'title',name:'Gold glint',what:'The title fades in, then one slow light sweeps across the gold, like old brass.',ease:'sine.inOut',dur:1.6,fit:['fits','Fits the rule book'],plate:'room',hold:.3,
+ b(s,tl){const t=h(s.center,'ttl glint','THE TAPE');dim(s,tl,.35,0);tl.fromTo(t,{opacity:0,backgroundPosition:'100% 0%'},{opacity:1,duration:.9,ease:'power2.inOut'},'<');tl.fromTo(t,{backgroundPosition:'100% 0%'},{backgroundPosition:'0% 0%',duration:1.6,ease:'sine.inOut'},'+=.1');out(tl,t,1);}},
+{id:'t-rgb',g:'title',name:'Colour split settle',what:'Red and blue copies of the word slide together into one clean word. Feels like a bad signal locking on.',ease:'power3.out',dur:1.3,fit:['change','Needs a rule change: red/blue split is for glitch moments only'],plate:'room',hold:.3,
+ b(s,tl){const t=h(s.center,'ttl sm white','DISCONNECTED');dim(s,tl,.4,0);tl.fromTo(t,{opacity:0,textShadow:'9px 0px 0px rgba(255,40,40,0.75), -9px 0px 0px rgba(40,140,255,0.75)'},{opacity:1,textShadow:'0px 0px 0px rgba(255,40,40,0), 0px 0px 0px rgba(40,140,255,0)',duration:1.3,ease:'power3.out'},'<');out(tl,t,2);}},
+{id:'t-rise',g:'title',name:'Line, then rise',what:'A thin gold line draws first. Then the year rises up from behind it.',ease:'power3.out',dur:1.1,fit:['fits','Fits the rule book'],plate:'room',hold:.3,
+ b(s,tl){const col=h(s.center,'col');const m=h(col,'mask');const t=h(m,'ttl','1996');const l=h(col,'gline');dim(s,tl,.35,0);tl.fromTo(l,{scaleX:0},{scaleX:1,duration:.9,ease:'power2.inOut'},'<');tl.fromTo(t,{yPercent:110},{yPercent:0,duration:1.1,ease:'power3.out'},'-=.3');out(tl,col,2);}},
+/* ---- dates ---- */
+{id:'d-row',g:'date',name:'Data row',what:'Date, place and time come in one after another, left to right, with thin lines between.',ease:'power3.out',dur:.8,fit:['fits','Fits the rule book (date = data row)'],plate:'room',hold:.3,
+ b(s,tl){const r=h(s.center,'row','<div class="cell"><small>DATE</small><span class="g">2005/07/02</span></div><div class="sep"></div><div class="cell"><small>PLACE</small><span>DAYTON, OHIO</span></div><div class="sep"></div><div class="cell"><small>TIME</small><span>03:14</span></div>');dim(s,tl,.4,0);tl.fromTo(r.querySelectorAll('.cell'),{opacity:0,xPercent:-12},{opacity:1,xPercent:0,duration:.8,ease:'power3.out',stagger:.16},'<.2');tl.fromTo(r.querySelectorAll('.sep'),{scaleY:0},{scaleY:1,duration:.6,ease:'power2.inOut',stagger:.16},'<.2');out(tl,r,2);}},
+{id:'d-osd',g:'date',name:'Camcorder screen text',what:'Old camcorder text in the corners: PLAY, the date, and a clock that ticks. Says "this is the tape" without a title.',ease:'sine.inOut',dur:.7,fit:['ok','Needs your OK: text sits in the corners (rule 5 says centre) and the seconds tick'],plate:'room sharp',hold:.2,
+ b(s,tl){const a=h(s.stage,'osd','PLAY ▶');a.style.left='5cqw';a.style.top='4.5cqw';const d=h(s.stage,'osd','JUL. 02 2005');d.style.left='5cqw';d.style.bottom='5cqw';const t=h(s.stage,'osd','03:14:07');t.style.right='5cqw';t.style.bottom='5cqw';const fig1=fig(s.shot,50,55);tl.fromTo([a,d,t],{opacity:0},{opacity:1,duration:.7,ease:'sine.inOut'},'<.2');tl.to({},{duration:3.2,ease:'none',onUpdate(){t.textContent='03:14:'+String(7+Math.floor(this.progress()*3.2)).padStart(2,'0');}},'<');tl.to([a,d,t],{opacity:0,duration:.6,ease:'power2.inOut'});}},
+/* ---- labels ---- */
+{id:'n-brackets',g:'label',name:'Corner lock-on',what:'Four corners close in on the person and lock. The tag fades in under them. The marks stay stuck to the shot.',ease:'power3.out',dur:1.0,fit:['fits','Fits the rule book (person = anchored tag)'],plate:'room sharp',hold:.3,
+ b(s,tl){fig(s.shot,50,48);const b=h(s.shot,'tbox','<i class="cn a"></i><i class="cn b"></i><i class="cn c"></i><i class="cn d"></i>');b.style.left='calc(50% - 8.5cqw)';b.style.top='calc(48% - 14.5cqw)';const r=h(s.shot,'tagrow','<span class="tag2">UNKNOWN · 02:47 AM</span>');r.style.top='calc(48% + 16.5cqw)';tl.fromTo(b,{scale:1.6,opacity:0},{scale:1,opacity:1,duration:1,ease:'power3.out'},'<.2');tl.fromTo(r,{opacity:0,yPercent:40},{opacity:1,yPercent:0,duration:.7,ease:'power2.inOut'},'-=.2');out(tl,[b,r]);}},
+{id:'n-leader',g:'label',name:'Leader line',what:'A thin line draws out from the person. The gold name lands at its end, then a small white line under it.',ease:'power2.inOut',dur:.9,fit:['fits','Fits the rule book (gold names)'],plate:'room sharp',hold:.3,
+ b(s,tl){fig(s.shot,36,54);const v=svg(s.shot,'<path class="draw" pathLength="1" stroke="#ece9e2" stroke-width=".35" d="M64 36 L80 24 L99 24"/>');const l=h(s.shot,'lead','<b>JOE</b><i>WITNESS · 2005</i>');l.style.left='63.5%';l.style.top='calc(26.7% - 3.6cqw)';const p=v.querySelector('path');tl.fromTo(p,{strokeDashoffset:1},{strokeDashoffset:0,autoRound:false,duration:.9,ease:'power2.inOut'},'<.2');tl.fromTo(l,{opacity:0,xPercent:-8},{opacity:1,xPercent:0,duration:.7,ease:'power3.out'},'-=.15');out(tl,[v,l]);}},
+{id:'n-file',g:'label',name:'File window opens',what:'A small old-computer window grows open from its centre with the file name on top.',ease:'power3.out',dur:1.1,fit:['fits','Fits the rule book (file name in white)'],plate:'screen',hold:.3,
+ b(s,tl){const w=h(s.center,'win','<div class="wbar"><span>STATION922.MKV - Media Player</span><span class="wbtn"><i>_</i><i>□</i><i>×</i></span></div><div class="wbody"><div class="wprog"><i></i></div></div>');fig(w.querySelector('.wbody'),50,58,'small nodoor');dim(s,tl,.4,0);tl.fromTo(w,{clipPath:'inset(50% 50% 50% 50%)'},{clipPath:'inset(0% 0% 0% 0%)',duration:1.1,ease:'power3.out'},'<.2');out(tl,w);}},
+/* ---- marks ---- */
+{id:'m-ring',g:'mark',name:'Red ring draws on (now)',what:'A hand-drawn red ring draws around the figure. It is stuck to the shot, so it moves with it.',ease:'power2.inOut',dur:.8,fit:['fits','Fits the rule book'],plate:'room sharp',hold:.3,
+ b(s,tl){fig(s.shot,50,52);const v=svg(s.shot,RING);tl.fromTo(v.querySelector('path'),{strokeDashoffset:1},{strokeDashoffset:0,autoRound:false,duration:.8,ease:'power2.inOut'},'+=.6');out(tl,v,2.4);}},
+{id:'m-iris',g:'mark',name:'Spotlight',what:'Everything except the figure goes darker. No red, no shape. Just a pool of light.',ease:'sine.inOut',dur:1.2,fit:['fits','Fits the rule book (pools of light)'],plate:'room sharp',hold:.3,
+ b(s,tl){fig(s.shot,50,52);const i=h(s.shot,'');i.style.cssText='position:absolute;inset:0;z-index:3;background:radial-gradient(circle at 50% 50%,transparent 0 11cqw,rgba(0,0,0,.8) 24cqw)';tl.fromTo(i,{opacity:0},{opacity:1,duration:1.2,ease:'sine.inOut'},'+=.6');tl.to(i,{opacity:0,duration:.8,ease:'sine.inOut'},'+=2.2');}},
+{id:'m-punch',g:'mark',name:'Push in, then ring',what:'The camera pushes in on the figure in one smooth move. The ring draws only after it lands.',ease:'power2.inOut',dur:1.6,fit:['fits','Fits the rule book (counts as a punch: max about 3 a video)'],plate:'room sharp',hold:.3,noPush:true,
+ b(s,tl){fig(s.shot,50,50);const v=svg(s.shot,RING);tl.fromTo([s.plate,s.shot],{scale:1},{scale:1.28,duration:1.6,ease:'power2.inOut',transformOrigin:'50% 50%'},'+=.3');tl.fromTo(v.querySelector('path'),{strokeDashoffset:1},{strokeDashoffset:0,autoRound:false,duration:.7,ease:'power2.inOut'},'+=.15');out(tl,v,2);}},
+{id:'m-arrow',g:'mark',name:'Block arrow',what:'A red block arrow slides in and stops short of the figure, so it never covers it.',ease:'power3.out',dur:.9,fit:['fits','Fits the rule book (police / CCTV series)'],plate:'room sharp',hold:.3,
+ b(s,tl){fig(s.shot,56,52);const v=svg(s.shot,'<g><polygon points="38,43 62,43 62,37.5 73,47 62,56.5 62,51 38,51" fill="#c0261e" stroke="#2a0705" stroke-width=".5"/></g>');const g=v.querySelector('g');tl.fromTo(g,{x:-14,opacity:0},{x:0,opacity:1,duration:.9,ease:'power3.out'},'+=.5');out(tl,v,2.4);}},
+/* ---- pages ---- */
+{id:'p-scroll',g:'page',name:'One-move scroll to the line',what:'The web page fills the whole screen, seen through a fixed, very light lens: a slight bulge in the middle, faint colour fringes at the sides. The lens does not change. The page scrolls in one smooth move to the key line, which gets a highlight.',ease:'power2.inOut',dur:3.4,fit:['fits','Fits the rule book (one ease per move)'],plate:'black',hold:.3,
+ b(s,tl){LENS();const w=h(s.stage,'pgfull');h(w,'bbar','<i></i><i></i><i></i><span>http://www.the3amforum.com/unexplained/thread-2291.html</span>');const vg=h(s.stage,'lensvig');const p=h(w,'pg','<div class="fhd">the3amforum.com<small>Logged in as guest · Search · FAQ</small></div><div class="crumb"><u>the3amforum</u> › <u>Unexplained</u> › Thread #2291</div><h4>Has anyone else caught the 3 AM broadcast?</h4><div class="who"><b>nightowl_77</b><small>Member · Joined Mar 2004 · Posts: 212 · Jul 03 2005, 04:02 AM</small></div><div class="bars"><i style="width:96%"></i><i style="width:88%"></i><i style="width:92%"></i><i style="width:60%"></i><i style="width:94%"></i><i style="width:85%"></i><i style="width:90%"></i><i style="width:40%"></i><i style="width:97%"></i><i style="width:83%"></i><i style="width:70%"></i></div><div class="acts">Quote · Reply · Report</div><div class="who"><b>static_cat</b><small>Member · Joined Nov 2003 · Posts: 1,045 · Jul 03 2005, 04:21 AM</small></div><div class="pst">Same here. It came on right after the anthem. Static, then a man reading numbers very slowly. I thought it was a test signal. My brother heard it too, two towns away.</div><div class="acts">Quote · Reply · Report</div><div class="who who2"><b>lowtide_88</b><small>Member · Joined Jan 2005 · Posts: 37 · Jul 03 2005, 04:40 AM</small></div><div class="keyline"><span class="mk">I recorded it at 3:14 AM. The voice read out my address.</span></div><div class="pst">I still have the tape. I will not play it again.</div><div class="acts">Quote · Reply · Report</div><div class="who"><b>nightowl_77</b><small>Member · Posts: 213 · Jul 03 2005, 05:02 AM</small></div><div class="pst">Post it. Please.</div>');const DM=[...document.querySelectorAll('#lens-ps feDisplacementMap')],o={k:.02},K=()=>DM.forEach((m,i)=>m.setAttribute('scale',(o.k*(1-i*.07)).toFixed(4)));K();tl.fromTo([w,vg],{opacity:0},{opacity:1,duration:.7,ease:'power2.inOut'},'<');tl.fromTo(w,{scale:1.06},{scale:1,duration:1.4,ease:'power2.out'},'<');tl.fromTo(p,{yPercent:0},{yPercent:-34,duration:3.4,ease:'power2.inOut'},'<.5');tl.fromTo(p.querySelector('.mk'),{backgroundSize:'0% 100%'},{backgroundSize:'100% 100%',duration:.8,ease:'power2.inOut'},'+=.1');out(tl,[w,vg],1.8);}},
+{id:'p-stack',g:'page',name:'Fly through the pages',what:'Three real pages (a news story, a forum post, an archived site) hang in dark space. The camera glides forward with a slow drift. Far pages are soft and dark; near pages blur and slide out past the edges of the frame. The camera settles on the third page, sharp and centred, and its key line gets a marker highlight.',ease:'power2.inOut',dur:5,fit:['fits','Fits the rule book (3D camera move, depth blur)'],plate:'black',hold:.3,noPush:true,
+ b(s,tl){s.center.style.perspective='600px';const g=h(s.center,'stk');const mk=(c,top,t,x)=>{const m=h(g,'mini '+c,'<small class="mh">'+top+'</small><b>'+t+'</b><div class="bars"><i style="width:95%"></i><i style="width:80%"></i><i style="width:90%"></i><i style="width:55%"></i></div>'+(x||''));m.style.gridArea='1/1';return m;};const P=[mk('dark news','DAYTON DAILY NEWS · LOCAL','Missing: Dayton teen, 17'),mk('forum','the3amforum.com › Unexplained','Re: the tape on my porch'),mk('dark arch','web.archive.org · Jul 14 2005','Archived: 3am-broadcast.net','<p class="kl"><span class="mk">Do not play the tape after midnight.</span></p>')];const Z=[0,-560,-1120],X=[-48,44,0],Y=[-14,12,0],R=[20,-18,0];P.forEach((p,k)=>gsap.set(p,{z:Z[k],xPercent:X[k],yPercent:Y[k],rotationY:R[k]}));const cam={z:-260},W=()=>s.stage.getBoundingClientRect().width/100||1,F=()=>{const u=W();gsap.set(g,{z:cam.z});P.forEach((p,k)=>{const d=Z[k]+cam.z,far=Math.max(0,-d-60)/260,near=Math.max(0,d-140)/90,o=1-Math.min(1,Math.max(0,(d-200)/200));p.style.filter='blur('+(Math.min(far*.35,.9)+near*.5)*u+'px) brightness('+(1-Math.min(far*.22,.55))+')';p.style.opacity=o;});};F();tl.fromTo(cam,{z:-260},{z:1240,duration:5,ease:'power2.inOut',onUpdate:F,onStart:F},'<');tl.fromTo(g,{rotationY:5,rotationX:3,y:'1.5cqw'},{rotationY:0,rotationX:0,y:0,duration:5,ease:'sine.inOut'},'<');tl.fromTo(P[2].querySelector('.mk'),{backgroundSize:'0% 100%'},{backgroundSize:'100% 100%',duration:.8,ease:'power2.inOut'},'+=.15');out(tl,P[2],1.4);}},
+{id:'p-crt',g:'page',name:'Into the old monitor',what:'The page sits on an old curved screen with scan lines. The camera pushes in until the screen fills the frame. It ends on the full screen with no fade or dip.',ease:'power2.inOut',dur:4,fit:['fits','Fits the rule book (CRT texture)'],plate:'room',hold:1.2,noOut:true,
+ b(s,tl){const c=h(s.center,'crt','<div class="scr"><b>3am-broadcast.net</b><div class="bars"><i style="width:90%"></i><i style="width:70%"></i><i style="width:85%"></i></div><p style="margin:1.6cqw 0">Do not play the tape after midnight.</p><div class="bars"><i style="width:60%"></i><i style="width:80%"></i></div><div class="ctr">You are visitor number <span>004127</span></div></div>');tl.fromTo(c,{scale:.62,opacity:0},{scale:.62,opacity:1,duration:.6,ease:'sine.inOut'},'<');tl.fromTo(c,{scale:.62},{scale:1.7,duration:4,ease:'power2.inOut'},'<');}},
+{id:'q-light',g:'quote',name:'Key words light up (now)',what:'The quote lands whole in grey. Then only the words that matter turn bright, one after the other.',ease:'sine.inOut',dur:.7,fit:['fits','Fits the rule book'],plate:'room',hold:.3,
+ b(s,tl){const q=h(s.center,'quote','“It knew <span class="k">my name</span>. Then it said <span class="k">all of our names</span>, one by one.”');dim(s,tl,.45,0);tl.fromTo(q,{opacity:0},{opacity:1,duration:.9,ease:'sine.inOut'},'<.2');tl.fromTo(q.querySelectorAll('.k'),{color:'#77736a'},{color:'#f3e6c0',duration:.7,ease:'sine.inOut',stagger:.4},'+=.4');out(tl,q,2);}},
+{id:'q-under',g:'quote',name:'Red underline',what:'The quote is already readable. A red line draws under the key words, left to right.',ease:'power2.inOut',dur:.6,fit:['fits','Fits the rule book (red points)'],plate:'room',hold:.3,
+ b(s,tl){const q=h(s.center,'quote w','“It knew <span class="u">my name</span>. Then it said <span class="u">all of our names</span>, one by one.”');dim(s,tl,.45,0);tl.fromTo(q,{opacity:0},{opacity:1,duration:.9,ease:'sine.inOut'},'<.2');tl.fromTo(q.querySelectorAll('.u'),{backgroundSize:'0% .14em'},{backgroundSize:'100% .14em',duration:.6,ease:'power2.inOut',stagger:.45},'+=.4');out(tl,q,2);}},
+{id:'q-redact',g:'quote',name:'Redaction lift',what:'Some words are hidden under black bars like a police file. The bars slide away to show them.',ease:'power2.inOut',dur:.8,fit:['ok','New idea: needs your OK'],plate:'room',hold:.3,
+ b(s,tl){const q=h(s.center,'quote w','The report lists the caller as <span class="r">the night manager</span>. The call came from <span class="r">inside the house</span>.');dim(s,tl,.45,0);tl.fromTo(q,{opacity:0},{opacity:1,duration:.9,ease:'sine.inOut'},'<.2');tl.fromTo(q.querySelectorAll('.r'),{backgroundSize:'100% 100%',color:'#050505'},{backgroundSize:'0% 100%',color:'#e9d9a8',duration:.8,ease:'power2.inOut',stagger:.6},'+=.6');out(tl,q,2);}},
+{id:'num-line',g:'quote',name:'Big number, line, unit',what:'The number lands whole. A gold line draws under it. The unit follows.',ease:'power2.out',dur:1.0,fit:['fits','Fits the rule book (number lands whole, unit follows)'],plate:'room',hold:.3,
+ b(s,tl){const col=h(s.center,'col','<div class="big">17</div><div class="gline"></div><div class="vcr" style="font-size:2.4cqw;color:var(--gold);letter-spacing:.2em">DAYS MISSING</div>');const k=col.children;dim(s,tl,.45,0);tl.fromTo(k[0],{opacity:0,scale:1.04},{opacity:1,scale:1,duration:1,ease:'power2.out'},'<.2');tl.fromTo(k[1],{scaleX:0},{scaleX:1,duration:.7,ease:'power2.inOut'},'-=.2');tl.fromTo(k[2],{opacity:0,yPercent:30},{opacity:1,yPercent:0,duration:.7,ease:'power2.inOut'},'-=.2');out(tl,col,2);}},
+/* ---- new looks ---- */
+{id:'s-dossier',g:'new',name:'Case file',what:'A tilted case folder: the photo slides in under a paper clip, the typed label lands, then a red UNVERIFIED stamp.',ease:'power2.inOut',dur:1.4,fit:['ok','New look: needs your OK (colours and font fit)'],plate:'black',hold:.3,
+ b(s,tl){const w=h(s.center,'');const f=h(w,'folder','<div class="ph"><div class="phimg"></div></div><div class="clip"></div><div class="strip">CASE FILE 07<br>SUBJECT: UNKNOWN<br>RECOVERED: 2005/07/02</div><div class="stamp">UNVERIFIED</div>');fig(f.querySelector('.phimg'),50,60,'small');const ph=f.querySelector('.ph'),st=f.querySelector('.strip'),sp=f.querySelector('.stamp');gsap.set(f,{transformPerspective:900});gsap.set(sp,{rotation:-12});tl.fromTo(f,{opacity:0,rotationX:26,z:-200},{opacity:1,rotationX:14,z:0,duration:1.4,ease:'power2.inOut'},'<');tl.fromTo(w,{rotation:-1.5},{rotation:1,duration:6,ease:'none'},'<');tl.fromTo(ph,{yPercent:16,opacity:0,rotation:-8},{yPercent:0,opacity:1,rotation:-3,duration:1,ease:'power3.out'},'-=.5');tl.fromTo(st,{opacity:0},{opacity:1,duration:.6,ease:'power2.inOut'},'-=.4');tl.fromTo(sp,{scale:1.3,opacity:0},{scale:1,opacity:.88,duration:.45,ease:'power3.out'},'+=.3');out(tl,f,1.6);}},
+{id:'s-terminal',g:'new',name:'Archive terminal',what:'An old computer looks up a dead website. Each line lands whole (no typing). The last one is red.',ease:'power2.out',dur:.35,fit:['ok','New look: needs your OK (lines land whole, no typing)'],plate:'black',hold:.3,
+ b(s,tl){h(s.stage,'scanov');const t=h(s.center,'term','<div>&gt; retrieve 3am-broadcast.net</div><div>&nbsp; 2005-07-02 03:14 ......... OK</div><div>&nbsp; 2006-01-11 22:40 ......... 404 NOT FOUND</div><div class="bad">&nbsp; 2007-??-?? ??:?? ......... ARCHIVE CORRUPTED</div><div><span class="cur"></span></div>');tl.fromTo(t.children,{opacity:0,xPercent:-2},{opacity:1,xPercent:0,duration:.35,ease:'power2.out',stagger:.55},'<.2');out(tl,t,1.8);}},
+{id:'s-cctv',g:'new',name:'CCTV screen',what:'A security-camera look: camera name, REC, date in the corners, and a box that follows the person as they walk.',ease:'power3.out',dur:.8,fit:['ok','Needs your OK: corner text (rule 5 says centre)'],plate:'forest sharp',hold:.3,noPush:true,
+ b(s,tl){h(s.stage,'scanov');s.stage.classList.add('cctv');const f=fig(s.shot,40,58,'small nodoor');const b=h(f,'');b.style.cssText='position:absolute;inset:-1.6cqw;border:.25cqw solid #e8e8e8';const a=h(s.stage,'osd','CAM 03 · NORTH LOT');a.style.cssText+='left:5cqw;top:4.5cqw;font-size:2.2cqw';const r=h(s.stage,'osd','<span style="color:#d0473d">●</span> REC');r.style.cssText+='right:5cqw;top:4.5cqw;font-size:2.2cqw';const d=h(s.stage,'osd','2005-07-02 03:14:09');d.style.cssText+='left:5cqw;bottom:5cqw;font-size:2.2cqw';tl.fromTo([a,r,d],{opacity:0},{opacity:1,duration:.6,ease:'sine.inOut'},'<.1');gsap.set(s.shot,{transformOrigin:'40% 58%'});gsap.set(s.plate,{transformOrigin:'40.9% 57.3%'});tl.fromTo([s.plate,s.shot],{scale:1},{scale:1.9,duration:2.4,ease:'steps(3)'},'<.4');tl.fromTo(b,{scale:1.5,opacity:0},{scale:1,opacity:1,duration:.8,ease:'power3.out'},'<.6');tl.to([a,r,d,b],{opacity:0,duration:.6,ease:'power2.inOut'},'+=3.2');}},
+{id:'s-tape',g:'new',name:'The tape itself',what:'A real-looking VHS tape (thick 3D shell, ribbed plastic, tape wound on the reels, a worn crooked label, a spine label) floats in from the dark and turns slowly while a soft light slides over it. For stories about a tape. It does not replace the case card.',ease:'power2.inOut',dur:1.8,fit:['ok','New look: needs your OK (extra plate, case card stays)'],plate:'room',hold:.3,
+ b(s,tl){const sc=h(s.center,'vscene');const sd=h(sc,'vshd');const sp=h(sc,'vspin');const bx=h(sp,'vbox','<div class="vk"></div><div class="vt"><div class="vsp">CASE 4 · THE BASEMENT TAPE</div></div><div class="vbo"></div><div class="vle"></div><div class="vri"></div><div class="vf"><div class="vrb l"></div><div class="vrb r"></div><div class="vw2"><div class="rl a"></div><div class="rl b"></div></div><div class="vl2">CASE 4<br>THE BASEMENT TAPE</div><div class="vmo">VHS · T-120 · SP 2H</div><div class="vsh"></div></div>');dim(s,tl,.4,0);tl.fromTo(sc,{opacity:0},{opacity:1,duration:.9,ease:'power2.inOut'},'<');tl.fromTo(bx,{z:-600,rotationY:-40,rotationX:-26},{z:0,rotationY:-16,rotationX:-14,duration:1.8,ease:'power2.inOut'},'<');tl.fromTo(sd,{opacity:0,scaleX:.5},{opacity:1,scaleX:1,duration:1.8,ease:'power2.inOut'},'<');tl.fromTo(sp,{rotationY:-6,rotationX:0},{rotationY:8,rotationX:3,duration:5.5,ease:'sine.inOut'},'<');tl.fromTo(bx.querySelector('.vsh'),{backgroundPosition:'100% 0'},{backgroundPosition:'0% 0',duration:5.5,ease:'sine.inOut'},'<');out(tl,sc,1.8);}},
+{id:'s-standby',g:'new',name:'Stand-by chapter card',what:'A chapter card styled like an old TV "please stand by" screen. It settles in with a slow vertical roll, and one soft tracking line passes once.',ease:'power3.out',dur:1.3,fit:['ok','New look: needs your OK (chapter cards only, text stays VCR)'],plate:'room',hold:.3,
+ b(s,tl){const c=h(s.center,'sb','<div class="s1">PLEASE STAND BY</div><div class="s2">THE SIGNAL</div><div class="s3">CHAPTER II</div><div class="trk"></div>');const k=c.querySelector('.trk');dim(s,tl,.5,0);tl.fromTo(c,{opacity:0,yPercent:-7},{opacity:1,yPercent:0,duration:1.3,ease:'power3.out'},'<.2');tl.fromTo(k,{top:'-10%'},{top:'110%',duration:1.6,ease:'sine.inOut'},'-=.6');out(tl,c,1.6);}},
+{id:'s-collage',g:'new',name:'2.5D photo depth',what:'A real frame is cut into layers (ground, person, front rocks). Each layer drifts at its own speed, so the still photo feels like a real place.',ease:'sine.inOut',dur:5.5,fit:['fits','Fits the rule book (camera move on a photo)'],plate:'room sharp',hold:.3,noPush:true,
+ b(s,tl){const mid=h(s.shot,'layer');fig(mid,62,52);const fr=h(s.shot,'layer cfr');fr.style.inset='0 -12% 0 0';tl.fromTo(s.plate,{xPercent:0,scale:1.02},{xPercent:-1,scale:1.04,duration:5.5,ease:'sine.inOut'},'<');tl.fromTo(mid,{xPercent:0},{xPercent:-4,duration:5.5,ease:'sine.inOut'},'<');tl.fromTo(fr,{xPercent:0,scale:1},{xPercent:-9,scale:1.06,duration:5.5,ease:'sine.inOut'},'<');}}
+];
+
+/* ---------- round 2 ---------- */
+const BARS=(ws)=>'<div class="bars">'+ws.map(w=>'<i style="width:'+w+'%"></i>').join('')+'</div>';
+const OK=['ok','New idea: needs your OK'];
+const ITEMS2=[
+/* ---- web pages and the archive ---- */
+{id:'w-wayback',g:'web',name:'Archive date scrub',what:'An old web page in an archive viewer. A gold box steps along the years, and the page changes with each year until it is gone.',ease:'power2.inOut',dur:.6,fit:OK,plate:'black',hold:.3,
+ b(s,tl){const col=h(s.center,'col');col.style.gap='0';const bw=h(col,'bw','<div class="bw-bar"><div class="bw-dots"><i></i><i></i><i></i></div><div class="bw-url">web.archive.org/web/*/3am-broadcast.net</div></div><div class="bw-body"></div>');const body=bw.querySelector('.bw-body');const T=['3AM BROADCAST','3AM BROADCAST · TAPES','THE TAPES ARE GONE','SITE CLOSED'],B=['#cdc9c0','#c9c4b9','#bdb7aa','#a9a397'],W=[[92,80,88,60],[90,84,70],[86,50],[40]];const snaps=T.map((t,i)=>{const e=h(body,'snap','<h4>'+t+'</h4><div class="sbox"></div>'+BARS(W[i]));e.style.background=B[i];return e;});snaps.push(h(body,'snap dead','404 · NOT FOUND'));const cal=h(col,'cal','<span>2003</span><span>2004</span><span>2005</span><span>2006</span><span>2007</span><i class="mkr"></i>');const mkr=cal.querySelector('.mkr');tl.fromTo(col,{opacity:0,scale:.97},{opacity:1,scale:1,duration:.8,ease:'power2.inOut'},'<.1');for(let i=1;i<5;i++){tl.to(mkr,{left:i*20+'%',duration:.6,ease:'power2.inOut'},'+=.8');tl.fromTo(snaps[i],{opacity:0},{opacity:1,duration:.2,ease:'none'},'<.4');}out(tl,col,1.4);}},
+{id:'w-url',g:'web',name:'Redirect chain',what:'Where a link really goes. Each jump lands whole, one under the other, and the last one fails in red.',ease:'power2.out',dur:.4,fit:OK,plate:'screen',hold:.3,
+ b(s,tl){const H=['short.example/3amtape','redirect.example/b4s3m3nt','files-mirror.example/x/0714','CONNECTION REFUSED'];const c=h(s.center,'chain','<small>WHERE THE LINK GOES</small>');const hops=H.map((t,i)=>{const e=h(c,'hop'+(i===3?' bad':''),'<span>'+(i===3?'✕':'→')+'</span>'+t);e.style.paddingLeft=(i*3.4)+'cqw';return e;});dim(s,tl,.55,0);tl.fromTo(c.firstChild,{opacity:0},{opacity:1,duration:.5,ease:'power2.inOut'},'<.2');tl.fromTo(hops,{opacity:0,xPercent:-4},{opacity:1,xPercent:0,duration:.4,ease:'power2.out',stagger:.6},'<.3');out(tl,c,1.8);}},
+{id:'w-dead',g:'web',name:'Video goes dead',what:'The video plays, then goes dark and soft, and the real "Video unavailable" screen fades up over it.',ease:'sine.inOut',dur:1.0,fit:['fits','Fits the rule book (real page, slow fade)'],plate:'black',hold:.3,
+ b(s,tl){const p=h(s.center,'pl','<div class="pic"></div><div class="pbar"><i></i></div><div class="gone"><div class="ic"></div>Video unavailable<small>This account has been terminated.</small></div>');const pic=p.querySelector('.pic');fig(pic,50,58,'small');const bar=p.querySelector('.pbar i'),g=p.querySelector('.gone');dim(s,tl,.4,0);tl.fromTo(p,{opacity:0},{opacity:1,duration:.6,ease:'power2.inOut'},'<.1');tl.fromTo(bar,{width:'0%'},{width:'46%',duration:2.6,ease:'none'},'<');tl.fromTo(pic,{filter:'brightness(1) blur(0px)'},{filter:'brightness(0.15) blur(4px)',duration:1,ease:'sine.inOut'},'-=.8');tl.fromTo(g,{opacity:0},{opacity:1,duration:1,ease:'sine.inOut'},'-=.3');out(tl,p,2);}},
+{id:'w-stamp',g:'web',name:'Upload facts under the player',what:'The video sits small. Its upload date, views and channel status land under it as a data row.',ease:'power3.out',dur:.8,fit:['fits','Fits the rule book (date = data row)'],plate:'black',hold:.3,
+ b(s,tl){const col=h(s.center,'col');const p=h(col,'pl sm','<div class="pic"></div><div class="pbar"><i style="width:30%"></i></div>');fig(p.querySelector('.pic'),50,58,'small');const r=h(col,'row sm','<div class="cell"><small>UPLOADED</small><span class="g">2009/03/14</span></div><div class="sep"></div><div class="cell"><small>VIEWS</small><span>412</span></div><div class="sep"></div><div class="cell"><small>CHANNEL</small><span class="rd">DELETED</span></div>');dim(s,tl,.4,0);tl.fromTo(p,{opacity:0,scale:.97},{opacity:1,scale:1,duration:.7,ease:'power2.inOut'},'<.1');tl.fromTo(r.querySelectorAll('.cell'),{opacity:0,xPercent:-12},{opacity:1,xPercent:0,duration:.8,ease:'power3.out',stagger:.18},'+=.2');tl.fromTo(r.querySelectorAll('.sep'),{scaleY:0},{scaleY:1,duration:.6,ease:'power2.inOut',stagger:.18},'<.2');out(tl,col,2);}},
+{id:'w-translate',g:'web',name:'Translate in place',what:'A Russian comment. A thin line passes down it and swaps the words to English as it goes. For the Russian and Arabic videos.',ease:'power2.inOut',dur:1.2,fit:OK,plate:'room',hold:.3,
+ b(s,tl){const col=h(s.center,'col');const c=h(col,'cc','<div class="cc-h"><span class="av"></span><b>@nochnaya_smena</b><span>14 лет назад</span></div><p class="tr"><span>Я нашёл эту кассету на чердаке у деда. Дата на ней — через два года после его смерти.</span><span>I found this tape in my grandfather\'s attic. The date on it is two years after he died.</span><i class="scanln"></i></p><div class="cc-f"><span class="lk"><svg viewBox="0 0 24 24"><path d="M2 21h4V9H2v12zM22 10c0-1.1-.9-2-2-2h-6.3l1-4.6v-.3c0-.4-.2-.8-.4-1.1L13.2 1 6.6 7.6C6.2 8 6 8.5 6 9v10c0 1.1.9 2 2 2h9c.8 0 1.5-.5 1.8-1.2l3-7.1c.1-.2.2-.5.2-.7v-2z"/></svg>3.4K</span><span class="lk dn"><svg viewBox="0 0 24 24"><path d="M2 21h4V9H2v12zM22 10c0-1.1-.9-2-2-2h-6.3l1-4.6v-.3c0-.4-.2-.8-.4-1.1L13.2 1 6.6 7.6C6.2 8 6 8.5 6 9v10c0 1.1.9 2 2 2h9c.8 0 1.5-.5 1.8-1.2l3-7.1c.1-.2.2-.5.2-.7v-2z"/></svg></span><span class="rp">Ответить</span></div>');const tr=c.querySelector('.tr'),ru=tr.children[0],en=tr.children[1],ln=tr.querySelector('.scanln');const lab=h(col,'tlab','TRANSLATED FROM RUSSIAN');dim(s,tl,.4,0);enter(tl,c,'power3.out',1);tl.to(ln,{opacity:1,duration:.1,ease:'none'},'+=.8');tl.fromTo(ru,{clipPath:'inset(0% 0% 0% 0%)'},{clipPath:'inset(100% 0% 0% 0%)',duration:1.2,ease:'power2.inOut'},'<');tl.fromTo(en,{clipPath:'inset(0% 0% 100% 0%)'},{clipPath:'inset(0% 0% 0% 0%)',duration:1.2,ease:'power2.inOut'},'<');tl.fromTo(ln,{top:'0%'},{top:'100%',duration:1.2,ease:'power2.inOut'},'<');tl.to(ln,{opacity:0,duration:.25,ease:'sine.out'});tl.fromTo(lab,{opacity:0},{opacity:1,duration:.6,ease:'power2.inOut'},'<');out(tl,col,2.2);}},
+{id:'w-tree',g:'web',name:'Open folder list',what:'A raw server folder list. The rows land one by one. The odd file gets a gold bar, and its size of 0 turns red.',ease:'power2.inOut',dur:.8,fit:OK,plate:'black',hold:.3,
+ b(s,tl){const R=[['../','',''],['tape_01.avi','2005-06-30 14:02','14M'],['tape_02.avi','2005-07-01 02:51','15M'],['tape_03.avi','2005-07-02 03:14','<b class="z">0</b>'],['readme.txt','2005-07-02 03:15','1K']];const x=h(s.center,'idx','<h5>Index of /tapes/</h5><div class="ln hd"><span>Name</span><span>Last modified</span><span>Size</span></div>'+R.map((r,i)=>'<div class="ln'+(i===3?' hit':'')+'"><span>'+r[0]+'</span><span>'+r[1]+'</span><span>'+r[2]+'</span></div>').join(''));const rows=x.querySelectorAll('.ln:not(.hd)'),hit=x.querySelector('.hit'),z=x.querySelector('.z');dim(s,tl,.4,0);tl.fromTo(x,{opacity:0,scale:.97},{opacity:1,scale:1,duration:.7,ease:'power2.inOut'},'<.1');tl.fromTo(rows,{opacity:0},{opacity:1,duration:.4,ease:'power2.out',stagger:.2},'-=.2');tl.fromTo(hit,{backgroundSize:'0% 100%'},{backgroundSize:'100% 100%',duration:.8,ease:'power2.inOut'},'+=.4');tl.fromTo(z,{color:'#1b1a18'},{color:'#c9281e',duration:.4,ease:'power2.inOut'},'-=.2');out(tl,x,2);}},
+/* ---- files and proof ---- */
+{id:'f-meta',g:'proof',name:'File info window',what:'An old-computer file info window opens. Size, camera and date land. The impossible date gets a red underline.',ease:'power3.out',dur:.9,fit:['fits','Fits the rule book (file window, red points)'],plate:'screen',hold:.3,
+ b(s,tl){const w=h(s.center,'win wide','<div class="wbar"><span>TAPE_03.AVI Properties</span><span class="wbtn"><i>?</i><i>×</i></span></div><div class="props"><span class="l">SIZE</span><span>14.2 MB</span><span class="l">CAMERA</span><span>JVC GR-AX</span><span class="l">RECORDED</span><span><span class="u">2005-07-02 03:14</span></span><span class="l">OWNER</span><span>GRANDFATHER (D. 2003)</span></div>');const cells=w.querySelectorAll('.props>span');dim(s,tl,.4,0);tl.fromTo(w,{clipPath:'inset(50% 50% 50% 50%)'},{clipPath:'inset(0% 0% 0% 0%)',duration:.9,ease:'power3.out'},'<.2');tl.fromTo(cells,{opacity:0},{opacity:1,duration:.4,ease:'power2.out',stagger:.08},'-=.2');tl.fromTo(w.querySelector('.u'),{backgroundSize:'0% .14em'},{backgroundSize:'100% .14em',duration:.6,ease:'power2.inOut'},'+=.4');out(tl,w,2);}},
+{id:'f-contact',g:'proof',name:'Contact sheet',what:'Twelve frames from the tape in a grid. All but one go dim, then the camera moves in on the one frame with the figure.',ease:'power2.inOut',dur:1.2,fit:OK,plate:'black',hold:.3,
+ b(s,tl){const k=h(s.center,'cs');const F=[];for(let i=0;i<12;i++){const t=11637+Math.floor(i*1.5),f=h(k,'fr','<b>'+[Math.floor(t/3600),Math.floor(t/60)%60,t%60].map(v=>String(v).padStart(2,'0')).join(':')+'</b>');f.style.backgroundImage='var(--im-cs'+String(i).padStart(2,'0')+')';F.push(f);}F[8].style.zIndex=2;dim(s,tl,.3,0);tl.fromTo(k,{opacity:0},{opacity:1,duration:.7,ease:'power2.inOut'},'<.1');tl.fromTo(F.filter((f,i)=>i!==8),{opacity:1},{opacity:.22,duration:.6,ease:'sine.inOut'},'+=.8');tl.fromTo(k,{xPercent:0,yPercent:0,scale:1},{xPercent:113.84,yPercent:-98.69,scale:3.1,duration:1.2,ease:'power2.inOut'},'<.2');out(tl,k,2);}},
+{id:'f-hex',g:'proof',name:'Broken file bytes',what:'The raw bytes of the file land line by line. The empty, broken parts turn red. The last line says what is missing.',ease:'sine.inOut',dur:.6,fit:OK,plate:'black',hold:.3,
+ b(s,tl){h(s.stage,'scanov');const t=h(s.center,'term hex','<div>0000&nbsp; 52 49 46 46 <i>00 00 00 00</i> 41 56 49 20</div><div>0010&nbsp; 4C 49 53 54 <i>00 00 00 00</i> 68 64 72 6C</div><div>0020&nbsp; 61 76 69 68 38 00 00 00 <i>00 00 00 00</i></div><div>0030&nbsp; <i>00 00 00 00 00 00 00 00</i> 10 09 00 00</div><div class="bad">HEADER DAMAGED · 4,112 BYTES MISSING</div>');const L=[...t.children];tl.fromTo(L.slice(0,4),{opacity:0},{opacity:1,duration:.3,ease:'power2.out',stagger:.35},'<.2');tl.fromTo(t.querySelectorAll('i'),{color:'#cfd3cc'},{color:'#d0473d',duration:.6,ease:'sine.inOut',stagger:.15},'+=.3');tl.fromTo(L[4],{opacity:0},{opacity:1,duration:.35,ease:'power2.out'},'+=.2');out(tl,t,1.8);}},
+{id:'f-develop',g:'proof',name:'Photo comes out of the noise',what:'A found photo starts washed out, blurry and grainy. It slowly clears, like it is being recovered.',ease:'sine.inOut',dur:2.4,fit:OK,plate:'room',hold:.3,
+ b(s,tl){const p=h(s.center,'print','<div class="phimg"></div><div class="cap">RECOVERED · 1998</div>');const im=p.querySelector('.phimg');fig(im,50,58);const gr=h(im,'grain');gsap.set(p,{rotation:-2});dim(s,tl,.4,0);tl.fromTo(p,{opacity:0,yPercent:6},{opacity:1,yPercent:0,duration:.8,ease:'power2.out'},'<.1');tl.fromTo(im,{filter:'blur(8px) brightness(1.9) contrast(0.35)'},{filter:'blur(0px) brightness(1) contrast(1)',duration:2.4,ease:'sine.inOut'},'<.2');tl.fromTo(gr,{opacity:.95},{opacity:.12,duration:2.4,ease:'sine.inOut'},'<');out(tl,p,1.8);}},
+{id:'f-fiche',g:'proof',name:'Microfiche reader',what:'Old newspaper pages fill the whole screen and slide past fast, then stop on the one story. The camera zooms in on the key line. Everything else blurs and goes dark. Then the line gets a gold bar.',ease:'expo.out',dur:2.6,fit:OK,plate:'black',hold:.3,
+ b(s,tl){const W=h(s.shot,'fwin full');const Z=h(W,'fzoom');const st=h(Z,'fstrip');const F=[95,80,90,60,85,92,70,88,94,76,90,64,86,93,72,84,90,58,88,80];['LOCAL','WEATHER','COUNCIL','SPORTS','NOTICES','CLASSIFIEDS','','OBITUARIES'].forEach((t,i)=>{h(st,'fp','<div class="mh">DAYTON EVENING COURIER · MONDAY, JULY 4, 2005 · '+(i+1)+'</div>'+(i===6?'<b>GIRL, 17, STILL MISSING</b><div class="fph"></div>'+BARS([90,80,95,70])+'<p><span class="mk">Police found a tape in her room.</span></p>'+BARS([85,60,90,70,92,66,88]):'<b>'+t+'</b>'+BARS(F)));});const pg=st.children,key=pg[6],mk=key.querySelector('.mk'),mp=mk.parentNode;const fo=h(W,'ffoc');const PW=32,GAP=2,SW=8*PW+7*GAP,xp=k=>(50-(k*(PW+GAP)+PW/2))/SW*100;let zm=null;const zv=()=>{if(zm)return zm;const zr=Z.getBoundingClientRect(),sr=st.getBoundingClientRect(),r=mk.getBoundingClientRect(),S=2.6;if(!zr.width||!sr.width)return{x:0,y:0,s:1};const fx=(r.left+r.width/2-sr.left)/sr.width,cx=(xp(6)/100+fx)*SW/100,cy=(r.top+r.height/2-zr.top)/zr.height;zm={s:S,x:-(cx-.5)*100*S,y:-(cy-.5)*100*S};const hw=r.width/zr.width*S*50+3,hh=r.height/zr.height*S*50+5,F=4;const m='linear-gradient(to bottom,#000 '+(50-hh-F)+'%,transparent '+(50-hh)+'%,transparent '+(50+hh)+'%,#000 '+(50+hh+F)+'%),linear-gradient(to right,#000 '+(50-hw-F)+'%,transparent '+(50-hw)+'%,transparent '+(50+hw)+'%,#000 '+(50+hw+F)+'%)';fo.style.webkitMaskImage=fo.style.maskImage=m;return zm;};tl.fromTo(W,{opacity:0},{opacity:1,duration:.6,ease:'power2.inOut'},'<.1');tl.fromTo(st,{xPercent:xp(0)},{xPercent:xp(6),duration:2.6,ease:'expo.out'},'<.1');tl.fromTo(Z,{scale:1,xPercent:0,yPercent:0},{scale:()=>zv().s,xPercent:()=>zv().x,yPercent:()=>zv().y,duration:1.5,ease:'power3.inOut'},'-=.5');tl.fromTo(fo,{opacity:0},{opacity:1,duration:1.1,ease:'power2.inOut'},'<.35');tl.fromTo(mk,{backgroundSize:'0% 100%'},{backgroundSize:'100% 100%',duration:.8,ease:'power2.inOut'},'+=.1');out(tl,W,2);}},
+{id:'f-print',g:'proof',name:'Statement print-out',what:'A witness statement feeds slowly out of a printer slot. The line that matters gets a red underline.',ease:'sine.inOut',dur:2.4,fit:OK,plate:'room',hold:.3,
+ b(s,tl){const sl=h(s.center,'slot','<div class="sl"></div><div class="feed"><div class="paper"><div class="p1">STATEMENT OF WITNESS</div><div class="p2">2005/07/03 · CASE 4 · PAGE 2</div><div class="fld"><span>NAME</span><i>WITHHELD</i><span>TAKEN BY</span><i>OFC. 2291</i></div><p>I heard the tape playing in the empty room. I went in and turned it off.</p><p><span class="u">It was playing my own voice.</span></p><div class="sig">Signed: ______________________</div></div></div>');const pa=sl.querySelector('.paper');dim(s,tl,.45,0);tl.fromTo(sl,{opacity:0},{opacity:1,duration:.5,ease:'power2.inOut'},'<.1');tl.fromTo(pa,{yPercent:-100},{yPercent:0,duration:2.4,ease:'sine.inOut'},'+=.1');tl.fromTo(sl.querySelector('.u'),{backgroundSize:'0% .14em'},{backgroundSize:'100% .14em',duration:.6,ease:'power2.inOut'},'+=.3');out(tl,sl,2);}},
+/* ---- time and order ---- */
+{id:'tm-strip',g:'time',name:'Timeline strip',what:'Four real pieces of proof stand in a row, each with its date above. The cards rise in one after another. The camera glides from one to the next in one smooth curve and never fully stops. Focus, size and turn change smoothly with distance: the card in focus is sharp and faces you, the others are soft, dark and turned in. The last date is red.',ease:'power3.inOut',dur:1.2,fit:OK,plate:'room',hold:.3,
+ b(s,tl){const cam=h(s.center,'tmcam');const row=h(cam,'tmrow');const K=[['JUL 02 2005','TAPE FOUND','still','<span>PLAY ▶ JUL. 02 2005</span>'],['JUL 05 2005','UPLOADED','up','<div class="tpic"><i>3:02</i></div><b>3am broadcast tape (real)</b><small>41 views · Jul 5, 2005</small>'],['AUG 11 2005','CHANNEL GONE','gone','<div class="gi"></div>This account has been terminated.<small>The channel does not exist.</small>'],['2007','ARCHIVE COPY','arc','<div class="au">web.archive.org/web/2007/3am-broadcast.net</div><div class="ab"><b>3AM BROADCAST</b>Tapes sent in by listeners since 2003.<span class="er">Some files were not saved.</span></div>']];const C=K.map((k,i)=>h(row,'tmc'+(i===3?' bad':''),'<div class="tmd">'+k[0]+'</div><div class="tmf '+k[2]+'">'+k[3]+'</div><div class="tme">'+k[1]+'</div>'));const X=[-10.66,-36.89,-63.11,-89.34],o={p:0};gsap.set(row,{yPercent:-50});gsap.set(C,{transformPerspective:1400});const R=()=>{const p=o.p,i=Math.min(2,Math.floor(p)),f=p-i;gsap.set(row,{xPercent:X[i]+(X[i+1]-X[i])*f});C.forEach((c,k)=>{const sd=k-p,d=Math.min(1,Math.abs(sd));gsap.set(c,{scale:1-.17*d,rotationY:-16*Math.max(-1,Math.min(1,sd)),filter:'blur('+(3.2*d).toFixed(2)+'px) brightness('+(1-.64*d).toFixed(3)+')'});});};R();dim(s,tl,.45,0);tl.fromTo(C,{opacity:0,yPercent:22},{opacity:1,yPercent:0,duration:1,ease:'expo.out',stagger:.09},'<.1');for(let i=1;i<4;i++){tl.fromTo(o,{p:i-1},{p:i,duration:1.2,ease:'power3.inOut',onUpdate:R,onStart:R},i===1?'-=.3':'+=.55');}out(tl,row,1.6);tl.fromTo(cam,{xPercent:1.4,scale:1.035},{xPercent:-1.4,scale:1,duration:tl.duration(),ease:'none'},0);}},
+{id:'tm-jump',g:'time',name:'Time jump card',what:'A short card for a jump in time: the new date, then "3 DAYS LATER" in gold, then a gold line.',ease:'power2.out',dur:.9,fit:['fits','Fits the rule book (gold title, line)'],plate:'room',hold:.3,
+ b(s,tl){const col=h(s.center,'col','<div class="vcr" style="font-size:2.2cqw;color:#cfc9bb;letter-spacing:.25em">JUL. 05 2005</div><div class="ttl sm">3 DAYS LATER</div><div class="gline"></div>');const k=col.children;dim(s,tl,.5,0);tl.fromTo(k[0],{opacity:0},{opacity:1,duration:.6,ease:'power2.inOut'},'<.2');tl.fromTo(k[1],{opacity:0,yPercent:30},{opacity:1,yPercent:0,duration:.9,ease:'power2.out'},'-=.3');tl.fromTo(k[2],{scaleX:0},{scaleX:1,duration:.7,ease:'power2.inOut'},'-=.4');out(tl,col,1.8);}},
+{id:'tm-rewind',g:'time',name:'Rewind to an earlier day',what:'The real footage plays. Then REWIND: the same footage runs backwards fast, with tracking lines and a shaky picture. Then PLAY, the older date, and the earlier part of the tape plays.',ease:'power1.inOut',dur:1.5,fit:OK,plate:'black',hold:.3,
+ b(s,tl){const R=h(s.shot,'rew');const N=48,o={f:24};const set=()=>{R.style.backgroundPosition='0 '+(Math.round(o.f)/(N-1)*100).toFixed(4)+'%';};set();h(s.stage,'scanov');const O=(t,x,y,b)=>{const e=h(s.stage,'osd',t);e.style.left=x;e.style[b?'bottom':'top']=y;return e;};const p1=O('PLAY ▶','5cqw','4.5cqw'),d1=O('JUL. 02 2005','5cqw','5cqw',1),rw=O('◀◀ REWIND','5cqw','4.5cqw'),p2=O('PLAY ▶','5cqw','4.5cqw'),d2=O('JUN. 30 2005','5cqw','5cqw',1);const tr=[0,1,2].map(()=>{const t=h(s.stage,'trk');t.style.zIndex=7;return t;});const nz=h(s.stage,'vnoise');nz.style.backgroundImage='url('+NOISE()+')';gsap.set([rw,p2,d2],{opacity:0});tl.fromTo([p1,d1],{opacity:0},{opacity:1,duration:.2,ease:'none'},'<.2');tl.fromTo(o,{f:24},{f:47,duration:2.9,ease:'none',onUpdate:set,onStart:set},'<');tl.set([p1,d1],{opacity:0});tl.set(rw,{opacity:1},'<');tl.fromTo(o,{f:47},{f:0,duration:1.5,ease:'power1.inOut',onUpdate:set},'<');tl.fromTo(R,{xPercent:0},{keyframes:[{xPercent:.8,duration:.1},{xPercent:-.6,duration:.1},{xPercent:1,duration:.1},{xPercent:-.4,duration:.1},{xPercent:.6,duration:.1}],repeat:2,ease:'none'},'<');tl.fromTo(nz,{opacity:0,backgroundPosition:'0% 0%'},{opacity:.22,backgroundPosition:'90% 70%',duration:1.5,ease:'steps(12)'},'<');tl.fromTo(tr,{top:'105%'},{top:'-10%',duration:.6,ease:'none',stagger:.4},'<');tl.set(rw,{opacity:0});tl.set(nz,{opacity:0},'<');tl.set(R,{xPercent:0},'<');tl.set([p2,d2],{opacity:1},'<');tl.to(o,{f:18,duration:2.25,ease:'none',onUpdate:set});tl.to([p2,d2],{opacity:0,duration:.6,ease:'power2.inOut'},'-=.6');}},
+{id:'tm-nosignal',g:'time',name:'Old TV switch-off',what:'First the tape breaks up: torn lines slide sideways, the picture jumps, static and a rolling noise bar come in. Then it switches off like a real old TV: still shaking, the picture flares white and snaps into one bright line, the line pulls in to a glowing dot, and the dot slowly fades (afterglow). NO SIGNAL fades up. For a case that ends cold.',ease:'power3.in',dur:.22,fit:OK,plate:'room sharp',hold:.3,noPush:true,
+ b(s,tl){fig(s.shot,50,52);const B=[[8,80,-3.2],[27,63,4.5],[46,47,-6],[63,29,2.6],[84,9,-4]].map(q=>{const b=h(s.stage,'vband');b.appendChild(s.plate.cloneNode(true));b.appendChild(s.shot.cloneNode(true));b.style.clipPath='inset('+q[0]+'% 0 '+q[1]+'% 0)';b.dx=q[2];return b;});const nz=h(s.stage,'vnoise');nz.style.backgroundImage='url('+NOISE()+')';const rb=h(s.stage,'vroll');rb.style.backgroundImage=nz.style.backgroundImage;const fl=h(s.stage,'vflash');const ln=h(s.stage,'offln');const dt=h(s.stage,'offdot');const col=h(s.center,'col','<div class="ttl sm white">NO SIGNAL</div><div class="vcr" style="font-size:2cqw;color:#a39d90;letter-spacing:.25em">CH 03</div>');col.style.zIndex=7;const A=[s.plate,s.shot];gsap.set(s.plate,{filter:'brightness(.82) saturate(1) hue-rotate(0deg)'});gsap.set(s.shot,{filter:'brightness(1) saturate(1) contrast(1)'});tl.addLabel('br','+=1.3');tl.to(A,{keyframes:[{xPercent:1.4,duration:.07},{xPercent:-.8,duration:.09},{xPercent:2.6,duration:.06},{xPercent:0,duration:.1},{xPercent:-2,duration:.07},{xPercent:3.4,duration:.08},{xPercent:-1.2,duration:.08},{xPercent:0,duration:.05}],ease:'none'},'br');tl.to(s.plate,{keyframes:[{filter:'brightness(1.25) saturate(1.8) hue-rotate(-14deg)',duration:.08},{filter:'brightness(.6) saturate(.6) hue-rotate(0deg)',duration:.1},{filter:'brightness(1.4) saturate(2) hue-rotate(10deg)',duration:.07},{filter:'brightness(.82) saturate(1) hue-rotate(0deg)',duration:.12},{filter:'brightness(1.3) saturate(1.6) hue-rotate(-8deg)',duration:.08},{filter:'brightness(.82) saturate(1) hue-rotate(0deg)',duration:.15}],ease:'none'},'br');B.forEach((b,i)=>{tl.fromTo(b,{opacity:0,xPercent:0},{keyframes:[{opacity:1,xPercent:b.dx,duration:.06},{xPercent:-b.dx*.5,duration:.08},{xPercent:b.dx*1.4,duration:.07},{opacity:0,xPercent:0,duration:.05}],ease:'none'},'br+='+(.06*i+(i%2)*.18).toFixed(2));});tl.fromTo(nz,{opacity:0,backgroundPosition:'0% 0%'},{keyframes:[{opacity:.18,duration:.15},{opacity:.42,backgroundPosition:'37% 61%',duration:.25},{opacity:.6,backgroundPosition:'81% 13%',duration:.35}],ease:'steps(6)'},'br');tl.fromTo(rb,{top:'105%',opacity:.85},{top:'-25%',duration:.65,ease:'none'},'br+=.05');tl.fromTo(fl,{opacity:0},{keyframes:[{opacity:.35,duration:.04},{opacity:0,duration:.1},{opacity:.5,duration:.04},{opacity:0,duration:.12}],ease:'none'},'br+=.3');const Z=[s.plate,s.shot,nz];tl.to(s.plate,{filter:'brightness(3.2) saturate(0) hue-rotate(0deg)',duration:.2,ease:'power2.in'},'br+=.76');tl.to(s.shot,{filter:'brightness(3.2) saturate(0) contrast(1.3)',duration:.2,ease:'power2.in'},'<');tl.to(A,{keyframes:[{xPercent:1.8,duration:.05},{xPercent:-1.2,duration:.05},{xPercent:.8,duration:.05},{xPercent:0,duration:.07}],ease:'none'},'<');tl.fromTo(Z,{scaleY:1,scaleX:1,opacity:1},{scaleY:.004,scaleX:1.04,duration:.22,ease:'power3.in'},'<');tl.fromTo(ln,{opacity:0,scaleX:1.04,scaleY:1},{opacity:1,duration:.04,ease:'none'},'-=.04');tl.set(Z,{opacity:0});tl.to(ln,{scaleX:.012,scaleY:.8,duration:.3,ease:'power3.in'},'+=.06');tl.fromTo(dt,{opacity:0,scale:.7},{opacity:1,scale:1,duration:.05,ease:'none'},'-=.05');tl.set(ln,{opacity:0});tl.to(dt,{scale:.3,duration:1.2,ease:'power2.out'},'+=.05');tl.to(dt,{opacity:0,duration:1,ease:'power1.in'},'<.3');tl.fromTo(col,{opacity:0},{opacity:1,duration:.6,ease:'sine.inOut'},'<.5');out(tl,col,1.6);}},
+/* ---- routes and traces ---- */
+{id:'pl-route',g:'place',name:'Route between two places',what:'A gold line draws from one town to the other like a trim path, with a glowing tip. It starts slow, speeds up, and settles in. The second pin pops as the tip arrives, then the distance.',ease:'power3.inOut',dur:2.2,fit:OK,plate:'map',hold:.3,
+ b(s,tl){const D='M40 58 C62 40 92 52 118 32';const v=svg(s.shot,GLOWF('glw-route')+'<path d="'+D+'" fill="none" stroke="#c9a54a" stroke-width=".3" stroke-dasharray=".8 1.4" opacity=".28"/><path class="draw" pathLength="1" stroke="#c9a54a" stroke-width="1.6" opacity=".35" filter="url(#glw-route)" d="'+D+'"/><path class="draw" pathLength="1" stroke="#e2c069" stroke-width=".6" d="'+D+'"/>');const ps=[...v.querySelectorAll('path.draw')].reverse();const g=head(v,'#e2c069','glw-route');const P=[[25,64.4,'DAYTON'],[73.75,35.6,'COLUMBUS']];const pins=P.map(q=>{const e=h(s.shot,'pin');e.style.left=q[0]+'%';e.style.top=q[1]+'%';return e;});const labs=P.map(q=>{const e=h(s.shot,'plab',q[2]);e.style.left=q[0]+'%';e.style.top=q[1]+'%';return e;});const dist=h(s.shot,'plab sm','72 MI · 1 HR 10 MIN');dist.style.left='50%';dist.style.top='62%';pop(tl,pins[0],3,'<.2');tl.fromTo(labs[0],{opacity:0},{opacity:1,duration:.5,ease:'power2.out'},'<.1');trim(tl,ps,g,2.2,'power3.inOut','+=.2');pop(tl,pins[1],3,'<-.25');tl.fromTo(labs[1],{opacity:0,y:'0.6cqw'},{opacity:1,y:0,duration:.6,ease:'power3.out'},'<.05');tl.fromTo(dist,{opacity:0},{opacity:1,duration:.6,ease:'power2.inOut'},'+=.1');out(tl,[v,...s.shot.querySelectorAll('.pin,.plab')],2);}},
+{id:'pl-trace',g:'place',name:'Signal trace',what:'Thin white lines draw from server to server like a trim path, each with a glowing tip. Each line starts slow, speeds up, and settles in. Each point pops the moment the tip lands. The red ring pops only after the last line has fully reached its end. The last point is a red ring with "APPROX. LOCATION". Only use it if a source shows the path.',ease:'power3.inOut',dur:.9,fit:OK,plate:'map',hold:.3,
+ b(s,tl){const P=[[22,30,'SERVER · NL'],[58,22,'RELAY · DE'],[96,40,'RELAY · PL'],[124,64,'APPROX. LOCATION']];let d=GLOWF('glw-trace');for(let i=1;i<4;i++){const D='M'+P[i-1][0]+' '+P[i-1][1]+' L'+P[i][0]+' '+P[i][1];d+='<path d="'+D+'" fill="none" stroke="#ece9e2" stroke-width=".2" stroke-dasharray=".6 1.2" opacity=".22"/><path class="draw" pathLength="1" stroke="#ece9e2" stroke-width="1.1" opacity=".3" filter="url(#glw-trace)" d="'+D+'"/><path class="draw" pathLength="1" stroke="#f4f2ec" stroke-width=".38" d="'+D+'"/>';}const v=svg(s.shot,d);const all=[...v.querySelectorAll('path.draw')];const g=head(v,'#f4f2ec','glw-trace');const nodes=P.map((q,i)=>{const e=h(s.shot,i===3?'ring':'node');e.style.left=(q[0]/1.6)+'%';e.style.top=(q[1]/.9)+'%';return e;});const labs=P.map((q,i)=>{const e=h(s.shot,'plab sm'+(i===3?' rd':''),q[2]);e.style.left=(q[0]/1.6)+'%';e.style.top=(q[1]/.9+(i===3?10:3))+'%';return e;});pop(tl,nodes[0],3.5,'<.2');tl.fromTo(labs[0],{opacity:0},{opacity:1,duration:.4,ease:'power2.out'},'<.1');for(let i=1;i<4;i++){trim(tl,[all[2*i-1],all[2*i-2]],g,.9,'power3.inOut','+=.1');pop(tl,nodes[i],i<3?3.5:1.7,i<3?'<':'<.12');tl.fromTo(labs[i],{opacity:0},{opacity:1,duration:.45,ease:'power2.out'},i<3?'<.1':'<.25');}out(tl,[v,...s.shot.querySelectorAll('.node,.ring,.plab')],2);}},
+/* ---- case status and endings ---- */
+{id:'k-lastseen',g:'case',name:'Last seen card',what:'A photo print on the left. On the right: LAST SEEN in gold, then the date, the place and what they wore, one line at a time.',ease:'power3.out',dur:.9,fit:['fits','Fits the rule book (gold names, data lines)'],plate:'room',hold:.3,
+ b(s,tl){const w=h(s.center,'ls');const p=h(w,'print sm','<div class="phimg"></div>');fig(p.querySelector('.phimg'),50,58);const t=h(w,'lst','<b>LAST SEEN</b><span>JUL. 02 2005 · 03:14</span><span>NORTH LOT, DAYTON</span><span class="gr">WEARING A GREY JACKET</span>');gsap.set(p,{rotation:-2});dim(s,tl,.45,0);tl.fromTo(p,{opacity:0,yPercent:8},{opacity:1,yPercent:0,duration:.9,ease:'power3.out'},'<.1');tl.fromTo(t.children,{opacity:0,xPercent:-6},{opacity:1,xPercent:0,duration:.7,ease:'power3.out',stagger:.22},'-=.4');out(tl,w,2);}},
+{id:'k-status',g:'case',name:'Case status',what:'The case name, a gold line, then what is known, one row at a time. A red UNSOLVED stamp lands last.',ease:'power3.out',dur:.5,fit:OK,plate:'room',hold:.3,
+ b(s,tl){const c=h(s.center,'cst','<b>CASE 4 · BASEMENT TAPE</b><div class="gline"></div><div class="kv"><span>UPLOADER</span><span>NEVER FOUND</span></div><div class="kv"><span>ORIGINAL TAPE</span><span>LOST IN 2007</span></div><div class="kv"><span>STATUS</span><span class="stp">UNSOLVED</span></div>');const k=c.children,stp=c.querySelector('.stp');gsap.set(stp,{rotation:-4});dim(s,tl,.5,0);tl.fromTo(k[0],{opacity:0},{opacity:1,duration:.7,ease:'power2.inOut'},'<.2');tl.fromTo(k[1],{scaleX:0},{scaleX:1,duration:.7,ease:'power2.inOut'},'-=.3');tl.fromTo([k[2],k[3],k[4]],{opacity:0,yPercent:20},{opacity:1,yPercent:0,duration:.5,ease:'power3.out',stagger:.3},'-=.2');tl.fromTo(stp,{scale:1.3,opacity:0},{scale:1,opacity:.92,duration:.5,ease:'power3.out'},'+=.3');out(tl,c,2);}},
+{id:'k-questions',g:'case',name:'Open questions',what:'STILL UNANSWERED, then one question at a time. Each older question goes grey when the next one lands.',ease:'power2.out',dur:.6,fit:OK,plate:'room',hold:.3,
+ b(s,tl){const c=h(s.center,'oq','<b>STILL UNANSWERED</b><div class="gline"></div><div>Who left the tape on the porch?</div><div>Why is it dated after his death?</div><div>Where is the uploader now?</div>');const k=c.children;dim(s,tl,.5,0);tl.fromTo(k[0],{opacity:0},{opacity:1,duration:.6,ease:'power2.inOut'},'<.2');tl.fromTo(k[1],{scaleX:0},{scaleX:1,duration:.7,ease:'power2.inOut'},'-=.3');for(let i=2;i<5;i++){tl.fromTo(k[i],{opacity:0,yPercent:30},{opacity:1,yPercent:0,duration:.6,ease:'power2.out'},i===2?'+=.2':'+=1.1');if(i>2)tl.to(k[i-1],{color:'#6f6b62',duration:.6,ease:'sine.inOut'},'<');}out(tl,c,2);}},
+{id:'k-progress',g:'case',name:'Case counter',what:'CASE 3 in gold over five small boxes. Done cases are filled, and box 3 fills gold now. Tells the viewer how far in they are.',ease:'power2.inOut',dur:.8,fit:OK,plate:'room',hold:.3,
+ b(s,tl){const col=h(s.center,'col','<div class="ttl sm">CASE 3</div><div class="cbox"><i class="d">1</i><i class="d">2</i><i class="c">3</i><i>4</i><i>5</i></div><div class="vcr" style="font-size:2cqw;color:#a39d90;letter-spacing:.25em">3 OF 5</div>');const k=col.children,box=col.querySelector('i.c');dim(s,tl,.5,0);tl.fromTo(k[0],{opacity:0},{opacity:1,duration:.8,ease:'power2.inOut'},'<.2');tl.fromTo(col.querySelectorAll('.cbox i'),{opacity:0},{opacity:1,duration:.4,ease:'power2.out',stagger:.08},'-=.3');tl.fromTo(box,{backgroundColor:'rgba(201,165,74,0)',color:'#c9a54a'},{backgroundColor:'rgba(201,165,74,1)',color:'#0c0b0a',duration:.8,ease:'power2.inOut'},'+=.2');tl.fromTo(k[2],{opacity:0},{opacity:1,duration:.6,ease:'power2.inOut'},'-=.3');out(tl,col,1.8);}}
+];
+const R2IDS=new Set(ITEMS2.map(i=>i.id));
+ITEMS.push(...ITEMS2);
+
+/* ---------- where and how to use them ---------- */
+const MAP=[
+ {t:'Cold open',n:'0:00–0:45',d:'Start with the strangest moment. Then the show title.',g:['t-depth','t-glint','tm-nosignal'],x:['Fade up from black'],len:'Hook 20–45 s · title 3–4 s',ease:'power2.out or sine.inOut',often:'Once per video'},
+ {t:'Case opens',n:'Start of each case',d:'Say which case this is. Use the same card every case, so the viewer learns it.',g:['k-progress','s-standby','s-tape','t-rise','t-track'],x:['CASE N card','Numbered case grid'],len:'3–4 s',ease:'power3.out',often:'Once per case, same style every time'},
+ {t:'Set the scene',n:'First 20–40 s of a case',d:'Who, where and when. Give the place and the date before the story starts.',g:['d-row','pl-route','k-lastseen','n-leader','n-brackets'],x:['Map / place card','Date label lower-left'],len:'Date row 3 s · map 4–6 s · name tag 2–3 s',ease:'power3.out (labels), power2.inOut (maps)',often:'One of each per case at most'},
+ {t:'Show the source',n:'When the voice names a site or file',d:'Show where it was found: the real page, the archive copy, the folder. Move once, in date order.',g:['w-wayback','w-url','w-tree','w-stamp','p-scroll','p-stack','p-crt','n-file'],x:['Page plane','Video in its page'],len:'4–8 s',ease:'power2.inOut',often:'1–2 per case, one scroll per page'},
+ {t:'Play the evidence',n:'The clip, photo or file itself',d:'Let the raw material play with its own sound. Add one mark, and only after the camera stops.',g:['d-osd','s-cctv','m-ring','m-iris','m-punch','m-arrow','f-contact','f-develop','f-meta','f-hex'],x:[],len:'Marks 2–3 s',ease:'power2.inOut',often:'1 mark per clip at most · about 3 push-ins per video'},
+ {t:'Order the events',n:'When the story has many dates',d:'Put the dates on one line so the viewer can follow. Use a jump card when the story skips ahead or back.',g:['tm-strip','tm-jump','tm-rewind'],x:[],len:'Timeline 5–7 s · jump card 2–3 s',ease:'power2.inOut or power2.out',often:'Timeline once or twice per case'},
+ {t:'What people said',n:'Comments, posts, statements',d:'Show the real words. Light up only the line that matters. Translate in place when it is not English.',g:['c-focus','c-depth','c-sweep','c-recede','w-translate','q-light','q-under','f-print'],x:['Comment card'],len:'4–6 s per comment',ease:'power3.out or power2.inOut',often:'2–4 per case · CRT scan 2 per video at most'},
+ {t:'Things go wrong',n:'Dead links, deleted channels, broken files',d:'A short, hard moment. Keep it brief so it hits.',g:['w-dead','tm-nosignal','s-terminal','f-hex','t-rgb'],x:['Glitch / static','Red error banner'],len:'1–3 s',ease:'power2.in or sine.inOut',often:'Once per case at most · colour split once per video'},
+ {t:'Outcome',n:'End of each case',d:'Say what is known and what is still open. Calm and slow. No new mysteries here.',g:['num-line','k-status','k-questions','q-redact','s-dossier'],x:[],len:'4–6 s · about 2 s per question',ease:'power3.out or power2.out',often:'Once per case'},
+ {t:'Next case',n:'Between cases',d:'A short breath before the next case starts.',g:['s-standby','tm-nosignal'],x:['Dip to black'],len:'1–2 s',ease:'sine.inOut',often:'Between every case'},
+ {t:'Outro',n:'Last 30 s',d:'Close the file. Show the sources.',g:['k-status','k-progress'],x:['Source end card','End credits'],len:'Until the music ends',ease:'sine.inOut',often:'Once'}
+];
+const RULES=[
+ ['Land it on the word','Start the graphic on the word the narrator says. Build graphics after the voice is recorded, not before.'],
+ ['One new thing every 10–15 s','A new picture, mark or card about every 10–15 seconds keeps people watching. More than that is noise.'],
+ ['One moving graphic at a time','Never move two things in two places at once. The eye can follow only one.'],
+ ['Hold it long enough to read twice','Name tags 2–3 s. Comments 4–6 s. If you cannot read it twice, hold it longer.'],
+ ['In 0.6–1.2 s, out 0.5–0.7 s','Things come in slower than they leave. An exit never pulls the eye.'],
+ ['Same job, same move','Every date row comes in the same way. Every case card too. The viewer learns the language.'],
+ ['Real material only','Use the real page, file or comment. Never make a fake document. The stand-ins here are only for the demo.'],
+ ['Gold names things, red points or warns','Gold for titles, names and dates. Red only for marks and for things that went wrong.'],
+ ['Archive pages in date order','Show old copies of a page from oldest to newest, like a time-lapse. The change tells the story.'],
+ ['Chapter cards only at real breaks','A stand-by or chapter card marks a new case or a big jump in time. Not every scene.']
+];
+const SRC=[
+ ['SpotlightFX true crime pack','https://spotlightfx.com/after-effects/collections/true-crime-documentary'],
+ ['Video Editor Studio true crime pack','https://videoeditorstudio.com/products/true-crime-pack'],
+ ['InVideo: true crime formats','https://invideo.io/blog/ai-video-prompt-formats-true-crime-creators/'],
+ ['PremiumBeat: horror titles','https://premiumbeat.com/blog/create-horror-titles-in-after-effects'],
+ ['Boris FX: VHS look','https://borisfx.com/blog/vhs-effect-in-after-effects-how-to-create/'],
+ ['Vox editing notes','https://scribd.com/document/478774027/vox'],
+ ['DocumentaryTube: maps and archive footage','https://documentarytube.com/blog/how-to-make-a-documentary-video-with-maps-archival-footage-and-motion-graphics/'],
+ ['9/11 minute by minute','https://library.peoplespharmacy.com/911-minute-minute-documentary'],
+ ['Web archives as evidence','https://tandfonline.com/doi/full/10.1080/24701475.2017.1307542'],
+ ['Lost Media Wiki: Wayback guide','https://forums.lostmediawiki.com/thread/6672/wayback-machine-short-guide'],
+ ['Internet Archive: follow the changes','https://blog.archive.org/2026/02/02/follow-the-changes/'],
+ ['Pixflow blog','https://pixflow.net/blog/?p=93140'],
+ ['George Blackman: retention','https://georgeblackman.substack.com/p/rr14-this-technique-will-save-your?open=false'],
+ ['Lemmi FAQ','https://lemmi.no/faq']
+];
+function buildMap(){const NM={};ITEMS.forEach(it=>NM[it.id]=it.name);const sec=document.createElement('section');sec.id='where';
+ let x='<h2 class="divh">Where and how to use them<small>A Farrell video from start to end. Each stage lists the moves that fit it, how long they stay on screen, the ease and how often. Gold-edged chips are new (round 2). Plain chips are approved (round 1). Dashed chips are graphics already in the guide. Click a chip to jump to its demo.</small></h2><div class="vmap">';
+ MAP.forEach((m,i)=>{x+='<div class="stg"><div class="when"><b>'+String(i+1).padStart(2,'0')+'</b>'+m.n+'</div><div><h3>'+m.t+'</h3><p>'+m.d+'</p><div class="chips">'+m.g.map(id=>'<a class="chip'+(R2IDS.has(id)?' new':'')+'" href="#it-'+id+'">'+NM[id]+'</a>').join('')+m.x.map(t=>'<span class="chip guide">'+t+'</span>').join('')+'</div><div class="facts"><span>On screen: <b>'+m.len+'</b></span><span>Ease: <b>'+m.ease+'</b></span><span>How often: <b>'+m.often+'</b></span></div></div></div>';});
+ x+='</div><h3 class="h3x">How to use them</h3><ol class="rules">'+RULES.map((r,i)=>'<li><b>'+(i+1)+'. '+r[0]+'</b>'+r[1]+'</li>').join('')+'</ol><p class="src">Sources: '+SRC.map(r=>'<a href="'+r[1]+'" target="_blank" rel="noopener">'+r[0]+'</a>').join(' · ')+'</p>';
+ sec.innerHTML=x;return sec;}
+
+/* ---------- curve thumbnails ---------- */
+function curve(name){const f=gsap.parseEase(name);let d='';for(let i=0;i<=40;i++){const x=i/40,y=f(x);d+=(i?'L':'M')+(4+x*38).toFixed(1)+' '+(26-y*22).toFixed(1);}return '<svg viewBox="0 0 46 30" aria-hidden="true"><path d="M4 26 H42 M4 4 V26" stroke="#2c2924" stroke-width="1"/><path d="'+d+'" fill="none" stroke="#c9a54a" stroke-width="1.6"/></svg>';}
+
+
+/* ---------- build ---------- */
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const main=document.getElementById('main');const els={};const tls={};
+const groupsEl={};
+const DIVS={2:{id:'r2',t:'Round 2 · 22 new moves',s:'Vote on these. Approve or Reject each one.'},1:{id:'r1',t:'Round 1 · approved',s:'You approved these. They are in the rule book now. Shown here for reference.'}};let lastR=null;
+GROUPS.forEach(g=>{if(g.r!==lastR){lastR=g.r;const d=DIVS[g.r];const hd=h(main,'divh',d.t+'<small>'+d.s+'</small>','h2');hd.id=d.id;hd.dataset.r=g.r;}const sec=h(main,'grp',null,'section');sec.id=g.id;sec.dataset.r=g.r;h(sec,'',g.t,'h2');h(sec,'gi',g.i,'p');groupsEl[g.id]=h(sec,'grid');});
+ITEMS.forEach((it,n)=>{
+  const art=h(groupsEl[it.g],'item',null,'article');art.dataset.id=it.id;art.id='it-'+it.id;
+  const st=h(art,'stage');st.tabIndex=0;st.setAttribute('role','button');st.setAttribute('aria-label','Pause or play '+it.name);
+  const plate=h(st,'plate '+it.plate+(it.plate==='room'?' v'+(n%3):'')),shot=h(st,'shot'),center=h(st,'center');
+  const s={stage:st,plate,shot,center};
+  const tl=gsap.timeline({repeat:-1,paused:true});
+  it.b(s,tl);
+  const dip=h(st,'dip');h(st,'fx');h(st,'paused','PAUSED');
+  // dip in at the start, dip out at the end
+  tl.fromTo(dip,{opacity:1},{opacity:0,duration:.5,ease:'sine.inOut'},0);
+  tl.to({},{duration:it.hold});
+  if(!it.noOut)tl.to(dip,{opacity:1,duration:.5,ease:'sine.inOut'});
+  if(!it.noPush)tl.fromTo([plate,shot],{scale:1},{scale:1.05,duration:tl.duration(),ease:'none'},0);
+  tls[it.id]=tl;
+  const m=h(art,'meta');
+  h(m,'mh','<h3>'+it.name+'</h3><span class="code">'+it.id.toUpperCase()+'</span>');
+  h(m,'what',it.what,'p');
+  h(m,'spec',curve(it.ease)+'<span>Easing: '+(EN[it.ease]||it.ease)+' · '+it.dur+' s</span>');
+  h(m,'tag '+it.fit[0],it.fit[1],'span');
+  const v=h(m,'vote');v.innerHTML='<button class="btn y" aria-pressed="false">Approve</button><button class="btn n" aria-pressed="false">Reject</button><input id="note-'+it.id+'" type="text" placeholder="Note (optional)" aria-label="Note for '+it.name+'">';
+  v.querySelector('.y').onclick=()=>pick(it.id,'yes');
+  v.querySelector('.n').onclick=()=>pick(it.id,'no');
+  v.querySelector('input').addEventListener('change',e=>save(it.id,{note:e.target.value.trim()}));
+  els[it.id]=art;
+  const toggle=()=>{st.userPaused=!st.userPaused;st.classList.toggle('is-paused',st.userPaused);st.classList.toggle('on',!st.userPaused&&!!st.visible);st.userPaused?tl.pause():(st.visible&&tl.play());};
+  st.addEventListener('click',toggle);st.addEventListener('keydown',e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();toggle();}});
+  if(reduce){st.userPaused=true;st.classList.add('is-paused');tl.progress(.5).pause();}
+});
+
+
+/* ---------- make the stand-ins real: text, player controls, avatars ---------- */
+(function(){
+const T={forum:'I live about two miles from the old water tower. Last night my scanner picked up a voice on a dead channel. It read out numbers, then a street name, then the same numbers again. My brother says it is a pirate station, but nobody runs one out here. So I set the tape deck to record from 2:50 AM. At 3:14 the hiss stopped and the voice came back. It was slower this time. It said the name of my street and the colour of my front door. I have not slept since. Has anyone else caught it? Please reply here and not by PM. ',
+ news:'Police in Dayton are asking for help to find a 17-year-old girl who was last seen on the evening of July 1. Her family says she left the house on foot at about 11 PM and did not take her phone. Officers searched the area near the old rail yard on Sunday. A spokesperson said there is no sign of a crime at this time. Anyone with information should call the county tip line. ',
+ web:'Welcome to the 3AM Broadcast archive. This page lists every recording that listeners have sent us since 2003. Click a date to hear the tape. Some files are large and take a long time to load on dial-up. Please do not email us copies of the tape. We do not know who sends the signal. ',
+ paper:'The council met on Tuesday to discuss the budget for the coming year. Members voted to repair the bridge on Route 4 before winter. The library will now open on Sundays from noon to five. A bake sale for the fire department raised $1,240. The weather service expects a dry, warm week, with storms late on Friday. Road works on Main Street will close one lane until August. '};
+const K={};
+document.querySelectorAll('.bars').forEach(b=>{const n=b.children.length,fp=b.closest('.fp'),mh=(b.closest('.mini')||{}).textContent||'';
+  const pool=fp?(fp.querySelector('.fph')?'news':'paper'):b.closest('.scr,.snap')?'web':/Missing/.test(mh)?'news':/Archived/.test(mh)?'web':'forum';
+  const S=T[pool].match(/[^.?!]+[.?!]+\s*/g),st=((K[pool]=(K[pool]||0)+1)-1)*2%S.length;const t=S.slice(st).concat(S.slice(0,st)).join('').trim();
+  const d=document.createElement('div');d.className='txt';d.style.height=(n*(fp?1.5:2.05))+'cqw';d.textContent=fp?t+' '+t:t;b.replaceWith(d);});
+document.querySelectorAll('.pg').forEach(p=>{const d=p.querySelector('.txt'),w=p.querySelector('.who2'),u=p.closest('.stage').getBoundingClientRect().width/100;if(d&&w&&u){d.style.height=((w.offsetTop-d.offsetTop)/u-1.5)+'cqw';d.style.marginBottom='0';}});
+const I=(p)=>'<svg viewBox="0 0 24 24"><path d="'+p+'"/></svg>';
+const CTL=I('M8 5v14l11-7z')+I('M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z')+I('M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 8v8a4.5 4.5 0 0 0 2.5-4z')+'<span>1:23 / 3:02</span><span class="sp"></span>'+I('M5 5h5v2H7v3H5zm9 0h5v5h-2V7h-3zM5 14h2v3h3v2H5zm12 3v-3h2v5h-5v-2z');
+document.querySelectorAll('.pl').forEach(p=>{const c=document.createElement('div');c.className='ctl';c.innerHTML=CTL;const g=p.querySelector('.gone');p.insertBefore(c,g||null);});
+const COL=['#5c6bc0','#00897b','#ef6c00','#8e24aa','#3949ab','#6d4c41'];
+document.querySelectorAll('.cc').forEach((c,i)=>{const a=c.querySelector('.av'),b=c.querySelector('.cc-h b');if(a&&b&&!a.textContent){a.textContent=(b.textContent.replace('@','')[0]||'?').toUpperCase();a.style.background=COL[(b.textContent.length+i)%COL.length];}});
+})();
+
+window.__fml=tls;
+main.insertBefore(buildMap(),document.getElementById('r1'));
+const io=new IntersectionObserver(es=>es.forEach(e=>{const st=e.target,tl=tls[st.parentNode.dataset.id];st.visible=e.isIntersecting;st.classList.toggle('on',e.isIntersecting&&!st.userPaused);if(e.isIntersecting&&!st.userPaused)tl.play();else tl.pause();}),{threshold:.2});
+document.querySelectorAll('.stage').forEach(s=>io.observe(s));
+
+/* ---------- votes ---------- */
+let votes={};let db=null;let filter='all';
+try{votes=JSON.parse(localStorage.getItem('fml-votes')||'{}')||{};}catch(e){votes={};}
+const saveEl=document.getElementById('save');
+function pick(id,v){const cur=votes[id]&&votes[id].v;save(id,{v:cur===v?null:v});}
+function save(id,patch){const nv=Object.assign({},votes[id]||{},patch,{at:Date.now()});votes[id]=nv;try{localStorage.setItem('fml-votes',JSON.stringify(votes));}catch(e){}
+  if(db){db.collection('votes').doc(id).set(nv).then(()=>{saveEl.textContent='Saved';}).catch(e=>{saveEl.textContent='Not saved for Claude: '+((e&&e.message)||'error')+'. Use Copy my choices.';});}
+  paint(id);counts();applyFilter();}
+function paint(id){const a=els[id];if(!a)return;const v=votes[id]||{};a.classList.toggle('yes',v.v==='yes');a.classList.toggle('no',v.v==='no');a.querySelector('.y').setAttribute('aria-pressed',v.v==='yes');a.querySelector('.n').setAttribute('aria-pressed',v.v==='no');const inp=a.querySelector('input');if(document.activeElement!==inp)inp.value=v.note||'';}
+function counts(){let y=0,n=0;ITEMS.forEach(it=>{const v=votes[it.id]&&votes[it.id].v;if(v==='yes')y++;else if(v==='no')n++;});document.getElementById('count').innerHTML='<span class="ca">'+y+' approved</span> · <span class="cr">'+n+' rejected</span> · <span class="cu">'+(ITEMS.length-y-n)+' left</span>';}
+function applyFilter(){ITEMS.forEach(it=>{const v=votes[it.id]&&votes[it.id].v;const show=filter==='all'||(filter==='open'&&!v)||filter===v;els[it.id].hidden=!show;});document.querySelectorAll('section.grp').forEach(s=>{s.hidden=![...s.querySelectorAll('.item')].some(a=>!a.hidden);});document.querySelectorAll('h2.divh[data-r]').forEach(d=>{d.hidden=!document.querySelector('section.grp[data-r="'+d.dataset.r+'"]:not([hidden])');});}
+document.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{filter=b.dataset.f;document.querySelectorAll('[data-f]').forEach(x=>x.setAttribute('aria-pressed',x===b));applyFilter();});
+document.getElementById('copy').onclick=()=>{const lines=['FARRELL MOTION LAB CHOICES'];['yes','no'].forEach(k=>{lines.push(k==='yes'?'APPROVED:':'REJECTED:');ITEMS.forEach(it=>{const v=votes[it.id];if(v&&v.v===k)lines.push('- '+it.id+' '+it.name+(v.note?' | note: '+v.note:''));});});ITEMS.forEach(it=>{const v=votes[it.id];if(v&&!v.v&&v.note)lines.push('NOTE ONLY: '+it.id+' | '+v.note);});const txt=lines.join('\n');const box=document.getElementById('copybox');const fallback=()=>{box.hidden=false;box.value=txt;box.focus();box.select();};try{navigator.clipboard.writeText(txt).then(()=>{saveEl.textContent='Copied';},fallback);}catch(e){fallback();}};
+ITEMS.forEach(it=>paint(it.id));counts();
+
+(async()=>{try{if(!window.claude||!window.claude.use)return;const d=await window.claude.use('db');if(!d)return;db=d;saveEl.textContent='Choices save for Claude';
+  d.collection('votes').onSnapshot(qs=>{qs.docs.forEach(doc=>{if(doc.exists)votes[doc.id]=doc.data();});try{localStorage.setItem('fml-votes',JSON.stringify(votes));}catch(e){}ITEMS.forEach(it=>paint(it.id));counts();applyFilter();},()=>{saveEl.textContent='Saving in this browser only. Use Copy my choices.';});
+}catch(e){}})();
+})();
+</script>

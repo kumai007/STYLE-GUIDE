@@ -1,0 +1,20 @@
+[Parsed_ebur128_1 @ 0x72b415f80] t: 4288.633313 TARGET:-23 LUFS    M: -27.7 S: -19.9     I: -16.2 LUFS       LRA:   9.1 LU
+[Parsed_ebur128_1 @ 0x72b415f80] t: 4288.733312 TARGET:-23 LUFS    M: -27.5 S: -20.0     I: -16.2 LUFS       LRA:   9.1 LU
+[Parsed_ebur128_1 @ 0x72b415f80] t: 4288.833312 TARGET:-23 LUFS    M: -27.1 S: -20.0     I: -16.2 LUFS       LRA:   9.1 LU
+[Parsed_ebur128_1 @ 0x72b415f80] t: 4288.933313 TARGET:-23 LUFS    M: -27.3 S: -20.1     I: -16.2 LUFS       LRA:   9.1 LU
+[Parsed_ebur128_1 @ 0x72b415f80] t: 4289.033312 TARGET:-23 LUFS    M: -27.9 S: -20.2     I: -16.2 LUFS       LRA:   9.1 LU
+[Parsed_ebur128_1 @ 0x72b415f80] t: 4289.133313 TARGET:-23 LUFS    M: -29.0 S: -20.2     I: -16.2 LUFS       LRA:   9.1 LU
+[Parsed_ebur128_1 @ 0x72b415f80] t: 4289.233312 TARGET:-23 LUFS    M: -30.5 S: -20.3     I: -16.2 LUFS       LRA:   9.1 LU
+[Parsed_ebur128_1 @ 0x72b415f80] t: 4289.333312 TARGET:-23 LUFS    M: -31.1 S: -20.4     I: -16.2 LUFS       LRA:   9.1 LU
+[Parsed_ebur128_1 @ 0x72b415f80] t: 4289.433313 TARGET:-23 LUFS    M: -31.3 S: -20.4     I: -16.2 LUFS       LRA:   9.1 LU
+[Parsed_ebur128_1 @ 0x72b415f80] t: 4289.533312 TARGET:-23 LUFS    M: -32.4 S: -20.5     I: -16.2 LUFS       LRA:   9.1 LU
+[Parsed_ebur128_1 @ 0x72b415f80] t: 4289.633313 TARGET:-23 LUFS    M: -33.3 S: -20.6     I: -16.2 LUFS       LRA:   9.1 LU
+[Parsed_ebur128_1 @ 0x72b415f80] t: 4289.733312 TARGET:-23 LUFS    M: -33.6 S: -20.7     I: -16.2 LUFS       LRA:   9.1 LU
+[Parsed_ebur128_1 @ 0x72b415f80] t: 4289.833312 TARGET:-23 LUFS    M: -34.7 S: -20.8     I: -16.2 LUFS       LRA:   9.1 LU
+[Parsed_ebur128_1 @ 0x72b415f80] t: 4289.933313 TARGET:-23 LUFS    M: -35.3 S: -21.0     I: -16.2 LUFS       LRA:   9.1 LU
+[Parsed_ebur128_1 @ 0x72b415f80] t: 4290.033312 TARGET:-23 LUFS    M: -37.2 S: -21.4     I: -16.2 LUFS       LRA:   9.1 LU
+[Parsed_ebur128_1 @ 0x72b415f80] t: 4290.133313 TARGET:-23 LUFS    M: -40.3 S: -22.6     I: -16.2 LUFS       LRA:   9.1 LU
+[Parsed_ebur128_1 @ 0x72b415f80] t: 4290.233312 TARGET:-23 LUFS    M: -43.4 S: -23.5     I: -16.2 LUFS       LRA:   9.1 LU
+[Parsed_ebur128_1 @ 0x72b415f80] t: 4290.333312 TARGET:-23 LUFS    M: -47.4 S: -24.3     I: -16.2 LUFS       LRA:   9.1 LU
+    I:         -16.2 LUFS
+    LRA:         9.1 LU

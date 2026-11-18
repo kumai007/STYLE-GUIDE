@@ -1,0 +1,22 @@
+{
+  "name": "final-phase-lite",
+  "version": "0.1.0",
+  "description": "A free window for videos Claude Code edits: see what Claude is doing, watch the video without rendering, pause and tell Claude what to change.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Jadouminou/final-phase-lite.git"
+  },
+  "type": "module",
+  "private": true,
+  "bin": {
+    "final-phase-lite": "./server.mjs"
+  },
+  "scripts": {
+    "start": "node server.mjs",
+    "test": "node --test test/*.test.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
