@@ -19,5 +19,10 @@ State:
   `assets/MEDIA_LOG.md`. 10 Commons photos failed (429): rerun `build/commons_get.py` with `build/commons_picks2.tsv`.
 - Ref study: 5 refs at 1080p in `productions/_abyssal-ref/latest5/<id>/src/full.mp4`; agent runs deep study on GitHub ->
   `CATALOG.md` per ref + `SUMMARY.md` (device recipes, banned-device replacements).
-Next: build devices (new channel look, `hf-engine/devices/lm.mjs`) + `cases/lm_intro.mjs`, `cases/lm_case01.mjs`
+- DONE: sources conformed (`sources/conf/*.mp4`, 60 fps). Ref study done: `productions/_abyssal-ref/latest5/SUMMARY.md`
+  (lead decisions on 6 open Qs at its top) + `<id>/CATALOG.md`.
+- RUNNING: build agent 1 = `hf-engine/devices/lm.mjs` (all channel devices) + `cases/lm_intro.mjs` + QA sheet
+  `productions/last-moments/edit/qa/lm_intro_sheet.jpg`. NEXT after it: agent 2 = `cases/lm_case01.mjs` (8 min VO, raws HPK/HCR,
+  page, map, photos, B-roll; retry 10 failed Commons photos), then `bash tools/case-build/preview.sh lm_intro,lm_case01`.
+Original plan: build devices (new channel look, `hf-engine/devices/lm.mjs`) + `cases/lm_intro.mjs`, `cases/lm_case01.mjs`
 (media root `hf-engine/media/last-moments`), node build.mjs, hyperframes check, preview.sh.
