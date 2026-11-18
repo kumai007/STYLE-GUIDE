@@ -67,10 +67,10 @@ export default {
   end: 61.11,
   plain: true,
   vo: { starts: [2.70], lens: [47.45], file: () => 'vo/c00.wav', tail: 0 },
-  devices: ['shared', 'lm'],
+  devices: ['shared', 'lm', 'lm_v2'],
   fonts: ['Anton-latin.woff2', 'Oswald-var-latin.woff2', 'BebasNeue-latin.woff2', 'IBMPlexMono-500-latin.woff2', 'IBMPlexMono-600-latin.woff2', 'IBMPlexMono-700-latin.woff2'],
   shots: [
-    { name: 'L00 warning', c: 0, to: 2.60, k: 'hard', n: 0, el: () => n('GlitchCut', { n: 8, seed: 'lmw' }, n('Warning')) },
+    { name: 'L00 warning', c: 0, to: 2.60, k: 'hard', n: 0, el: () => n('GlitchCut', { n: 8, seed: 'lmw' }, n('Warning2')) },
     // "Final footage .. ordinary video there is"
     { name: 'L01 HPK', c: 2.60, to: 8.52, k: 'hard', n: 0, el: () => clip({ src: 'HPK', t: 0, speed: 0.85, sw: 640, sh: 480, fit: 'contain', fill: true, scale: 1.04, origin: '50% 100%' }, 0.85, MET, 'tl') }, // credit top-left: CAM 1 stamp is top-right
     // "A dive, a stream sign-off, a vlog"
@@ -88,9 +88,9 @@ export default {
     // "a dive into the Blue Hole, a fan line in Orlando, a cabin porch .., a hotel lobby .., a fuel station in Kent. Every clip stops .. next."
     { name: 'L08 split', c: 32.63, to: 46.31, k: 'hard', n: 0, el: () => split() },
     // "today" -> 21 cases
-    { name: 'L09 ledger', c: 46.31, to: 53.31, k: 'hard', n: 0, el: () => [n('Ledger'), n('Dip', { outN: 16 })] },
-    { name: 'L10 ledger return', c: 53.31, to: 55.81, k: 'hard', n: 0, el: () => [n('Ledger', { ret: true }), n('Dip', { inN: 14, outN: 16 })] },
-    { name: 'L11 CASE 01', c: 55.81, to: 61.11, k: 'hard', n: 0, el: () => [n('CaseCard', { no: '01', name: ['THE CODEBREAKER WHO', 'WALKED OUT OF FRAME'], plate: { src: 'HCR', t: 1.5, speed: 0.25 } }), n('Dip', { inN: 14 })] },
+    { name: 'L09 ledger', c: 46.31, to: 53.31, k: 'hard', n: 0, el: () => [n('Descent'), n('Dip', { outN: 16 })] },
+    { name: 'L10 ledger return', c: 53.31, to: 55.81, k: 'hard', n: 0, el: () => [n('DescentReturn'), n('Dip', { inN: 14, outN: 16 })] },
+    { name: 'L11 CASE 01', c: 55.81, to: 61.11, k: 'hard', n: 0, el: () => [n('CaseCard2', { no: '01', name: ['THE CODEBREAKER WHO', 'WALKED OUT OF FRAME'], plate: { src: 'HCR', t: 1.5, speed: 0.25 } }), n('Dip', { inN: 14 })] },
   ],
   audio: [
     { src: 'static', id: 'bed_static', file: 'sfx/static_lp.wav', at: 0, to: 2.60, lane: [[0, 0], [1.5, db(-25.5 + 32.4)], [2.5, db(-25.5 + 32.4)], [2.6, 0]] },
