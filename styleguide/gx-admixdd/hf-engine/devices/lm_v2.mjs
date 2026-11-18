@@ -38,22 +38,22 @@ const dust = (ctx, devName, n, seed) => {
 export const Warning2 = {
   name: 'Warning2',
   html: (p, ctx) => {
-    const tx = ctx.id('wtx'), tm = ctx.id('wtm');
+    const tx = ctx.id('wtx');
     const word = (extra) => `<div style="position:absolute;left:0;right:0;top:404px;text-align:center;font:400 178px/1 ${ANT};letter-spacing:0.16em;padding-left:0.16em;${extra}">WARNING</div>`;
-    const mono = (t, top, cls) => `<div class="${cls}" style="position:absolute;left:0;right:0;top:${top}px;text-align:center;font:600 25px/1 ${MONO};letter-spacing:0.2em;padding-left:0.2em;color:rgba(232,228,220,.88);text-shadow:0 0 14px rgba(232,228,220,.22),0 2px 3px rgba(0,0,0,.85);filter:url(#${tm})">${t}</div>`;
+    const mono = (t, top, cls) => `<div class="${cls}" style="position:absolute;left:0;right:0;top:${top}px;text-align:center;font:500 40px/1 ${MONO};letter-spacing:0.14em;padding-left:0.14em;color:rgba(232,228,220,.9);text-shadow:0 2px 12px rgba(0,0,0,.8),0 1px 2px rgba(0,0,0,.95)">${t}</div>`;
     return `<div class="${AF}" style="background:#040404"></div>`
       + `<div class="${AF}" ${ctx.dev('Warning2', { part: 'bg' })} style="overflow:hidden"><img src="${DOOR}" style="position:absolute;left:-96px;top:-54px;width:2112px;height:1188px;transform-origin:56% 44%;filter:brightness(.36) contrast(1.12)"></div>`
       + topLight(0.07, 20) + vig(0.86, 26)
-      + texDef(tx, 4, 2.6, 2.9, 0.62) + texDef(tm, 9, 3.2, 3.2, 0.9)
+      + texDef(tx, 4, 2.6, 2.9, 0.62)
       + `<div class="${AF}" ${ctx.dev('Warning2', { part: 'tx' })}>`
       + `<div class="pool ${AF}" style="mix-blend-mode:screen;background:radial-gradient(ellipse 40% 24% at 50% 46%, rgba(158,31,28,.34) 0%, rgba(158,31,28,0) 72%);opacity:0"></div>`
       + `<i class="ru" style="position:absolute;left:560px;width:800px;top:382px;height:2px;background:linear-gradient(90deg,rgba(232,228,220,0),rgba(232,228,220,.62) 20%,rgba(232,228,220,.62) 80%,rgba(232,228,220,0));transform:scaleX(0)"></i>`
       + `<i class="ru" style="position:absolute;left:560px;width:800px;top:612px;height:2px;background:linear-gradient(90deg,rgba(232,228,220,0),rgba(232,228,220,.62) 20%,rgba(232,228,220,.62) 80%,rgba(232,228,220,0));transform:scaleX(0)"></i>`
       + `<div class="wd" style="position:absolute;inset:0;opacity:0">`
-      + word(`color:#B3241F;filter:blur(20px);opacity:.75`)
+      + word(`color:#B3241F;filter:blur(22px);opacity:.6`)
       + word(`background:linear-gradient(180deg,#C8352C 0%,#9E1F1C 55%,#6E1512 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:url(#${tx})`)
       + `</div>`
-      + mono('THIS VIDEO CONTAINS REAL FOOTAGE OF FINAL MOMENTS.', 646, 'ml') + mono('VIEWER DISCRETION IS ADVISED.', 690, 'ml')
+      + mono('THIS VIDEO CONTAINS REAL FOOTAGE OF FINAL MOMENTS.', 648, 'ml') + mono('VIEWER DISCRETION IS ADVISED.', 708, 'ml')
       + `</div>` + grain(ctx, 0.085);
   },
   render: function (el, f, p, G, S) {
@@ -90,24 +90,24 @@ const deckHtml = (p, ctx, devName) => {
     let ents = '';
     for (let j = 0; j < 3; j++) {
       const i = b * 3 + j; if (i >= rows.length) break;
-      const cx = 380 + j * 580 + Math.round((r() - 0.5) * 70), ty = 44 + Math.round((r() - 0.5) * 18), ls = (0.05 + depth * 0.03 * r()).toFixed(3);
-      ents += `<div class="en" style="position:absolute;left:${cx - 300}px;width:600px;top:${ty}px;text-align:center;white-space:nowrap">`
-        + `<span style="font:600 23px/1 ${MONO};color:#B22A24;letter-spacing:.06em;margin-right:16px;vertical-align:6px;text-shadow:0 0 10px rgba(158,31,28,.75)">${String(i + 1).padStart(2, '0')}</span>`
-        + `<span class="nm" style="position:relative;display:inline-block;font:500 42px/1.1 ${OSW};letter-spacing:${ls}em;color:${col};text-shadow:0 0 16px rgba(232,228,220,.2),0 2px 3px rgba(0,0,0,.9)">${ctx.esc(rows[i])}`
+      const cx = 330 + j * 630 + Math.round((r() - 0.5) * 30), fs = Math.min(52, Math.round(1000 / rows[i].length)), ty = 44 + Math.round((r() - 0.5) * 18), ls = (0.05 + depth * 0.03 * r()).toFixed(3);
+      ents += `<div class="en" style="position:absolute;left:${cx - 315}px;width:630px;top:${ty}px;text-align:center;white-space:nowrap">`
+        + `<span style="font:600 26px/1 ${MONO};color:#B22A24;letter-spacing:.06em;margin-right:12px;vertical-align:9px;text-shadow:0 0 10px rgba(158,31,28,.75)">${String(i + 1).padStart(2, '0')}</span>`
+        + `<span class="nm" style="position:relative;display:inline-block;font:500 ${fs}px/1.1 ${OSW};letter-spacing:${ls}em;color:${col};text-shadow:0 0 16px rgba(232,228,220,.2),0 2px 3px rgba(0,0,0,.9)">${ctx.esc(rows[i])}`
         + `<s class="sw" style="position:absolute;left:0;top:0;right:0;bottom:0;text-decoration:none;background:linear-gradient(100deg,rgba(255,248,236,0) 42%,rgba(255,248,236,.95) 50%,rgba(255,248,236,0) 58%);background-size:300% 100%;background-position:120% 0;-webkit-background-clip:text;background-clip:text;color:transparent;opacity:0">${ctx.esc(rows[i])}</s>`
         + `<u class="sel" style="position:absolute;left:-6px;right:-6px;bottom:-12px;height:3px;background:#9E1F1C;box-shadow:0 0 12px rgba(158,31,28,.9),0 0 3px rgba(200,60,50,.8);transform:scaleX(0);transform-origin:0 50%"></u></span></div>`;
     }
     bands += `<div class="bd" style="position:absolute;left:0;right:0;top:${BAND0 + b * PITCH}px;height:${PITCH}px;filter:url(#${tex})">`
       + `<i style="position:absolute;left:0;right:0;top:2px;bottom:0;background:linear-gradient(180deg,rgba(18,18,20,.62) 0%,rgba(10,10,11,.3) 60%,rgba(10,10,11,0) 100%)"></i>`
-      + `<i class="hl" style="position:absolute;left:110px;right:110px;top:0;height:2px;background:linear-gradient(90deg,rgba(232,228,220,0),rgba(232,228,220,.7) 16%,rgba(232,228,220,.7) 84%,rgba(232,228,220,0));box-shadow:0 0 12px rgba(232,228,220,.3)"></i>${ents}</div>`;
+      + `<i class="hl" style="position:absolute;left:110px;right:110px;top:0;height:3px;background:linear-gradient(90deg,rgba(232,228,220,0),rgba(232,228,220,.85) 16%,rgba(232,228,220,.85) 84%,rgba(232,228,220,0));box-shadow:0 0 14px rgba(232,228,220,.35)"></i>${ents}</div>`;
   }
   const head = `<div class="hd" style="position:absolute;left:0;right:0;top:56px;text-align:center;filter:url(#${tex})">`
     + `<div style="font:600 50px/1 ${OSW};letter-spacing:.44em;padding-left:.44em;color:#E2DED6;text-shadow:0 0 22px rgba(232,228,220,.25),0 2px 4px rgba(0,0,0,.85)">21 CASES</div>`
     + `<div style="margin-top:18px;font:500 18px/1 ${MONO};letter-spacing:.34em;padding-left:.34em;color:#9A968E">LAST KNOWN FOOTAGE &#183; IN ORDER OF DESCENT</div></div>`;
   return `<div class="${AF}" style="background:#030303"></div>${texDef(tex, 21, 2.9, 2.6, 0.8)}`
     + `<div class="${AF}" ${ctx.dev(devName, { part: 'all' })}>`
-    + `<div class="${AF}" style="overflow:hidden"><img class="bgi" src="${STAIR}" style="position:absolute;left:-220px;top:-120px;width:2360px;height:1589px;transform-origin:57% 80%;filter:brightness(.5) contrast(1.18)"></div>`
-    + `<div class="${AF}" style="pointer-events:none;background:linear-gradient(180deg,rgba(0,0,0,.25) 0%,rgba(0,0,0,0) 30%,rgba(0,0,0,.45) 66%,rgba(0,0,0,.82) 100%)"></div>`
+    + `<div class="${AF}" style="overflow:hidden"><img class="bgi" src="${STAIR}" style="position:absolute;left:-220px;top:-120px;width:2360px;height:1589px;transform-origin:57% 80%;filter:brightness(.6) contrast(1.18)"></div>`
+    + `<div class="${AF}" style="pointer-events:none;background:linear-gradient(180deg,rgba(0,0,0,.05) 0%,rgba(0,0,0,0) 34%,rgba(0,0,0,.45) 68%,rgba(0,0,0,.82) 100%)"></div>`
     + `<div class="cam ${AF}" style="perspective:2000px;perspective-origin:960px 520px"><div class="dk" style="position:absolute;left:0;top:0;width:1920px;height:1300px;transform-origin:50% 0">${head}${bands}</div></div>`
     + `</div>` + dust(ctx, devName, 56, devName === 'Descent' ? 5 : 6) + topLight(0.15) + vig(0.8, 34) + grain(ctx, 0.075);
 };
@@ -134,7 +134,7 @@ export const Descent = {
     var bd = el.querySelectorAll('.bd');
     for (var b = 0; b < bd.length; b++) {
       var a = c((f - 12 - b * 9) / 42), e = 1 - Math.pow(1 - a, 3), dd = Math.abs(b - fi);
-      var bl = Math.min(5.5, dd * 1.2) + b * 0.12 + 8 * (1 - e);
+      var bl = Math.min(5.5, Math.max(0, dd - 0.6) * 1.4) + 8 * (1 - e);
       bd[b].style.opacity = (e * (1 - b * 0.06) * (1 - 0.3 * Math.min(1, dd / 3))).toFixed(3);
       bd[b].style.filter = bd[b].style.filter.replace(/ ?blur\([^)]*\)/, '') + ' blur(' + bl.toFixed(2) + 'px)';
       bd[b].querySelector('.hl').style.transform = 'scaleX(' + e.toFixed(4) + ')';
@@ -203,7 +203,7 @@ export const CaseCard2 = {
       + `<div class="${AF}" style="mix-blend-mode:screen;background:radial-gradient(ellipse 30% 16% at 50% 62%, rgba(158,31,28,.28), rgba(158,31,28,0) 75%)"></div>`
       + no('color:rgba(232,228,220,.42);filter:blur(24px)') + no(`${fill};filter:url(#${tx})`) + `</div>`
       + `<div class="${AF}" ${ctx.dev('CaseCard2', { part: 'nm' })} style="opacity:0">`
-      + `<div class="lb" style="position:absolute;left:0;right:0;top:376px;text-align:center;font:600 24px/1 ${MONO};letter-spacing:.42em;padding-left:.42em;color:#B22A24;text-shadow:0 0 12px rgba(158,31,28,.7)">CASE ${ctx.esc(p.no)}</div>`
+      + `<div class="lb" style="position:absolute;left:0;right:0;top:372px;text-align:center;font:600 28px/1 ${MONO};letter-spacing:.3em;padding-left:.3em;color:rgba(232,228,220,.82);text-shadow:0 2px 10px rgba(0,0,0,.85),0 1px 2px rgba(0,0,0,.9)">CASE ${ctx.esc(p.no)}</div>`
       + `<div class="nmw ${AF}" style="isolation:isolate">${name}</div>`
       + `<i class="hr" style="position:absolute;left:700px;width:520px;top:${436 + (p.name || []).length * 90 + 18}px;height:2px;background:#9E1F1C;box-shadow:0 0 12px rgba(158,31,28,.9);transform:scaleX(0)"></i></div>`
       + grain(ctx, 0.07);

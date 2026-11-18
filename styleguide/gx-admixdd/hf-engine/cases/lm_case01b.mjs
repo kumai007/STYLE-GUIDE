@@ -39,7 +39,7 @@ const ptsAt = (at) => [DIP[0] - 0.1, DIP[0], DIP[1], DIP[1] + 0.1, SW[0] + 0.5, 
 // ---- picture helpers. i = shot index (varies the 3-D camera drift); all frame numbers shot-local @60.
 const MET = 'FOOTAGE: METROPOLITAN POLICE';
 const PH = {
-  hans_crescent_harrods_side: "DANIEL X. O'NEIL / CC BY 2.0", brompton_road_knightsbridge: 'LEWIS CLARKE / CC BY-SA 2.0',
+  hans_crescent_harrods_side: "DANIEL X. O'NEIL / CC BY 2.0", brompton_road_knightsbridge: 'LEWIS CLARKE / CC BY-SA 2.0', c01b_brompton_mos: 'LEWIS CLARKE / CC BY-SA 2.0', hans_crescent_sign: 'ELL BROWN / CC BY-SA 2.0',
   hans_crescent_geograph: 'LEWIS CLARKE / CC BY-SA 2.0', sloane_street: 'LEWIS CLARKE / CC BY-SA 2.0',
   sis_building_vauxhall: 'COLIN SMITH / CC BY-SA 2.0', sis_building_vauxhall_b: 'RICHARD COOKE / CC BY-SA 2.0',
   valley_anglesey_church: 'PETER WOOD / CC BY-SA 2.0', westminster_coroners_court: 'THE WUB / CC BY-SA 4.0',
@@ -88,7 +88,7 @@ const tag = (L, at, name, role, pin) => n('Tag', { at, name, role, pin, hold: Ma
 const T = [
   // p03 (0-132.70)
   [0, 5.40, 'B00 harrods side', (i) => photo(i, 'hans_crescent_harrods_side')],
-  [5.40, 10.00, 'B01 brompton road', (i) => photo(i, 'brompton_road_knightsbridge', { s: [1.04, 1.14] })],
+  [5.40, 10.00, 'B01 brompton road', (i) => photo(i, 'c01b_brompton_mos', { s: [1.04, 1.14] }) /* faces pixelated (48 src px blocks) */],
   [10.00, 15.90, 'B02 sloane street', (i, L, A) => photo(i, 'sloane_street', { over: [tag(L, A(10.6), 'SLOANE STREET', 'KNIGHTSBRIDGE, 2.30 PM', true)] })],
   [15.90, 20.40, 'B03 HCR last frame', (i) => hcrStill(0.72, [1.0, 1.06], [n('Credit', { text: MET })])],
   [20.40, 24.00, 'B04 dark hallway', (i) => foot(i, 'dark_empty_hallway', 0)],
@@ -116,7 +116,7 @@ const T = [
   [114.30, 118.50, 'B26 card DNA', (i) => tcard(bgV(i, 'dark_empty_hallway', 5), 'DNA ON HIS HAND', ["A FORENSIC SCIENTIST'S"])],
   [118.50, 123.40, 'B27 rain window', (i) => foot(i, 'rain_window_night', 22)],
   [123.40, 128.40, 'B28 padlock gate', (i) => foot(i, 'pad_gate', 7)],
-  [128.40, 132.70, 'B29 hans crescent', (i) => [...photo(i, 'hans_crescent_geograph'), n('Dip', { outN: 16 })]],
+  [128.40, 132.70, 'B29 hans crescent', (i) => [...photo(i, 'hans_crescent_sign'), n('Dip', { outN: 16 })] /* QA: geograph photo = crowd of private faces */],
   // replay (VO paused)
   [132.70, 142.20, 'B30 REPLAY', () => [
     n('Grade', { mono: true, bri: 0.78, con: 1.12 }, n('Cam', { s: [1.0, 1.15], o: '50% 60%' },
@@ -166,7 +166,7 @@ const T = [
   [278.60, 282.20, 'B64 padlock red', (i) => foot(i, 'pad_red', 2, { pos: '50% 59%' })],
   [282.20, 287.00, 'B65 snowdonia', (i) => foot(i, 'snowdonia_a', 0, { bri: 0.95 })],
   // TypedDate (not a Tag): the next shot carries a Tag, never the same device twice in a row
-  [287.00, 291.60, 'B66 valley church', (i, L, A) => photo(i, 'valley_anglesey_church', { pos: '40% 55%', s: [1.12, 1.2], over: [n('TypedDate', { text: 'VALLEY, ANGLESEY - 26 SEPTEMBER 2010', at: A(287.3) })] })],
+  [287.00, 291.60, 'B66 valley church', (i, L, A) => photo(i, 'valley_anglesey_church', { pos: '40% 55%', s: [1.12, 1.2], cp: 'br', over: [n('TypedDate', { text: 'VALLEY, ANGLESEY - 26 SEPTEMBER 2010', at: A(287.3) })] })],
   [291.60, 295.40, 'B67 SIS sawers', (i, L, A) => photo(i, 'sis_building_vauxhall', { over: [tag(L, A(292.8), 'SIR JOHN SAWERS', 'HEAD OF MI6')] })],
   [295.40, 300.40, 'B68 quote headstone', (i) => [
     n('Grade', { sat: 0.3, bri: 0.78, con: 1.06 }, cam(i, [1.06, 1.16], 'filter:blur(3px) sepia(.3)', vid('snowdonia_a', 5))),

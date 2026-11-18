@@ -121,3 +121,9 @@ Check: all shots >= 3 s; no same text device back to back; one big text device a
   padlock files are *_illustrative.mp4; vertical clips full-frame cover; RedCircle in a twin Cam outside the mono grade).
 - STEP 2 DONE: build exit 0, no media window problems; check 0 errors (11 warnings: dup media, small credit text, heavy overlays).
 - STEP 3 QA round 1: photos bri .6/sat .3 (were Y100-119), per-source b-roll brightness map SB (night clips were Y6-27), card backdrops brighter, RedCircle positions refit from stills, page W1320. Pimlico Tag moved to B05 (word at 23.0 was 1 s before the cut). Scratch: scratchpad/c01b (times.txt, sheet.py).
+- QA round 2 (final): faces: new media photos/c01b_brompton_mos.jpg (brompton, 3 pixelated boxes, 48 src px blocks); B29 now
+  hans_crescent_sign (ELL BROWN / CC BY-SA 2.0; geograph photo = crowd of private faces); B66 credit bottom-right (clashed with
+  the long TypedDate). Build exit 0, check 0 errors. Stills YAVG mean 57 (photos 54-75, night b-roll 31-63, cards 26-54, page 109).
+  Sheet: productions/last-moments/edit/qa/lm_case01b_sheet.jpg (70 stills). Scratch stills: scratchpad/c01b/snapF.
+- OPEN: harrods_side / sloane_street / sis photos not checked at full size for faces (small, distant); dark_empty_hallway still
+  Y31-34 and B26 card Y26 (night clip, bri 3.0 max before noise); page B41 Y109 (white paper); mix not measured.

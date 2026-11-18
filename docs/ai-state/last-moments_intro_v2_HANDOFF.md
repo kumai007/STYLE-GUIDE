@@ -29,7 +29,21 @@ Task: owner rejected intro graphics as "AI slop". Rebuild warning, 21-case list,
   plain mono text, flat grid, flat yellow box). Fix: photographic textured backdrop with depth, text integrated with
   light/texture, layered bands with depth blur, 3-D eased camera moves, no flat highlight boxes."
 
+## Polish pass (2026-11-18, lead fixes 1-4)
+- Warning2: body lines Plex Mono 500 40px caps, tracking .14em, rgba(232,228,220,.9), dark shadow, no texture filter
+  (tops 648/708); red glow copy blur 22 / .6 so the WARNING edge stays crisp.
+- Descent deck: names 52px max, auto-fit `fs=min(52, 1000/len)` (long names ~43px, no column collisions), columns
+  330/960/1590 (pitch 630), numbers 26px; hairlines 3px .85 + glow .35; bg brightness .6, top gradient .05 (band 1 lit).
+  Descent focus blur: 0 within +-0.6 band of focus (`max(0,dd-.6)*1.4`, cap 5.5; no per-band base blur).
+- DescentReturn unchanged: red hairline + sweep land under case 01 at 55.4/55.7 s (checked).
+- CaseCard2 label: Plex Mono 600 28px, .3em, off-white .82 + dark shadow, top 372.
+- Build exit 0; check ok, 0 errors (6 known lint warnings). Sheet overwritten: ours only, 2 cols, 1.0/2.56/47.6/50.5/
+  54.2/55.4/56.6/59.5 s. Mid-descent 48.6-52.5 s: band in focus sharp, +-1 band readable. Backup of pre-pass device:
+  scratch `v2/lm_v2.r2.bak.mjs`.
+
 ## Open (next round)
+- Pre-existing: at 54.2 s (return rising) entry 01 alone is blurred while bands 1 entries 02/03 are sharp; cause not found.
+- Right/left columns still lean slightly (perspective of rotateX), e.g. "SIGN-OFF", "RADISSON LOBBY".
 - List still darker/smaller than refs: refs' hairlines are brighter/thicker and the backdrop has a lit upper area. Try band
   names 46-48 px, hairline 3 px .8, bg brightness .5->.6 at top.
 - Bands 5-7 blurred at 47.6 s by design (focus follows the camera; each band sharp ~1 s as it passes, +-1 band readable).

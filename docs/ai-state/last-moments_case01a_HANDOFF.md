@@ -81,3 +81,10 @@ Photo device (new, devices/lm_c01a.mjs): img cover, keyed drift scale 1.04->1.12
    need a `hold` prop + softer shadow (lm.mjs is shared: keep defaults).
 2. cases/lm_case01a.mjs from lm_intro.mjs structure (vo starts [0.50,43.80,95.57,139.30], lens above, files vo/c01a_*.wav).
 3. build, check, stills sheet edit/qa/lm_case01a_sheet.jpg (framesheet: `npx hyperframes@0.9.56 snapshot --at ... -o DIR`).
+
+## Agent 2 progress (2026-11-18)
+- STEP 1 DONE: `devices/lm_c01a.mjs` (Frz freeze still, MosImg photo mosaic, MapC01 live dark map) + `cases/lm_case01a.mjs`
+  (reuses lm_c01b Cam/Img/Lbl/Tag/TCard; Tag replaces flat PlaceTag/NameTag; S12 + S23 = TCard on blurred backdrop so no
+  TypedDate twice in a row). HCR has 226 frames (last = 225; freeze end uses 224). Music: tarmac 61.1 only lasts to 156.5,
+  so dark_days returns at 150.5 (xfade 150.5-156.5).
+- STEP 2 DONE: build exit 0, no media problems; check ok, 0 errors, 8 warnings.
