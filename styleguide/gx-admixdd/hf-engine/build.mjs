@@ -127,7 +127,12 @@ for (const a of CASE.audio || []) {
 
 const fontFace = (f) => {
   if (f.startsWith('Archivo')) return `@font-face{font-family:'Archivo';src:url(assets/fonts/${f}) format('woff2');font-weight:100 900;font-stretch:62% 125%}`;
-  if (f.startsWith('IBMPlexMono')) return `@font-face{font-family:'IBM Plex Mono';src:url(assets/fonts/${f}) format('woff2');font-weight:500}`;
+  if (f.startsWith('IBMPlexMono')) return `@font-face{font-family:'IBM Plex Mono';src:url(assets/fonts/${f}) format('woff2');font-weight:${(f.match(/-(\d00)-/) || [0, 500])[1]}}`; // weight from the file name (IBMPlexMono-600-latin -> 600)
+  // last-moments channel faces (2026-11-18): Anton, Oswald (var 200-700), Bebas Neue, Source Serif 4 (var 200-900)
+  if (f.startsWith('Anton')) return `@font-face{font-family:'Anton';src:url(assets/fonts/${f}) format('woff2');font-weight:400}`;
+  if (f.startsWith('Oswald')) return `@font-face{font-family:'Oswald';src:url(assets/fonts/${f}) format('woff2');font-weight:200 700}`;
+  if (f.startsWith('BebasNeue')) return `@font-face{font-family:'Bebas Neue';src:url(assets/fonts/${f}) format('woff2');font-weight:400}`;
+  if (f.startsWith('SourceSerif4')) return `@font-face{font-family:'Source Serif 4';src:url(assets/fonts/${f}) format('woff2');font-weight:200 900}`;
   const fam = f.startsWith('VT323') ? 'VT323' : f.startsWith('SpecialElite') ? 'Special Elite' : f.startsWith('CourierPrime') ? 'Courier Prime' : f.startsWith('Michroma') ? 'Michroma' : 'Share Tech Mono';
   return `@font-face{font-family:'${fam}';src:url(assets/fonts/${f}) format('woff2');font-weight:${f.includes('700') ? 700 : 400}}`;
 };
