@@ -113,3 +113,20 @@ are unmasked -> lead/owner to confirm. RAD + WED need owner OK. CGF is all close
   scratch strips; written into cases/lm_intro.mjs (CG_A for 19.5-22.92, CG_B for 9.0-13.98, both women). Ledger titles = short
   caps from the cut-sheet headings (in lm.mjs LEDGER). Conveyor re-timed (P0 full frame 32.63, compresses to L at 34.43; every
   panel >= 3.9 s on screen).
+- STEP 5 DONE: `hf-engine/devices/lm.mjs` (API block at top): Grade, LClip (+fill, push, Mosaic via duplicate video + SVG pixelate
+  24 px, clip-path path() keyed boxes), Vertical, Split2/Panel (keyed x/w), Warning, GlitchCut, Dip, Ledger (LEDGER titles), CaseCard,
+  Credit, TypedDate, PlaceTag, NameTag, Page, RedCircle, Spotlight, Subs. TypedDate/PlaceTag/NameTag/Page/RedCircle/Spotlight/Subs
+  are NOT exercised by lm_intro (untested visually).
+- STEP 6 DONE: `hf-engine/cases/lm_intro.mjs` (61.11 s, 12 shots, audio lanes: static bed +6.9 dB, glitch -7.6 dB (peak -14 re VO),
+  music levelled to -38.5 with -12 dB dips, title bed 56.04 2 s in, riser 40.40 (helper -22.8 dB), tick 54.34 (-14.6 dB, peak), boom 56.04 (-18.1 dB)).
+- STEP 7 DONE: build exit 0, no MEDIA WINDOW PROBLEMS; check: 0 errors, 24 warnings (18 line_unread on ledger rows, 2 duplicate
+  media = mosaic copies by design, file size, heavy overlays, first frame dark warning card, credit 24 px < 28 px floor).
+- STEP 8 DONE: sheet `productions/last-moments/edit/qa/lm_intro_sheet.jpg` (17 stills). QA 1 fix: per-shot Grade brightness (footage
+  was YAVG 68-118). Now stills YAVG: warn 30, HPK 61, LIP 69, HCR 67, CGF 37/34, LIP 65, CRV 74, WED 65, split 64/56/77, Kent 69,
+  ledger 36/32, card 52 -> mean of 17 = 54 (target 52-58). Mosaic verified: CGF both women (shot + split P1), RAD clerk + woman.
+  Judged unreadable (no mosaic): HPK/HCR man (CCTV ~10 px face), LIP divers (masks), CRV packer (face out of frame), WED gate/Kent (no people seen).
+- STEP 9 (estimate, not measured): mix I ~ -28.0 LUFS (VO -28.5 + music -38.5; music-only tail gated out), TP ~ -2.5 dBTP.
+  Intro target ~-20 LUFS -> master pass needs ~+8 dB with a limiter (VO peak -3.1 dBFS).
+- Open: credit top-right overlaps burned-in CCTV text on HPK (CAM 1 / police stamp); WED gate timestamp cut at the left by scale 1.22;
+  LIP shots carry a large burned-in camcorder date (native); RAD + WED need owner OK; ledger glitch copies duplicate filter ids (grain
+  missing for 8 f, harmless); no full render, no listen test.
