@@ -9,3 +9,15 @@
   coc_case25 (tracked blur), coc_case08 (silent CCTV), coc_intro. Their coc2h-vol1 media/paths are deleted: copy the
   structure into a new `cases/<id>.mjs`, do not build them as-is. `media/<prod>` = media root for new builds.
 - Same look rules as always (style guide, SOPs, playbook). Never read `media/` (13 GB) or `v*_stills/`.
+
+## last-moments notes (owner workflow 2026-11-18: fix notes live here, no render)
+- Parts: `lm_intro` (cases/lm_intro.mjs; intro graphics in devices/lm_v2.mjs), `lm_case01a` (cases/lm_case01a.mjs,
+  devices/lm_c01a.mjs), `lm_case01b` (cases/lm_case01b.mjs, devices/lm_c01b.mjs). Shared channel devices: devices/lm.mjs.
+  Media: media/last-moments/. State + decisions: `../../../docs/ai-state/last-moments_*HANDOFF.md` (grep, don't read whole).
+- Per note: open the note's frame picture, find the shot at that time in the case file, change only what the note asks,
+  run `node build.mjs <part>` (must exit 0), then stop. Be fast: no audits, no re-planning, no full reads of big files.
+- Quality bar (owner): no flat black plates, no plain text on flat colour, no flat boxes; real photo/footage backdrops,
+  grain, light falloff, depth, eased 3-D moves. Banned: iceberg graphic, cyan, typewriter type, VHS/static/tape, stamps,
+  PRESENTS. Every clip >= 3 s. Faces of victims/private people mosaicked.
+- A general rule the owner gives in a note ("always/never ...") also goes into the memory topic file
+  `~/.claude/projects/C--Users-ayush-Videos-CLAUDE-render-farm-video/memory/_topic-abyssal-edit-feedback.md` (one line).
