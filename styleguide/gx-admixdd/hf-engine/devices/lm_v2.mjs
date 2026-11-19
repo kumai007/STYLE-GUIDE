@@ -289,7 +289,8 @@ export const TitleType = {
   name: 'TitleType',
   html: (p, ctx) => {
     const pl = p.plate, VCR = "'VCR OSD Mono',monospace", a = p.a || 'CASE 1', b = p.b || '';
-    const vid = ctx.node({ d: '_V', p: { src: pl.src, trim: pl.t, speed: pl.speed ?? 0.25, fit: 'cover' } }, ctx.win);
+    // plate.img (v5): a still instead of a clip (owner 2026-11-19 "don't repeat the same clips in the intro")
+    const vid = pl.img ? `<img src="assets/media/${pl.img}" style="position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover">` : ctx.node({ d: '_V', p: { src: pl.src, trim: pl.t, speed: pl.speed ?? 0.25, fit: 'cover' } }, ctx.win);
     const line = (top, fs, ls) => `<div class="tl" style="position:absolute;left:0;right:0;top:${top}px;text-align:center;white-space:pre;font:400 ${fs}px/1 ${VCR};letter-spacing:${ls}em;color:#ECE8E0;text-shadow:0 0 20px rgba(232,228,220,.3),0 2px 4px rgba(0,0,0,.9)"><span class="ty"></span><span style="position:relative;display:inline-block;width:0;height:1em"><i class="cu" style="position:absolute;left:.03em;bottom:.06em;width:.5em;height:.78em;background:#ECE8E0;box-shadow:0 0 16px rgba(232,228,220,.5);display:none"></i></span><span class="re" style="visibility:hidden"></span></div>`;
     return `<div class="${AF}" style="background:#040404"></div>`
       + `<div class="${AF}" ${ctx.dev('TitleType', { part: 'plate' })} style="overflow:hidden"><div class="${AF}" style="filter:blur(2.5px) brightness(.4) contrast(1.15) saturate(.12)">${vid}</div>`
@@ -388,4 +389,33 @@ export const GBox = {
   },
 };
 
-export default [Warning2, Descent, DescentReturn, CaseCard2, GlitchOut2, TitleType, GCam, GBox];
+// ---------------------------------------------------------------- FloatBg + FloatCard (v5, owner 2026-11-19: "no glitch again and
+// again; floating clips over a blur background, coming from down to up in a very smooth motion, next clip, next clip, dip to black").
+// Ref ONL 25.5 (clip over its own blurred fill). Cards rise as a slow vertical conveyor: the next card pushes the last one up and out.
+// FloatBg {from, until, fade, clip}: full-frame blurred copy, opacity 0->1 over [from, from+fade]. Put all FloatBg before the cards.
+// FloatCard {r:[x,y,w,h], from, rise=54, out (frame the exit starts), clip}: enters from below the frame, leaves above it
+// (pre = frames of the rise already done at `from`, so a card on a hard cut is never an empty frame) (smootherstep, same distance as the next card's rise), plus a slow 0.1 px/f upward drift so it floats.
+export const FloatBg = {
+  name: 'FloatBg',
+  html: (p, ctx) => `<div class="${AF}" ${ctx.dev('FloatBg', { from: p.from ?? 0, until: p.until ?? ctx.win[1], fade: p.fade ?? 0 })} style="overflow:hidden"><div class="${AF}" style="filter:blur(38px) brightness(.42) saturate(.6);transform:scale(1.18)">${LClip.html({ ...p.clip, fit: 'cover', mos: undefined, from: p.from ?? 0, until: p.until ?? ctx.win[1], push: [1, 1] }, ctx)}</div></div>`,
+  render: function (el, f, p) {
+    var on = f >= p.from && f < p.until; el.style.display = on ? '' : 'none'; if (!on) return;
+    var u = p.fade ? Math.max(0, Math.min(1, (f - p.from) / p.fade)) : 1;
+    el.style.opacity = (-(Math.cos(Math.PI * u) - 1) / 2).toFixed(4);
+  },
+};
+export const FloatCard = {
+  name: 'FloatCard',
+  html: (p, ctx) => {
+    const [x, y, w, h] = p.r, from = p.from ?? 0, rise = p.rise ?? 54, until = p.out != null ? p.out + rise : (p.until ?? ctx.win[1]);
+    return `<div ${ctx.dev('FloatCard', { from, until, rise, pre: p.pre ?? 0, out: p.out ?? -1, dn: 1080 - y, up: 1080 })} style="position:absolute;left:${x}px;top:${y}px;width:${w}px;height:${h}px;overflow:hidden;background:#0B0B0C;box-shadow:0 30px 90px rgba(0,0,0,.75),0 0 0 1px rgba(232,228,220,.08)">${LClip.html({ W: w, H: h, ...p.clip, from, until, push: [1, 1.05] }, ctx)}</div>`;
+  },
+  render: function (el, f, p) {
+    var on = f >= p.from && f < p.until; el.style.display = on ? '' : 'none'; if (!on) return;
+    var s = function (u) { u = Math.max(0, Math.min(1, u)); return u * u * u * (u * (6 * u - 15) + 10); };
+    var ty = p.dn * (1 - s((f - p.from + p.pre) / p.rise)) - (p.out >= 0 ? p.up * s((f - p.out) / p.rise) : 0) - 0.1 * (f - p.from);
+    el.style.transform = 'translateY(' + ty.toFixed(2) + 'px)';
+  },
+};
+
+export default [Warning2, Descent, DescentReturn, CaseCard2, GlitchOut2, TitleType, GCam, GBox, FloatBg, FloatCard];

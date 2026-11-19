@@ -46,3 +46,6 @@ Original plan: build devices (new channel look, `hf-engine/devices/lm.mjs`) + `c
   reloads by itself (server "last-moments-preview", port 4848).
 - Final Phase Lite local fixes: claude.exe path, clean env for child claude, drawing tools. Owner's CLI is signed out:
   `tools/final-phase-lite/login_clean.ps1` signs in (owner must do it); until then notes are fixed in the main chat.
+- 2026-11-19 intro v5: glitch only on the warning. A = FloatBg/FloatCard rise montage (LIP 60, CGF 9.0, CRV 195.5) + dip to HCR
+  full frame; B = hard cuts CRV 236 / CGF 19.5 / WED 121.8. No repeats: conveyor C CGF 11.4 @0.46, RAD 596 (entrance);
+  title plate = still c01a/harrods_night.jpg. Backups: cases/lm_intro.mjs.bak_v4, devices/lm_v2.mjs.bak_v4float. Check 0 errors.
