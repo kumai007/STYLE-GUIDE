@@ -20,6 +20,7 @@
 //      dpos='tr'|'tl'|'br'|'bl', tag='SUBJECT', g}  freeze of a raw (contain over its blurred fill), eased punch-in toward the box
 //      (origin clamped so the picture always fills the frame), corner brackets lock on (+ tag), VCR data readout, faint scan lines
 //      and one slow scan sweep (not VHS static). box in stage px of the unzoomed contain picture.
+//      tagAt='b' puts the tag under the box (box near the frame top).
 //  DocStack {docs:[{img,iw,ih,bands:[[x,y,w,h]],src,date,at}], W=1380, dx=780, dy=-36, dz=-950}  kids = backdrop. Real article
 //      crops as paper cards stacked in depth; the camera flies from one card to the next (arrives at doc.at, move 42 f), passed
 //      cards fade, far cards dim + blur; amber marker draws over each card's bands (12 f after arrival, 26 f apart).
@@ -176,7 +177,7 @@ export const CCTVAnalyse = {
       + `<img class="${AF}" src="${st}" alt="" style="object-fit:contain;filter:${gf(p.g)}">`
       + `<div data-box style="position:absolute;left:${bx}px;top:${by}px;width:${bw}px;height:${bh}px;opacity:0">${[0, 1, 2, 3].map(corner).join('')}`
       + `<i data-xh style="position:absolute;left:50%;top:50%;width:14px;height:14px;margin:-7px 0 0 -7px;border:2px solid rgba(236,232,223,.7);border-radius:50%"></i>`
-      + `<b data-tag style="position:absolute;left:0;bottom:100%;margin-bottom:12px;font:400 26px/1 ${VCR};letter-spacing:.1em;color:${C.tx};background:rgba(150,26,22,.85);padding:5px 10px 4px;white-space:nowrap;transform-origin:0 100%">${ctx.esc(String(p.tag ?? 'SUBJECT').toUpperCase())}</b></div></div>`
+      + `<b data-tag style="position:absolute;left:0;${p.tagAt === 'b' ? 'top:100%;margin-top:12px' : 'bottom:100%;margin-bottom:12px'};font:400 26px/1 ${VCR};letter-spacing:.1em;color:${C.tx};background:rgba(150,26,22,.85);padding:5px 10px 4px;white-space:nowrap;transform-origin:0 ${p.tagAt === 'b' ? '0' : '100%'}">${ctx.esc(String(p.tag ?? 'SUBJECT').toUpperCase())}</b></div></div>`
       + `<div class="${AF}" style="pointer-events:none;opacity:.5;background:repeating-linear-gradient(0deg,rgba(0,0,0,.22) 0 1px,rgba(0,0,0,0) 1px 4px)"></div>`
       + `<div data-sw style="position:absolute;left:0;top:0;width:1920px;height:180px;pointer-events:none;background:linear-gradient(180deg,rgba(220,235,255,0),rgba(220,235,255,.07) 80%,rgba(240,248,255,.16) 98%,rgba(220,235,255,0));opacity:0"></div>`
       + `<div style="position:absolute;${dpos};display:flex;flex-direction:column;gap:12px;font:400 32px/1 ${VCR};letter-spacing:.06em;color:${C.tx};${SH}">${data}</div></div>`

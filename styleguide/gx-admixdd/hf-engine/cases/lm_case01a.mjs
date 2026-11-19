@@ -40,7 +40,7 @@ const BRUSH = [1.54];
 const ARTS = [[43.80, 70, true], [73.54, 50, true]]; // v5: S36 article -> Parallax photo
 // v4 click SFX at each text fade-in (part s): places, dates, cards (TYPED key stream removed: typing only on title screens)
 const CLICKS = [6.24, 28.2 + 44 / 60, 32.62 + 10 / 60, 50.0, 57.94 + 8 / 60, 66.26, 77.62, 90.98, 103.3, 106.40, 109.9, 116.5, 120.5, 124.81,
-  138.98 + 84 / 60, 163.06 + 30 / 60, 163.06 + 143 / 60, 163.06 + 202 / 60, 168.3, 172.3, 178.42 + 84 / 60]; // v5: S30/S39 data pop, S35 pins
+  138.98 + 84 / 60, 163.06 + 30 / 60, 163.06 + 143 / 60, 163.06 + 192 / 60, 168.3, 172.3, 178.42 + 84 / 60]; // v5: S30/S39 data pop, S35 pins
 const WHOOSH = [19.56 + 0.33 - 0.469, 130.87 + 0.5 + 0.33 - 0.469, 138.98 + 46 / 60 - 0.469, 158.50 + (150 - 21) / 60 - 0.469, 163.06 + 30 / 60 - 0.469, 178.42 + 46 / 60 - 0.469];
 const stS = (f) => {
   const e = spawnSync('ffmpeg', ['-hide_banner', '-nostats', '-i', path.join(MED, f), '-af', 'ebur128', '-f', 'null', '-'], { encoding: 'utf8', maxBuffer: 1 << 28 }).stderr;
@@ -148,7 +148,7 @@ const STAMP = { HCR: { x: 243, y: 1037, w: 484, h: 24, rect: [240, 0, 1440, 1095
 const MAP = { z12: 'c01a/map_z12.jpg', z14: 'c01a/map_z14.jpg', off: [-5376, -3072, 4] };
 const TL = (a, b, c) => [{ date: '11 AUG 2010', label: 'HOME FROM THE US', at: a }, { date: '14 AUG', label: b ? 'SATURDAY - A WET AFTERNOON' : 'HOLLAND PARK', at: b ?? 9999 }, { date: '15 AUG', label: 'HANS CRESCENT', at: c ?? 9999 }];
 const DOCS = () => [{ ...ART.cctv, at: 10 }, { ...ART.profile, at: 150 }];
-const CCTV = { HPK: { CAM: 'HOLLAND PARK', DATE: '14 AUG 2010', TIME: '14:59' }, HCR: { CAM: 'HANS CRESCENT', DATE: '15 AUG 2010', TIME: '14:27:28' } };
+const CCTV = { HPK: { CAM: 'HOLLAND PARK', DATE: '14 AUG 2010', TIME: '14:59' }, HCR: { CAM: 'HANS CRESCENT', DATE: '15 AUG 2010', TIME: '14:27:26' } };
 const cctvData = (k) => Object.entries(CCTV[k]);
 
 // shot table: [start, end, name, (i, L = len f, A = part s -> local f) => nodes]
@@ -195,12 +195,12 @@ const T = [
     ...MAP,
     keys: [[0, 1800, 1220, 0.9, 18], [60, 1700, 1180, 1.25, 10], [284, 1830, 1240, 1.4, 8]],
     pins: [{ x: 1439.9, y: 1047.3, label: 'HOLLAND PARK', time: '14 AUG - 14:59', at: 24 }, { x: 1950.2, y: 1212.0, label: 'HANS CRESCENT', time: '15 AUG - 14:27', at: 137 },
-      { x: 2158, y: 1388, label: 'PIMLICO', time: 'ALDERNEY ST - HIS FLAT', at: 196 }],
+      { x: 2158, y: 1388, label: 'PIMLICO', time: 'ALDERNEY ST - HIS FLAT', at: 186 }],
   })), n('Credit', { text: 'MAP: SENTINEL-2 CLOUDLESS BY EOX (CC BY 4.0)', place: 'br', hold: 200 })]],
   [167.80, 172.00, 'S36 brompton road', (i, L, A) => par(i, 'brompton_road_knightsbridge', { bri: 0.66, over: [place(A(168.3), 'BROMPTON ROAD', 'KNIGHTSBRIDGE')] })], // v5: was Article3D
   [172.00, 175.20, 'S37 hans crescent', (i, L, A) => photo(i, 'hans_crescent_geograph', { bri: 0.6, over: [td(A(172.3), '15 AUGUST, 14:27')] })],
   [175.20, 178.42, 'S38 hans crescent sign', (i) => par(i, 'hans_crescent_sign', { bri: 0.62 })],
-  [178.42, 182.10, 'S39 HCR analyse', (i) => [n('CCTVAnalyse', { src: 'HCR', n: 0, box: [1040, 40, 240, 300], o: [1160, 60], zoom: 1.35, data: cctvData('HCR'), tag: 'GARETH WILLIAMS', dpos: 'tl', g: { sat: 0.55, bri: 0.85, con: 1.1 } }), n('Grade', { vig: 0.55, grain: 0.07 }), met('br')]],
+  [178.42, 182.10, 'S39 HCR analyse', (i) => [n('CCTVAnalyse', { src: 'HCR', n: 70, box: [650, 10, 240, 370], o: [770, 150], zoom: 1.4, data: cctvData('HCR'), tag: 'GARETH WILLIAMS', tagAt: 'b', dpos: 'tl', g: { sat: 0.55, bri: 0.85, con: 1.1 } }), n('Grade', { vig: 0.55, grain: 0.07 }), met('br')]],
   [182.10, 185.85, 'S40 HCR raw', (i) => live(i, 'HCR', 0, 1, { bri: 0.75 }, [met('tr')])],
 ];
 

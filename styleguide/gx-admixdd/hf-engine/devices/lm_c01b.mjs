@@ -14,6 +14,7 @@
 //      soft drop shadow, focus pull, eased 3-D camera (rotateX 9->2, rotateY -7->-2, scale .94->1.05), textured marker bands L->R 44 f.
 //  QuoteC {lines:[..], attr, at=0}  premium quote: words resolve one by one (blur -> sharp, rise), warm lit Source Serif 4 type,
 //      faint red opening mark, attribution typed. Parallax drift opposite to the backdrop.
+import { Article3D } from './lm_pro.mjs';
 const AF = 'af';
 const C = { tx: '#E8E4DC', dim: '#9A968E', red: '#9E1F1C', amb: '#E3A21A' };
 const MONO = "'IBM Plex Mono',monospace", OSW = "'Oswald',sans-serif", SERIF = "'Source Serif 4',serif";
@@ -121,4 +122,22 @@ export const QuoteC = {
     var out=c((f-(S.len-30))/30); el.style.opacity=(1-out).toFixed(4);`),
 };
 
-export default [Cam, Img, Win, Lbl, TCard, Tag, PageC, QuoteC];
+// Article3H {same props as lm_pro Article3D}  v5b (lead 2026-11-19): Article3D marks max 2 bands; this marks up to 3 (whole key
+//      sentence). Renders Article3D for bands 0-1, then splices band 2's marker svg (built by a 2nd Article3D call with the same
+//      scale, its filter id renamed to the 1st call's) into the page. Animation = Article3D's own render (all svg[data-f0]).
+export const Article3H = {
+  name: 'Article3H',
+  html: (p, ctx, node) => {
+    const bs = p.bands || [], h = Article3D.html({ ...p, bands: bs.slice(0, 2) }, ctx, node);
+    if (bs.length < 3) return h;
+    const id0 = h.match(/url\(#(lp\d+)R\)/)?.[1];
+    const big = bs[0][2] >= bs[1][2] ? bs[0] : bs[1]; // keep the widest band in the 2nd call so both calls get the same scale
+    const h2 = Article3D.html({ ...p, bands: [bs[2], big] }, ctx, node), id2 = h2.match(/url\(#(lp\d+)R\)/)?.[1];
+    const m = h2.match(/<svg data-f0=[\s\S]*?<\/svg>/);
+    if (!m || !id0 || !id2) return h;
+    const band = m[0].split(`#${id2}`).join(`#${id0}`);
+    const at = h.indexOf('<img data-dof');
+    return h.slice(0, at) + band + h.slice(at);
+  },
+};
+export default [Cam, Img, Win, Lbl, TCard, Tag, PageC, QuoteC, Article3H];

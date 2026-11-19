@@ -72,3 +72,17 @@ STEP 4: `node build.mjs lm_case01a` exit 0, check 0 errors, snapshot sheet -> pr
 - Stock 188.7 s (61 %) -> 66.9 s (22 %). build exit 0, check 0 errors. Sheet productions/last-moments/edit/qa/lm_case01b_v5_sheet.jpg (38 changed shots).
 - Open: B22 highlight covers 2 of 3 sentence lines (c01b_articles.py takes lines[:2]); B08 + B11 same Alderney photo look alike;
   Timeline used 6x (owner may want fewer); SFX mix not measured; not previewed in motion.
+
+## Part A v5 DONE (2026-11-19, agent v5-A2)
+- Photos: Commons full-size downloads = HTTP 429 (upload host); standard thumb widths work (iiurlwidth 1920/1280, script
+  scratch copy of commons_get with thumburl). Got gchq_aerial (PD), cheltenham_promenade, harrods_brompton_road, holland_park_station,
+  alderney_street (unused) -> assets/photos_v5 + hardlinks media/last-moments/c01a; MEDIA_LOG + PH credits added.
+- cases/lm_case01a.mjs (backup cases/lm_case01a.v4bak.mjs): plan executed. Parallax S02 S07 S10 S13 S16 S21 S24 S32 S36 S38; S12 bg = blurred
+  gchq_aerial; S22 photo cheltenham; Timeline S23 (bg holland_park_station) + S25; CCTVAnalyse S30 (HPK n104, box ok on frame) +
+  S39 (HCR n70 not n0: man visible; box [650,10,240,370], tagAt 'b', TIME 14:27:26 = burned stamp); Counter S33 + tick_soft;
+  DocStack S34 + paper/marker; RouteMap S35 (Pimlico pin at 186, not 220: craft floor). Stock left S14 S18 S19 S20 = 22.31 s = 12.0 %.
+- lm_mg.mjs change (API kept): CCTVAnalyse new optional `tagAt:'b'` = tag under the box (box near frame top). Default unchanged.
+- build exit 0; check ok, 0 errors, 9 warnings (8 lint duplicate-media, 1 craft type floor 28 px on article source line), 4 info.
+- QA: productions/last-moments/edit/qa/lm_case01a_v5_sheet.jpg (shot mids) + lm_case01a_v5_mg.jpg (MG frames). All MGs render.
+- Open: Timeline sub-labels small (~18 px); S30 data readout tr sits over a bright area (readable); cheltenham_promenade has
+  distant pedestrians (faces ~15 px, no MOS); audio not listened (SFX placed by formula).

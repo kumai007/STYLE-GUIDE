@@ -117,12 +117,13 @@ const par = (i, file, o = {}) => [
 const TLN = [['16 AUG 2010', 'BELIEVED DEAD'], ['23 AUG 2010', 'FOUND IN HIS FLAT'], ['6 SEP 2010', 'POLICE APPEAL'], ['2 MAY 2012', 'INQUEST VERDICT'],
   ['NOV 2013', 'MET REVIEW'], ['OCT 2015', 'KGB CLAIM'], ['NOV 2023', 'FORENSIC REPORT']];
 // timeline grows: nodes 0..k-1 already lit, node k lights at local frame at (its VO word)
-const tline = (i, k, at, c, bgFile) => { EV.click.push(c + at / 60); EV.whoosh.push(c + (at - 36) / 60 - 0.25);
-  return [n('Timeline', { nodes: TLN.slice(0, k + 1).map(([date, label], j) => ({ date, label, at: j < k ? -120 : at })) }, bgP(i, bgFile, 0.42))]; };
+// v5b (lead): Timeline at most 3x; pre = {node: frame} lights earlier nodes inside this shot (camera dollies node to node)
+const tline = (i, k, at, c, bgFile, pre = {}) => { EV.click.push(c + at / 60, ...Object.values(pre).map((f) => c + f / 60)); EV.whoosh.push(c + (at - 36) / 60 - 0.25);
+  return [n('Timeline', { nodes: TLN.slice(0, k + 1).map(([date, label], j) => ({ date, label, at: j === k ? at : pre[j] ?? -120 })) }, bgP(i, bgFile, 0.42))]; };
 const counter = (i, c, o, bgFile) => { EV.tick.push(...counterTicks(c + (o.at ?? 10) / 60, o.from ?? 0, o.to, o.dur ?? 80, 0.12)); EV.click.push(c + ((o.at ?? 10) + (o.dur ?? 80)) / 60 + 0.1);
   return [n('Counter', o, bgP(i, bgFile, 0.42))]; };
 const art5 = (k, c, f0) => { const a = ART[k]; EV.art.push([c, f0, a.bands.length]);
-  return [n('Article3D', { img: a.img, iw: a.iw, ih: a.ih, src: a.src, date: a.date, bands: a.bands.map((b, j) => [...b, f0 + 28 * j]) })]; };
+  return [n('Article3H', { img: a.img, iw: a.iw, ih: a.ih, src: a.src, date: a.date, bands: a.bands.map((b, j) => [...b, f0 + 28 * j]) })]; };
 const INQ = { img: 'pages/c01b_inquest_crop.jpg', iw: 1250, ih: 730, bands: [[99, 388, 968, 52], [87, 448, 314, 52]], src: 'RTE NEWS', date: '2 MAY 2012' };
 
 // shot table: [start, end, name, (i, L = len f, A = part s -> local f) => nodes]. Stock use count per file <= 2 (different trim + zoom).
@@ -141,14 +142,14 @@ const T = [
   [36.00, 41.00, 'B08 alderney st', (i, L, A) => par(i, 'geo_alderney_st', { over: [place(L, A(39.4), '36 ALDERNEY STREET', 36, { sub: 'PIMLICO' })] })],
   [41.00, 46.60, 'B09 article 2010', (i) => art('c01b2', 41, 50, foot(i, 'nb_holdall_bag', 10))],
   [46.60, 50.10, 'B10 phone sim', (i) => foot(i, 'nb_phone_sim', 9, { s: [1.14, 1.2] })],
-  [50.10, 54.30, 'B11 alderney photo', (i) => photo(i, 'geo_alderney_st', { pos: '30% 60%', s: [1.16, 1.24] })],
+  [50.10, 54.30, 'B11 pimlico windows', (i) => photo(i, 'geo_pimlico_corner', { pos: '30% 32%', s: [1.22, 1.3] })],
   [54.30, 60.10, 'B12 padlock gate', (i, L, A) => foot(i, 'pad_gate', 0, { inCam: [n('RedCircle', { cx: 972, cy: 565, rx: 120, ry: 105, at: A(57.9) })] })],
   [60.10, 63.80, 'B13 card the key', (i) => tcard(bgP(i, 'geo_pimlico_corner', 0.45), 'INSIDE THE BAG', ['THE KEY TO THE PADLOCK'], 60.1, 63.8)],
   [63.80, 67.70, 'B14 forensic lab', (i) => foot(i, 'nb_forensic_lab', 6, { s: [1.2, 1.28], bri: 0.72, con: 1.2, vig: 0.8 })],
   [67.70, 73.40, 'B15 coroners engraving', (i) => par(i, 'geo_coroners_engraving')],
   [73.40, 78.40, 'B16 padlock red', (i, L, A) => foot(i, 'pad_red', 0, { pos: '50% 59%', inCam: [n('RedCircle', { cx: 625, cy: 668, rx: 182, ry: 192, at: A(74.3) })] })],
   [78.40, 85.80, 'B17 card forensics', (i) => tcard(bgP(i, 'geo_coroners_court', 0.42), 'POST MORTEM / FORENSICS', ['NO FINGERPRINTS', 'NO GLOVES'], 78.4, 85.8)],
-  [85.80, 90.80, 'B19 timeline appeal', (i) => tline(i, 2, 47, 85.8, 'brompton_road_knightsbridge')],
+  [85.80, 90.80, 'B19 date appeal', (i, L, A) => photo(i, 'brompton_road_knightsbridge', { s: [1.08, 1.16], over: [dateT(L, A(86.58), '6 SEPTEMBER 2010', 85.8)] })],
   [90.80, 94.20, 'B20 HPK raw', () => raw('HPK', 0, 0.85, 'tl')],
   [94.20, 97.70, 'B21 HCR raw', () => raw('HCR', 0, 0.7, 'tr')],
   [97.70, 104.90, 'B22 article appeal', () => art5('c01b5', 97.7, 66)],
@@ -185,19 +186,19 @@ const T = [
   [209.40, 213.60, 'B47 counter sticks', (i) => counter(i, 209.4, { to: 9, unit: 'MEMORY STICKS', label: 'AT HIS MI6 OFFICE', at: 14, dur: 70 }, 'sis_building_vauxhall')],
   [213.60, 217.40, 'B48 SIS b', (i) => photo(i, 'sis_building_vauxhall_b')],
   [217.40, 220.60, 'B49 usb close', (i) => foot(i, 'nb_usb_sticks', 9, { s: [1.2, 1.28] })],
-  [220.60, 224.60, 'B50 timeline met', (i) => tline(i, 4, 36, 220.6, 'geo_sis_bridge')],
+  [220.60, 224.60, 'B50 date met', (i, L, A) => par(i, 'hans_crescent_geograph', { over: [dateT(L, A(220.98), 'NOVEMBER 2013', 220.6)] })],
   [224.60, 228.60, 'B51 article 2013', (i) => art('c01b3', 224.6, 40, foot(i, 'nb_cyclist_hills', 0))],
   [228.60, 233.60, 'B52 SIS hewitt', (i, L, A) => photo(i, 'sis_building_vauxhall', { pos: '60% 50%', s: [1.14, 1.2], over: [place(L, A(229.0), 'MARTIN HEWITT', 228.6, { sub: 'DEPUTY ASSISTANT COMMISSIONER, MET' })] })],
   [233.60, 237.60, 'B53 card accident', (i) => tcard(bgP(i, 'geo_alderney_st', 0.42), 'THE MET, 2013', ['LOCKED HIMSELF IN', 'BY ACCIDENT'], 233.6, 237.6)],
   [237.60, 241.60, 'B54 valley church', (i) => photo(i, 'valley_anglesey_church')],
   [241.60, 245.60, 'B55 thames', (i) => foot(i, 'nb_thames_night', 9, { s: [1.2, 1.28] })],
-  [245.60, 249.60, 'B56 timeline 2015', (i) => tline(i, 5, 173, 245.6, 'sis_building_vauxhall_b')],
+  [245.60, 249.60, 'B56 date 2015', (i, L, A) => photo(i, 'sis_building_vauxhall_b', { pos: '30% 50%', s: [1.14, 1.22], over: [dateT(L, A(247.94), 'OCTOBER 2015', 245.6)] })],
   [249.60, 254.60, 'B57 article karpichkov', () => art5('c01b7', 249.6, 40)],
   [254.60, 258.00, 'B58 moscow karpichkov', (i, L, A) => foot(i, 'nb_moscow', 8, { s: [1.24, 1.32], lbl: 'tl', over: [place(L, A(254.8), 'BORIS KARPICHKOV', 254.6, { sub: 'FORMER KGB OFFICER' })] })],
   [258.00, 261.60, 'B59 code screen', (i) => foot(i, 'nb_code_screen', 9, { s: [1.2, 1.28] })],
   [261.60, 265.40, 'B60 documents', (i) => foot(i, 'nb_documents_desk', 6, { s: [1.16, 1.22], bri: 0.8 })],
   [265.40, 270.40, 'B61 london rain a', (i) => foot(i, 'london_rain_street_a', 2, { s: [1.18, 1.26] })],
-  [270.40, 275.00, 'B62 timeline 2023', (i) => tline(i, 6, 179, 270.4, 'geo_pimlico_corner')],
+  [270.40, 275.00, 'B62 timeline 2023', (i) => tline(i, 6, 179, 270.4, 'geo_pimlico_corner', { 5: 70 })],
   [275.00, 282.20, 'B64 article 2024', () => art5('c01b4', 275.0, 150)],
   [282.20, 287.00, 'B65 valley station', (i) => par(i, 'valley_anglesey_station', { cp: 'br' })],
   [287.00, 291.60, 'B66 valley church', (i, L, A) => photo(i, 'valley_anglesey_church', { pos: '40% 55%', s: [1.14, 1.22], cp: 'br', over: [dateT(L, A(287.1), '26 SEPTEMBER 2010', 287), place(L, A(288.4), 'VALLEY, ANGLESEY', 287)] })],
@@ -216,7 +217,7 @@ const SHOTS = T.map(([c, to, name, fn], i) => {
 // SFX list: device events -> part-A families; no two SFX starts within 0.3 s (typing keys exempt, they are a stream)
 const FX = [
   ...EV.brush.map((t) => sfx('lm_brush', t)), ...EV.click.map((t) => sfx('lm_click', t - 0.15)),
-  ...EV.art.flatMap(([c, f0, nb]) => [sfx('lm_paper', c), sfx('lm_marker', c + f0 / 60 - 0.03), ...(nb > 1 ? [sfx('lm_marker', c + (f0 + (c === 183.6 ? 44 : 28)) / 60 - 0.03)] : [])]),
+  ...EV.art.flatMap(([c, f0, nb]) => [sfx('lm_paper', c), sfx('lm_marker', c + f0 / 60 - 0.03), ...(nb > 1 ? [sfx('lm_marker', c + (f0 + (c === 183.6 ? 44 : 28)) / 60 - 0.03)] : []), ...(nb > 2 ? [sfx('lm_marker', c + (f0 + 56) / 60 - 0.03)] : [])]),
   ...EV.whoosh.map((t) => sfx('lm_whoosh', t)), ...EV.marker.map((t) => sfx('lm_marker', t - 0.03)), ...EV.tick.map((t) => sfx('tick_soft', t, -8)),
   sfx('lm_whoosh', 132.70 - 0.47), sfx('riser_dark', 178.25), sfx('lm_boom', 184.16 - 0.17),
 ].sort((a, b) => a.at - b.at).filter(((last) => (e) => { if (e.src === 'tick_soft') return true; const ok = e.at - last >= 0.3; if (ok) last = e.at; return ok; })(-9));
