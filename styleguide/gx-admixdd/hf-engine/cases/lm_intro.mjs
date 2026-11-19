@@ -128,7 +128,7 @@ export default {
     { name: 'L06 conveyor C', c: 32.855, to: 46.535, k: 'hard', n: 0, el: () => split() },
     // "today 46.56" -> 21 cases (VO ends ~50.2); dip; ONE title screen (owner 2026-11-19: no zoom onto case 01, no second card)
     { name: 'L07 ledger', c: 46.535, to: T0, k: 'hard', n: 0, el: () => [n('Descent'), n('Dip', { outN: 16 })] },
-    { name: 'L08 CASE 1 title', c: T0, to: END, k: 'hard', n: 0, el: () => [n('TitleType', { ...TY, plate: { img: 'c01a/harrods_night.jpg' } }), n('Dip', { inN: 14 })] },
+    { name: 'L08 CASE 1 title', c: T0, to: END, k: 'hard', n: 0, el: () => [n('TitleType', { ...TY, plate: { img: 'c01a/thames_night.jpg' } }), n('Credit', { text: 'PHOTO: CHRISTINE MATTHEWS / CC BY-SA 2.0', place: 'tr' }), n('Dip', { inN: 14 })] /* v7: own plate (harrods_night = 01a S32) */ },
   ],
   audio: mixScale([
     // warning static bed (film/static texture only here): I = music -2 (SFX v2; was VO +3), drops 9 dB as the glitch hits (2.43), tails to 2.87

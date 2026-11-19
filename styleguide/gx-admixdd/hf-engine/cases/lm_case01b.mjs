@@ -53,6 +53,27 @@ const PH = {
   valley_anglesey_church: 'PETER WOOD / CC BY-SA 2.0', westminster_coroners_court: 'THE WUB / CC BY-SA 4.0',
   valley_anglesey_station: 'NEIL THEASBY / CC BY-SA 2.0', geo_alderney_st: 'DAVID HOWARD / CC BY-SA 2.0', geo_pimlico_corner: 'IAN CAPPER / CC BY-SA 2.0',
   geo_coroners_court: 'THOMAS NUGENT / CC BY-SA 2.0', geo_coroners_engraving: 'CHRISTINE MATTHEWS / CC BY-SA 2.0', geo_sis_bridge: 'N CHADWICK / CC BY-SA 2.0',
+  // v7 (no repeated photo): Geograph CC BY-SA 2.0 (assets/MEDIA_LOG.md)
+  alderney_street: 'CHRIS WHIPPET / CC BY-SA 2.0', nsy_broadway: 'LEWIS CLARKE / CC BY-SA 2.0', harrods_lit_night: 'RUTH SHARVILLE / CC BY-SA 2.0',
+  mi6_hq_vauxhall: 'MARATHON / CC BY-SA 2.0', pimlico_gardens: 'PAUL FARMER / CC BY-SA 2.0', coroners_court_kg: 'KEVIN GORDON / CC BY-SA 2.0',
+  nsy_westminster: 'LEWIS CLARKE / CC BY-SA 2.0', nsy_sw1: 'PHILLIP PERRY / CC BY-SA 2.0', pimlico_station: 'N CHADWICK / CC BY-SA 2.0',
+  hans_crescent_mm: 'MALC MCDONALD / CC BY-SA 2.0', king_charles_street: 'COLIN SMITH / CC BY-SA 2.0', horseferry_courthouse: 'SHAZZ / CC BY-SA 2.0',
+  vauxhall_bridge_nc: 'N CHADWICK / CC BY-SA 2.0', coroners_door: 'CHRISTINE MATTHEWS / CC BY-SA 2.0', horseferry_junction: 'BASHER EYRE / CC BY-SA 2.0',
+  coroners_door_b: 'CHRISTINE MATTHEWS / CC BY-SA 2.0', coroners_sign: 'CHRISTINE MATTHEWS / CC BY-SA 2.0', vauxhall_tower: 'N CHADWICK / CC BY-SA 2.0',
+  mi6_river: 'PAM FRAY / CC BY-SA 2.0', nsy_sign_night: 'PAUL FARMER / CC BY-SA 2.0', nsy_embankment: 'PAUL FARMER / CC BY-SA 2.0',
+  pimlico_lupus_st: 'PAUL FARMER / CC BY-SA 2.0', traeth_cymyran: 'JEFF BUCK / CC BY-SA 2.0', city_tower_dusk: 'MARATHON / CC BY-SA 2.0',
+  city_night: 'ROB FARROW / CC BY-SA 2.0', nsy_curtis_green: 'PETER MCDERMOTT / CC BY-SA 2.0', valley_tidal: 'GORDON HATTON / CC BY-SA 2.0',
+  valley_shingle: 'GORDON HATTON / CC BY-SA 2.0', valley_hotel: 'JAMES ALLAN / CC BY-SA 2.0', holyhead_mountain: 'MAT FASCIONE / CC BY-SA 2.0',
+  city_belfast_night: 'DS PUGH / CC BY-SA 2.0', 'c01a/map_z14.jpg': 'SENTINEL-2 CLOUDLESS BY EOX (CC BY 4.0)',
+};
+// v7: credit on blurred card / counter / timeline backdrops (new files only); face mosaic boxes (1920x1080 cover px, default pos)
+const NEWC = new Set(['pimlico_gardens', 'coroners_court_kg', 'nsy_sw1', 'horseferry_courthouse', 'vauxhall_bridge_nc', 'horseferry_junction', 'coroners_door_b',
+  'vauxhall_tower', 'pimlico_lupus_st', 'nsy_curtis_green', 'city_belfast_night', 'c01a/map_z14.jpg']);
+const cr = (f) => (f && NEWC.has(f) ? [n('Credit', { text: `${f.includes('map') ? 'MAP' : 'PHOTO'}: ${PH[f]}`, place: 'tr' })] : []);
+const MOS = {
+  nsy_broadway: [[0, 745, 85, 100], [275, 740, 90, 95], [930, 790, 90, 90], [1690, 805, 105, 85], [1805, 795, 115, 95]],
+  nsy_embankment: [[56, 757, 122, 112], [131, 739, 337, 94], [1725, 776, 195, 169], [581, 673, 47, 47]],
+  hans_crescent_mm: [[165, 855, 90, 75], [324, 810, 210, 75]],
 };
 const DRIFT = [
   { ry: [-1.2, 1.2], tx: [-18, 18] }, { ry: [1.0, -1.0], ty: [12, -12] }, { rx: [1.0, -0.6], tx: [16, -16] },
@@ -73,12 +94,12 @@ const foot = (i, name, t, o = {}) => {
   ];
 };
 const photo = (i, file, o = {}) => [
-  n('Grade', { sat: 0.3, bri: o.bri ?? 0.6, con: 1.06, vig: 0.72 }, cam(i, o.s ?? [1.05, 1.13], o.css, n('Img', { src: `photos/${file}.jpg`, pos: o.pos }))),
+  n('Grade', { sat: 0.3, bri: o.bri ?? 0.6, con: 1.06, vig: 0.72 }, cam(i, o.s ?? [1.05, 1.13], o.css, n('Img', { src: `photos/${file}.jpg`, pos: o.pos }), ...(MOS[file] ? [n('MosImg', { src: `photos/${file}.jpg`, pos: o.pos, boxes: MOS[file] })] : []))),
   n('Credit', { text: `PHOTO: ${PH[file]}`, place: o.cp || 'tr' }), ...(o.over || []),
 ];
 // blurred backdrop for title cards / quote / page
 const bgV = (i, name, t, bri = 0.8) => n('Grade', { sat: 0.55, bri: bri * (SB[name] ?? 1), con: 1.0 }, cam(i, [1.1, 1.18], 'filter:blur(10px)', vid(name, t)));
-const bgP = (i, file, bri = 0.5, pos) => n('Grade', { sat: 0.3, bri, con: 1.05 }, cam(i, [1.1, 1.18], 'filter:blur(12px)', n('Img', { src: `photos/${file}.jpg`, pos })));
+const bgP = (i, file, bri = 0.5, pos) => n('Grade', { sat: 0.3, bri, con: 1.05 }, cam(i, [1.1, 1.18], 'filter:blur(12px)', n('Img', { src: file.includes('/') ? file : `photos/${file}.jpg`, pos })));
 // HCR last frame (640x480): contain over its own blurred fill
 const hcrStill = (bri, s, extra = []) => [
   n('Grade', { sat: 0.55, bri, con: 1.1 },
@@ -95,10 +116,10 @@ const rj = (f) => { try { return JSON.parse(fs.readFileSync(path.join(MED, f), '
 const NM = rj('c01b_new_media.json'), ART = rj('pages/c01b_articles.json');
 for (const [k, v] of Object.entries(NM)) if (v.type === 'video' && v.yavg) SB[k] = +Math.max(0.42, Math.min(2.4, 62 / v.yavg)).toFixed(2);
 const EV = { brush: [], click: [], art: [], whoosh: [], tick: [], marker: [] }; // SFX events (part s), filled while the shot table is written
-const tcard = (bg, kick, lines, c, to) => {
+const tcard = (bg, kick, lines, c, to, f) => {
   const tot = [kick, ...lines].reduce((a, t) => a + t.length + 4, 0), cps = Math.max(22, Math.ceil(tot / (to - c - 1.5)));
   EV.click.push(c + 8 / 60); // v4: fade mode + click (typewriter only on title screens)
-  return [bg, n('TitleType', { mode: 'fade', kick, lines, cps })];
+  return [bg, n('TitleType', { mode: 'fade', kick, lines, cps }), ...cr(f)];
 };
 // v4 plain text on the footage (owner 2026-11-19): place / name = PlaceText, date = TextFade top-left; each with a click; ~3 s hold
 // v6 (owner 2026-11-19 "less lower thirds; write the place in the centre"): places + minor names centred (pos 'c'); the one corner
@@ -113,7 +134,7 @@ const art = (k, c, f0, fb) => { const a = ART[k]; if (!a) return fb;
 
 // ---- v5 (owner 2026-11-19: "too much stock", "more motion graphics"): lm_mg devices on real photos/pages, stock 61 % -> ~22 %
 const par = (i, file, o = {}) => [
-  n('Grade', { sat: 0.3, bri: o.bri ?? 0.62, con: 1.06, vig: 0.72 }, n('Parallax', { src: `photos/${file}.jpg`, pos: o.pos, s: o.s, ry: DRIFT[i % DRIFT.length].ry ? [-3, 3] : [3, -3] })),
+  n('Grade', { sat: 0.3, bri: o.bri ?? 0.62, con: 1.06, vig: 0.72 }, n('Parallax', { src: `photos/${file}.jpg`, pos: o.pos, s: o.s, mos: MOS[file], ry: DRIFT[i % DRIFT.length].ry ? [-3, 3] : [3, -3] })),
   n('Credit', { text: `PHOTO: ${PH[file]}`, place: o.cp || 'tr' }), ...(o.over || []),
 ];
 const TLN = [['16 AUG 2010', 'BELIEVED DEAD'], ['23 AUG 2010', 'FOUND IN HIS FLAT'], ['6 SEP 2010', 'POLICE APPEAL'], ['2 MAY 2012', 'INQUEST VERDICT'],
@@ -121,9 +142,9 @@ const TLN = [['16 AUG 2010', 'BELIEVED DEAD'], ['23 AUG 2010', 'FOUND IN HIS FLA
 // timeline grows: nodes 0..k-1 already lit, node k lights at local frame at (its VO word)
 // v5b (lead): Timeline at most 3x; pre = {node: frame} lights earlier nodes inside this shot (camera dollies node to node)
 const tline = (i, k, at, c, bgFile, pre = {}) => { EV.click.push(c + at / 60, ...Object.values(pre).map((f) => c + f / 60)); EV.whoosh.push(c + (at - 36) / 60 - 0.25);
-  return [n('Timeline', { nodes: TLN.slice(0, k + 1).map(([date, label], j) => ({ date, label, at: j === k ? at : pre[j] ?? -120 })) }, bgP(i, bgFile, 0.42))]; };
+  return [n('Timeline', { nodes: TLN.slice(0, k + 1).map(([date, label], j) => ({ date, label, at: j === k ? at : pre[j] ?? -120 })) }, bgP(i, bgFile, bgFile.includes('map') ? 1.1 : 0.42)), ...cr(bgFile)]; };
 const counter = (i, c, o, bgFile) => { EV.tick.push(...counterTicks(c + (o.at ?? 10) / 60, o.from ?? 0, o.to, o.dur ?? 80, 0.12)); EV.click.push(c + ((o.at ?? 10) + (o.dur ?? 80)) / 60 + 0.1);
-  return [n('Counter', o, bgP(i, bgFile, 0.42))]; };
+  return [n('Counter', o, bgP(i, bgFile, 0.42)), ...cr(bgFile)]; };
 const art5 = (k, c, f0) => { const a = ART[k]; EV.art.push([c, f0, a.bands.length]);
   return [n('Article3H', { img: a.img, iw: a.iw, ih: a.ih, src: a.src, date: a.date, bands: a.bands.map((b, j) => [...b, f0 + 28 * j]) })]; };
 const INQ = { img: 'pages/c01b_inquest_crop.jpg', iw: 1250, ih: 730, bands: [[99, 388, 968, 52], [87, 448, 314, 52]], src: 'RTE NEWS', date: '2 MAY 2012' };
@@ -131,35 +152,35 @@ const INQ = { img: 'pages/c01b_inquest_crop.jpg', iw: 1250, ih: 730, bands: [[99
 // shot table: [start, end, name, (i, L = len f, A = part s -> local f) => nodes]. Stock use count per file <= 2 (different trim + zoom).
 const T = [
   // p03 (0-132.70)
-  [0, 5.40, 'B00 harrods side', (i) => photo(i, 'hans_crescent_harrods_side')],
-  [5.40, 10.00, 'B01 brompton road', (i) => photo(i, 'c01b_brompton_mos', { s: [1.04, 1.14] })],
+  [0, 5.40, 'B00 harrods side', (i) => photo(i, 'nsy_broadway')],
+  [5.40, 10.00, 'B01 brompton road', (i) => photo(i, 'harrods_lit_night', { s: [1.04, 1.14] })],
   [10.00, 15.90, 'B02 sloane street', (i, L, A) => photo(i, 'sloane_street', { over: [place(L, A(11.2), 'SLOANE STREET', 10, { sub: 'KNIGHTSBRIDGE' })] })],
   [15.90, 20.40, 'B03 HCR last frame', (i) => hcrStill(0.72, [1.0, 1.06], [n('Credit', { text: MET })])],
   [20.40, 24.00, 'B04 route map', (i) => { EV.click.push(20.4 + 20 / 60, 20.4 + 150 / 60); return [n('Grade', { sat: 1, con: 1.05, bri: 1, vig: 0.55, grain: 0.07 }, n('RouteMap', { z12: 'c01a/map_z12.jpg', z14: 'c01a/map_z14.jpg', off: [-5376, -3072, 4],
     pins: [{ x: 1950.2, y: 1212.0, label: 'KNIGHTSBRIDGE', time: '15 AUG · LAST SEEN', at: 20 }, { x: 2165.8, y: 1387.9, label: 'PIMLICO', time: 'HIS FLAT', at: 150 }] })),
     n('Credit', { text: 'MAP: SENTINEL-2 CLOUDLESS BY EOX (CC BY 4.0)', place: 'br' })]; }],
   [24.00, 28.70, 'B05 counter week', (i) => counter(i, 24.0, { to: 7, unit: 'DAYS', label: 'NO ONE CHECKED ON HIM', at: 20, dur: 110 }, 'geo_pimlico_corner')],
-  [28.70, 31.90, 'B06 SIS', (i) => photo(i, 'sis_building_vauxhall')],
-  [31.90, 36.00, 'B07 timeline 23 aug', (i) => tline(i, 1, 38, 31.9, 'hans_crescent_geograph')],
+  [28.70, 31.90, 'B06 SIS', (i) => photo(i, 'mi6_hq_vauxhall')],
+  [31.90, 36.00, 'B07 timeline 23 aug', (i) => tline(i, 1, 38, 31.9, 'c01a/map_z14.jpg')],
   [36.00, 41.00, 'B08 alderney st', (i, L, A) => par(i, 'geo_alderney_st', { over: [place(L, A(39.4), '36 ALDERNEY STREET', 36, { sub: 'PIMLICO' })] })],
   [41.00, 46.60, 'B09 article 2010', (i) => art('c01b2', 41, 50, foot(i, 'nb_holdall_bag', 10))],
   [46.60, 50.10, 'B10 phone sim', (i) => foot(i, 'nb_phone_sim', 9, { s: [1.14, 1.2] })],
-  [50.10, 54.30, 'B11 pimlico windows', (i) => photo(i, 'geo_pimlico_corner', { pos: '30% 32%', s: [1.22, 1.3] })],
+  [50.10, 54.30, 'B11 pimlico windows', (i) => photo(i, 'alderney_street', { s: [1.06, 1.14] })],
   [54.30, 60.10, 'B12 padlock gate', (i, L, A) => foot(i, 'pad_gate', 0, { inCam: [n('RedCircle', { cx: 972, cy: 565, rx: 120, ry: 105, at: A(57.9) })] })],
-  [60.10, 63.80, 'B13 card the key', (i) => tcard(bgP(i, 'geo_pimlico_corner', 0.45), 'INSIDE THE BAG', ['THE KEY TO THE PADLOCK'], 60.1, 63.8)],
+  [60.10, 63.80, 'B13 card the key', (i) => tcard(bgP(i, 'pimlico_gardens', 0.45), 'INSIDE THE BAG', ['THE KEY TO THE PADLOCK'], 60.1, 63.8, 'pimlico_gardens')],
   [63.80, 67.70, 'B14 forensic lab', (i) => foot(i, 'nb_forensic_lab', 6, { s: [1.2, 1.28], bri: 0.72, con: 1.2, vig: 0.8 })],
   [67.70, 73.40, 'B15 coroners engraving', (i) => par(i, 'geo_coroners_engraving')],
   [73.40, 78.40, 'B16 padlock red', (i, L, A) => foot(i, 'pad_red', 0, { pos: '50% 59%', inCam: [n('RedCircle', { cx: 625, cy: 668, rx: 182, ry: 192, at: A(74.3) })] })],
-  [78.40, 85.80, 'B17 card forensics', (i) => tcard(bgP(i, 'geo_coroners_court', 0.42), 'POST MORTEM / FORENSICS', ['NO FINGERPRINTS', 'NO GLOVES'], 78.4, 85.8)],
-  [85.80, 90.80, 'B19 date appeal', (i, L, A) => photo(i, 'brompton_road_knightsbridge', { s: [1.08, 1.16], over: [dateT(L, A(86.58), '6 SEPTEMBER 2010', 85.8)] })],
+  [78.40, 85.80, 'B17 card forensics', (i) => tcard(bgP(i, 'coroners_court_kg', 0.42), 'POST MORTEM / FORENSICS', ['NO FINGERPRINTS', 'NO GLOVES'], 78.4, 85.8, 'coroners_court_kg')],
+  [85.80, 90.80, 'B19 date appeal', (i, L, A) => photo(i, 'nsy_westminster', { s: [1.08, 1.16], over: [dateT(L, A(86.58), '6 SEPTEMBER 2010', 85.8)] })],
   [90.80, 94.20, 'B20 HPK raw', () => raw('HPK', 0, 0.85, 'tl')],
   [94.20, 97.70, 'B21 HCR raw', () => raw('HCR', 0, 0.7, 'tr')],
   [97.70, 104.90, 'B22 article appeal', () => art5('c01b5', 97.7, 66)],
-  [104.90, 114.30, 'B24 pimlico sebire', (i, L, A) => par(i, 'geo_pimlico_corner', { over: [place(L, A(105.9), 'JACQUELINE SEBIRE', 104.9, { sub: 'DETECTIVE CHIEF INSPECTOR, MET', pos: 'bl' })] })],
-  [114.30, 118.50, 'B26 forensic lab', (i) => foot(i, 'nb_forensic_lab', 0, { s: [1.16, 1.22], bri: 0.85 })],
+  [104.90, 114.30, 'B24 pimlico sebire', (i, L, A) => par(i, 'pimlico_station', { over: [place(L, A(105.9), 'JACQUELINE SEBIRE', 104.9, { sub: 'DETECTIVE CHIEF INSPECTOR, MET', pos: 'bl' })] })],
+  [114.30, 118.50, 'B26 forensic lab', (i) => tcard(bgP(i, 'nsy_sw1', 0.42, '50% 40%'), 'FORENSICS', ['A TRACE OF DNA', 'ON HIS HAND'], 114.3, 118.5, 'nsy_sw1')],
   [118.50, 123.40, 'B27 code screen', (i) => foot(i, 'nb_code_screen', 3)],
   [123.40, 128.40, 'B28 holdall', (i) => foot(i, 'nb_holdall_bag', 2)],
-  [128.40, 132.70, 'B29 hans crescent', (i) => [...photo(i, 'hans_crescent_sign'), n('Dip', { outN: 16 })]],
+  [128.40, 132.70, 'B29 hans crescent', (i) => [...photo(i, 'hans_crescent_mm'), n('Dip', { outN: 16 })]],
   // replay (VO paused): StampRing on the burned-in HCR stamp (screen box 243,1029 484x40; picture rect 240..1680), ring outside the mono grade
   [132.70, 139.20, 'B30 REPLAY', () => [
     n('StampRing', { x: 476, y: 1037, w: 250, h: 24, rect: [240, 0, 1440, 1095], // v6: pill on the time only, inside the picture
@@ -172,46 +193,46 @@ const T = [
     data: [['CAM', 'CH 1'], ['DATE', '15 AUG 2010'], ['TIME', '14:27:28'], ['LOC', 'HANS CRESCENT']] }), n('Grade', { vig: 0.75 }), n('Credit', { text: MET, place: 'bl' })]; }],
   // p04 (142.40-)
   [142.20, 145.60, 'B31 coroners court', (i, L, A) => photo(i, 'westminster_coroners_court', { pos: '35% 50%', s: [1.14, 1.2], over: [place(L, A(142.6), "WESTMINSTER CORONER'S COURT", 142.2, { sub: 'INQUEST, 2012' })] })],
-  [145.60, 150.40, 'B32 court engraving', (i) => photo(i, 'geo_coroners_engraving', { s: [1.12, 1.2], pos: '50% 35%' })],
+  [145.60, 150.40, 'B32 court engraving', (i) => photo(i, 'king_charles_street', { s: [1.08, 1.16] })],
   [150.40, 155.60, 'B33 SIS bridge', (i) => par(i, 'geo_sis_bridge')],
-  [155.60, 160.40, 'B34 counter 400', (i) => counter(i, 155.6, { to: 400, label: 'ATTEMPTS · TWO EXPERTS', at: 30, dur: 90 }, 'westminster_coroners_court')],
-  [160.40, 164.80, 'B35 card two experts', (i) => tcard(bgP(i, 'sis_building_vauxhall_b', 0.42), 'AN IDENTICAL BAG', ['NEITHER GOT IN'], 160.4, 164.8)],
-  [164.80, 170.40, 'B36 court parallax', (i) => par(i, 'geo_coroners_court')],
+  [155.60, 160.40, 'B34 counter 400', (i) => counter(i, 155.6, { to: 400, label: 'ATTEMPTS · TWO EXPERTS', at: 30, dur: 90 }, 'horseferry_courthouse')],
+  [160.40, 164.80, 'B35 card two experts', (i) => tcard(bgP(i, 'vauxhall_bridge_nc', 0.42), 'AN IDENTICAL BAG', ['NEITHER GOT IN'], 160.4, 164.8, 'vauxhall_bridge_nc')],
+  [164.80, 170.40, 'B36 court parallax', (i) => par(i, 'coroners_door')],
   [170.40, 174.00, 'B37 empty hallway', (i) => foot(i, 'empty_hallway', 4)],
-  [174.00, 177.40, 'B38 counter minutes', (i) => counter(i, 174.0, { to: 3, unit: 'MIN', label: 'CO2: TWO OR THREE MINUTES', at: 96, dur: 60 }, 'westminster_coroners_court')],
-  [177.40, 180.40, 'B39 timeline verdict', (i) => tline(i, 3, 38, 177.4, 'geo_coroners_engraving')],
+  [174.00, 177.40, 'B38 counter minutes', (i) => counter(i, 174.0, { to: 3, unit: 'MIN', label: 'CO2: TWO OR THREE MINUTES', at: 96, dur: 60 }, 'horseferry_junction')],
+  [177.40, 180.40, 'B39 timeline verdict', (i) => tline(i, 3, 38, 177.4, 'coroners_door_b')],
   [180.40, 183.60, 'B40 court wilcox', (i, L, A) => photo(i, 'geo_coroners_court', { pos: '50% 40%', s: [1.12, 1.2], over: [place(L, A(180.6), 'DR FIONA WILCOX', 180.4, { sub: 'CORONER' })] })],
   [183.60, 189.80, 'B41 inquest page', () => { EV.art.push([183.6, 34, 2]); return [n('Article3D', { img: 'pages/c01b_inquest_crop.jpg', iw: 1250, ih: 730, src: 'RTE NEWS', date: '2 MAY 2012', bands: [[99, 388, 968, 52, 34], [87, 448, 314, 52, 78]] })]; }],
-  [189.80, 194.00, 'B42 padlock gate', (i) => foot(i, 'pad_gate', 7, { s: [1.16, 1.22] })],
+  [189.80, 194.00, 'B42 padlock gate', (i) => foot(i, 'nb_bathroom_dark', 3, { s: [1.1, 1.16] })],
   [194.00, 201.60, 'B43 article verdict', () => art5('c01b6', 194.0, 40)],
   [201.60, 205.40, 'B45 newspapers', (i) => foot(i, 'nb_newspapers', 5, { s: [1.16, 1.22] })],
-  [205.40, 209.40, 'B46 coroners court', (i) => photo(i, 'westminster_coroners_court', { pos: '70% 50%', s: [1.12, 1.2] })],
-  [209.40, 213.60, 'B47 counter sticks', (i) => counter(i, 209.4, { to: 9, unit: 'MEMORY STICKS', label: 'AT HIS MI6 OFFICE', at: 14, dur: 70 }, 'sis_building_vauxhall')],
-  [213.60, 217.40, 'B48 SIS b', (i) => photo(i, 'sis_building_vauxhall_b')],
+  [205.40, 209.40, 'B46 coroners court', (i) => photo(i, 'coroners_sign', { s: [1.08, 1.16] })],
+  [209.40, 213.60, 'B47 counter sticks', (i) => counter(i, 209.4, { to: 9, unit: 'MEMORY STICKS', label: 'AT HIS MI6 OFFICE', at: 14, dur: 70 }, 'vauxhall_tower')],
+  [213.60, 217.40, 'B48 SIS b', (i) => photo(i, 'mi6_river')],
   [217.40, 220.60, 'B49 usb close', (i) => foot(i, 'nb_usb_sticks', 9, { s: [1.2, 1.28] })],
-  [220.60, 224.60, 'B50 date met', (i, L, A) => par(i, 'hans_crescent_geograph', { over: [dateT(L, A(220.98), 'NOVEMBER 2013', 220.6)] })],
+  [220.60, 224.60, 'B50 date met', (i, L, A) => par(i, 'nsy_sign_night', { over: [dateT(L, A(220.98), 'NOVEMBER 2013', 220.6)] })],
   [224.60, 228.60, 'B51 article 2013', (i) => art('c01b3', 224.6, 40, foot(i, 'nb_cyclist_hills', 0))],
-  [228.60, 233.60, 'B52 SIS hewitt', (i, L, A) => photo(i, 'sis_building_vauxhall', { pos: '60% 50%', s: [1.14, 1.2], over: [place(L, A(229.0), 'MARTIN HEWITT', 228.6, { sub: 'DEPUTY ASSISTANT COMMISSIONER, MET' })] })],
-  [233.60, 237.60, 'B53 card accident', (i) => tcard(bgP(i, 'geo_alderney_st', 0.42), 'THE MET, 2013', ['LOCKED HIMSELF IN', 'BY ACCIDENT'], 233.6, 237.6)],
-  [237.60, 241.60, 'B54 valley church', (i) => photo(i, 'valley_anglesey_church')],
+  [228.60, 233.60, 'B52 SIS hewitt', (i, L, A) => photo(i, 'nsy_embankment', { s: [1.06, 1.12], over: [place(L, A(229.0), 'MARTIN HEWITT', 228.6, { sub: 'DEPUTY ASSISTANT COMMISSIONER, MET' })] })],
+  [233.60, 237.60, 'B53 card accident', (i) => tcard(bgP(i, 'pimlico_lupus_st', 0.42), 'THE MET, 2013', ['LOCKED HIMSELF IN', 'BY ACCIDENT'], 233.6, 237.6, 'pimlico_lupus_st')],
+  [237.60, 241.60, 'B54 valley church', (i) => photo(i, 'traeth_cymyran')],
   [241.60, 245.60, 'B55 thames', (i) => foot(i, 'nb_thames_night', 9, { s: [1.2, 1.28] })],
-  [245.60, 249.60, 'B56 date 2015', (i, L, A) => photo(i, 'sis_building_vauxhall_b', { pos: '30% 50%', s: [1.14, 1.22], over: [dateT(L, A(247.94), 'OCTOBER 2015', 245.6)] })],
+  [245.60, 249.60, 'B56 date 2015', (i, L, A) => photo(i, 'city_tower_dusk', { s: [1.08, 1.16], over: [dateT(L, A(247.94), 'OCTOBER 2015', 245.6)] })],
   [249.60, 254.60, 'B57 article karpichkov', () => art5('c01b7', 249.6, 40)],
   [254.60, 258.00, 'B58 moscow karpichkov', (i, L, A) => foot(i, 'nb_moscow', 8, { s: [1.24, 1.32], lbl: 'tl', over: [place(L, A(254.8), 'BORIS KARPICHKOV', 254.6, { sub: 'FORMER KGB OFFICER' })] })],
-  [258.00, 261.60, 'B59 code screen', (i) => foot(i, 'nb_code_screen', 9, { s: [1.2, 1.28] })],
+  [258.00, 261.60, 'B59 code screen', (i) => par(i, 'city_night')],
   [261.60, 265.40, 'B60 documents', (i) => foot(i, 'nb_documents_desk', 6, { s: [1.16, 1.22], bri: 0.8 })],
   [265.40, 270.40, 'B61 london rain a', (i) => foot(i, 'london_rain_street_a', 2, { s: [1.18, 1.26] })],
-  [270.40, 275.00, 'B62 timeline 2023', (i) => tline(i, 6, 179, 270.4, 'geo_pimlico_corner', { 5: 70 })],
+  [270.40, 275.00, 'B62 timeline 2023', (i) => tline(i, 6, 179, 270.4, 'nsy_curtis_green', { 5: 70 })],
   [275.00, 282.20, 'B64 article 2024', () => art5('c01b4', 275.0, 150)],
-  [282.20, 287.00, 'B65 valley station', (i) => par(i, 'valley_anglesey_station', { cp: 'br' })],
-  [287.00, 291.60, 'B66 valley church', (i, L, A) => photo(i, 'valley_anglesey_church', { pos: '40% 55%', s: [1.14, 1.22], cp: 'br', over: [dateT(L, A(287.1), '26 SEPTEMBER 2010', 287), place(L, A(288.4), 'VALLEY, ANGLESEY', 287)] })],
-  [291.60, 295.40, 'B67 SIS sawers', (i, L, A) => par(i, 'geo_sis_bridge', { over: [place(L, A(292.8), 'SIR JOHN SAWERS', 291.6, { sub: 'HEAD OF MI6' })] })],
+  [282.20, 287.00, 'B65 valley station', (i) => par(i, 'valley_tidal', { cp: 'br' })],
+  [287.00, 291.60, 'B66 valley church', (i, L, A) => photo(i, 'valley_shingle', { s: [1.08, 1.16], cp: 'br', over: [dateT(L, A(287.1), '26 SEPTEMBER 2010', 287), place(L, A(288.4), 'VALLEY, ANGLESEY', 287)] })],
+  [291.60, 295.40, 'B67 SIS sawers', (i, L, A) => par(i, 'valley_hotel', { over: [place(L, A(292.8), 'SIR JOHN SAWERS', 291.6, { sub: 'HEAD OF MI6' })] })],
   [295.40, 300.40, 'B68 quote headstone', (i) => [
-    n('Grade', { sat: 0.3, bri: 0.6, con: 1.06 }, cam(i, [1.06, 1.16], 'filter:blur(3px) sepia(.3)', n('Img', { src: 'photos/valley_anglesey_church.jpg' }))),
+    n('Grade', { sat: 0.3, bri: 0.6, con: 1.06 }, cam(i, [1.06, 1.16], 'filter:blur(3px) sepia(.3)', n('Img', { src: 'photos/holyhead_mountain.jpg' }))), n('Credit', { text: `PHOTO: ${PH.holyhead_mountain}`, place: 'tr' }),
     n('QuoteC', { lines: ['Free to run', 'in the mountains.'], attr: 'HIS HEADSTONE, VALLEY', at: 98 }),
   ]],
-  [300.40, 309.00, 'B69 docstack', () => { EV.whoosh.push(300.4 + 40 / 60 - 0.5, 300.4 + 330 / 60 - 0.5); EV.marker.push(300.4 + 52 / 60, 300.4 + 78 / 60, 300.4 + 342 / 60);
-    return [n('DocStack', { docs: [{ ...INQ, at: 40 }, { ...ART.c01b3, at: 330 }] }, ...hcrStill(0.4, [1.0, 1.06])), n('Dip', { outN: 30 })]; }],
+  // v7: DocStack (re-used the B41 / B51 pages) -> card on its own photo
+  [300.40, 309.00, 'B69 card two findings', (i) => [...tcard(bgP(i, 'city_belfast_night', 0.95), 'TWO OFFICIAL FINDINGS', ['INQUEST: PROBABLY KILLED', 'MET: PROBABLY AN ACCIDENT'], 300.4, 309.0, 'city_belfast_night'), n('Dip', { outN: 30 })]],
 ];
 const SHOTS = T.map(([c, to, name, fn], i) => {
   const L = Math.round((to - c) * 60), A = (t) => Math.round((t - c) * 60), el = fn(i, L, A);

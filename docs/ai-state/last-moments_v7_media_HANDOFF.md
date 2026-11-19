@@ -1,4 +1,4 @@
-# last-moments v7 - case 1 "no repeated photo/stock" pass (2026-11-19) - IN PROGRESS, no case edits yet
+# last-moments v7 - case 1 "no repeated photo/stock" pass (2026-11-19) - DONE (see v6 handoff "v7 done")
 
 Goal (lead brief): every photo / stock clip in case 1 (lm_case01a + lm_case01b) in only ONE visible shot. Keep timing, overlays,
 SFX; prefer MG / new real free photos over stock; stock share must not rise (01a 12 %, 01b 25 %). Do not touch text devices,
@@ -65,3 +65,21 @@ log row in productions/last-moments/assets/MEDIA_LOG.md (geograph URL, author, l
 Fetch the picks above (largest unstamped size), view each, edit the two shot tables, build, check, repeat scan, snapshot changed
 shots (`npx hyperframes snapshot parts/<id> -o <scratch> --no-end --at t1,...`), append v7 to last-moments_v6_HANDOFF.md, report.
 Also mention to lead: article repeats remain (01b B69 DocStack reuses INQ page of B41 and c01b3 of B51) - out of scope (articles approved).
+
+## Progress agent 2 (2026-11-19 18:30) - media fetched + copied, case edits next
+Lead overrides: keep S32 harrods_night; intro L08 plate -> c01a/thames_night.jpg (6075934 "River Thames at Night", Christine Matthews) + Credit.
+Keep S21 GCHQ sharp; S12 card bg -> c01a/gchq_entrance.jpg (7297260 Roger Cornfoot). B69 DocStack -> tcard on blurred city_belfast_night.
+All Geograph CC BY-SA 2.0, copied to media/last-moments/photos/<name>.jpg (sources+meta: scratch geo/meta.json; fetch script geo_fetch.py):
+B00 nsy_broadway 2114592 Lewis Clarke (MOS faces) | B01 harrods_lit_night 7112861 Ruth Sharville | B06 mi6_hq_vauxhall 7736205 Marathon |
+B07 bg c01a/map_z14 | B11 alderney_street (copy of c01a, 4336113 Chris Whippet) | B13 bg pimlico_gardens 4714182 PAUL FARMER |
+B17 bg coroners_court_kg 742151 Kevin Gordon | B19 nsy_westminster 6269380 Lewis Clarke | B24 pimlico_station 5303842 N Chadwick |
+B26 tcard DNA on nsy_sw1 878385 Phillip Perry | B29 hans_crescent_mm 5431651 Malc McDonald (MOS) | B32 king_charles_street 2380566 Colin Smith |
+B34 bg horseferry_courthouse 3324475 Shazz | B35 bg vauxhall_bridge_nc 7163426 N Chadwick | B36 coroners_door 4895264 Christine Matthews |
+B38 bg horseferry_junction 3584126 Basher Eyre | B39 bg coroners_door_b 4895267 Christine Matthews | B42 stock nb_bathroom_dark (Pexels) |
+B46 coroners_sign 4895271 Christine Matthews | B47 bg vauxhall_tower 5686604 N Chadwick | B48 mi6_river 5197509 pam fray |
+B50 nsy_sign_night 5252075 PAUL FARMER | B52 nsy_embankment 5238683 PAUL FARMER (MOS) | B53 bg pimlico_lupus_st 3277508 PAUL FARMER |
+B54 traeth_cymyran 4975535 Jeff Buck | B56 city_tower_dusk 7049025 Marathon | B59 city_night 8209337 Rob Farrow | B62 bg nsy_curtis_green 5560371 Peter McDermott |
+B65 valley_tidal 6618548 Gordon Hatton | B66 valley_shingle 6618604 Gordon Hatton | B67 valley_hotel 549875 James Allan | B68 holyhead_mountain 2606671 Mat Fascione |
+B69 bg city_belfast_night 4973656 DS Pugh. 01a: S15/S34 bgs dropped, S33 bg bgP map_z12.
+MOS boxes (cover px): nsy_broadway [[0,745,85,100],[275,740,90,95],[930,790,90,90],[1690,805,105,85],[1805,795,115,95]];
+nsy_embankment [[56,757,122,112],[131,739,337,94],[1725,776,195,169],[581,673,47,47]]; hans_crescent_mm [[165,855,90,75],[324,810,210,75]].

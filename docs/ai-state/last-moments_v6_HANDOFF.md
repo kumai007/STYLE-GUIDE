@@ -11,3 +11,13 @@ DONE (lead, check 0 errors all 3 parts):
 - Mix: every part has mixScale(): music x0.75, every sfx/ file x0.6 on top of the levelled mix; VO/raw sound unchanged.
 - Backups: *.bak_v6 (cases lm_case01a/b, devices lm.mjs, lm_pro.mjs), lm_intro.mjs.bak_v5, c01a_articles.py.bak_v6.
 OPEN: repeated photos/stock across 01a + 01b shot tables (list in the agent brief); loudness not measured (GitHub render).
+
+## v7 done (2026-11-19) - no repeated photo / stock in intro + case 1
+- Every photo / stock clip in ONE visible shot (repeat_scan.mjs: 0 visible repeats, 77 media items). 32 new Geograph CC BY-SA 2.0 photos
+  (list + authors: productions/last-moments/assets/MEDIA_LOG.md "v7"; shot map: last-moments_v7_media_HANDOFF.md). PH credits on screen,
+  incl. new blurred card / counter / timeline backdrops (01b cr(), NEWC set). Faces mosaicked: 01b MOS (nsy_broadway, nsy_embankment, hans_crescent_mm).
+- Intro L08 plate -> c01a/thames_night.jpg + credit (harrods_night stays in 01a S32). 01a S12 bg -> gchq_entrance; S33 bg -> blurred map_z12; S15/S34 hidden bgs dropped.
+- 01b: B26 forensic stock -> FORENSICS card, B59 code stock -> City photo, B42 padlock repeat -> nb_bathroom_dark, B69 DocStack (re-used B41/B51 pages) -> card
+  "TWO OFFICIAL FINDINGS / INQUEST: PROBABLY KILLED / MET: PROBABLY AN ACCIDENT" on blurred city photo; its DocStack whoosh/marker SFX went with it (tcard click instead).
+- Stock share (ILLUSTRATIVE shots / length): 01a 6.0 % -> 6.0 %, 01b 21.7 % -> 19.1 %. Builds exit 0, check 0 errors all 3 parts.
+- Backups: cases/*.bak_v7 (lm_intro.mjs.bak_v7 = pre-v7 intro).

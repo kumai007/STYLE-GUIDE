@@ -77,6 +77,7 @@ const PH = {
   harrods_night: 'EDITOR5807 / CC BY 3.0', sloane_street: 'LEWIS CLARKE / CC BY-SA 2.0',
   gchq_aerial: 'ADRIAN PINGSTONE / PUBLIC DOMAIN', cheltenham_promenade: 'STEVE DANIELS / CC BY-SA 2.0', harrods_brompton_road: 'EDWARDX / CC BY-SA 3.0',
   holland_park_station: 'RC1959 / CC0', alderney_street: 'CHRIS WHIPPET / CC BY-SA 2.0',
+  gchq_entrance: 'ROGER CORNFOOT / CC BY-SA 2.0', // v7
 };
 // faces of private people in photos (1920x1080 cover-box px, before the camera)
 const MOS = {
@@ -168,10 +169,10 @@ const T = [
   [43.80, 49.78, 'S09 article profile', (i) => [art('profile', 70, bgV(i, 'snowdonia_a', 1, 0.6))]], // full-bleed page: no backdrop label (QA 2026-11-19)
   [49.78, 54.22, 'S10 manchester', (i, L, A) => par(i, 'manchester_university', { bri: 0.75, over: [place(A(50.0), 'UNIVERSITY OF MANCHESTER')] })],
   [54.22, 57.94, 'S11 st catharines', (i) => photo(i, 'st_catharines_cambridge', { over: [n('SpotC01', { cx: 960, cy: 500, r: 460, at: 20, hold: 150 })] })],
-  [57.94, 63.80, 'S12 card 2001 GCHQ', (i) => [bgP(i, 'gchq_aerial', 0.42), n('TitleType', { mode: 'fade', kick: '2001', lines: ['GCHQ', 'CHELTENHAM'] })]], // v5: real GCHQ photo backdrop (was stock CCTV camera)
+  [57.94, 63.80, 'S12 card 2001 GCHQ', (i) => [bgP(i, 'gchq_entrance', 0.42), n('TitleType', { mode: 'fade', kick: '2001', lines: ['GCHQ', 'CHELTENHAM'] }), n('Credit', { text: `PHOTO: ${PH.gchq_entrance}`, place: 'tr' })]] /* v7: own GCHQ photo (gchq_aerial stays sharp in S21) */, // v5: real GCHQ photo backdrop (was stock CCTV camera)
   [63.80, 68.74, 'S13 prestbury', (i, L, A) => par(i, 'prestbury_village', { bri: 0.78, pos: '30% 60%', over: [place(A(66.26), 'PRESTBURY', 'CHELTENHAM')] })],
   [68.74, 73.54, 'S14 cyclist road', (i) => foot(i, 'cyclist_drone_road', 2, { bri: 0.9 })],
-  [73.54, 77.40, 'S15 article secondment', (i) => [art('secondment', 50, bgP(i, 'sis_building_vauxhall_b', 0.6), { ry: [10, 2] })]],
+  [73.54, 77.40, 'S15 article secondment', (i) => [art('secondment', 50, null, { ry: [10, 2] })]],
   [77.40, 80.52, 'S16 SIS', (i, L, A) => par(i, 'sis_building_vauxhall', { bri: 0.66, over: [place(A(77.62), 'SIS BUILDING', 'VAUXHALL, LONDON')] })],
   [80.52, 84.42, 'S17 SIS b', (i) => photo(i, 'sis_building_vauxhall_b', { over: [n('SpotC01', { cx: 960, cy: 520, r: 420, at: 20, hold: 150 })] })],
   // v6 (owner 2026-11-19 "according to the journalist Duncan Campbell .. you put a random stock footage"): his real article, The Register
@@ -194,8 +195,8 @@ const T = [
   [138.98, 144.60, 'S30 HPK analyse', (i) => [n('CCTVAnalyse', { src: 'HPK', n: 104, box: [900, 360, 210, 380], data: cctvData('HPK'), tag: 'GARETH WILLIAMS', dpos: 'tr', g: { sat: 0, bri: 1.0, con: 1.1 } }), n('Grade', { vig: 0.55, grain: 0.07 }), met('tl')]], // v5: was SpotC01 replay
   [144.60, 150.02, 'S31 HPK freeze end', (i) => frz('HPK', 270, { bri: 1.05, mono: true }, { s: [1.0, 1.08], o: '60% 50%' })],
   [150.02, 154.40, 'S32 harrods night', (i) => par(i, 'harrods_night', { bri: 0.82 })],
-  [154.40, 158.50, 'S33 counter 20 days', (i, L, A) => [n('Counter', { to: 20, unit: 'DAYS', label: 'UNTIL HE WAS DUE TO LEAVE LONDON', at: A(155.2), dur: 80 }, bgP(i, 'sloane_street', 0.5))]], // v5: VO "less than three weeks"
-  [158.50, 163.06, 'S34 doc stack', (i) => [n('DocStack', { docs: DOCS() }, bgP(i, 'brompton_road_knightsbridge', 0.5))]], // v5: was wet pavement stock
+  [154.40, 158.50, 'S33 counter 20 days', (i, L, A) => [n('Counter', { to: 20, unit: 'DAYS', label: 'UNTIL HE WAS DUE TO LEAVE LONDON', at: A(155.2), dur: 80 }, n('Grade', { sat: 0.5, bri: 1.1, con: 1.05 }, cam(i, [1.1, 1.18], 'filter:blur(12px)', n('Img', { src: MAP.z12 })))), n('Credit', { text: 'MAP: SENTINEL-2 CLOUDLESS BY EOX (CC BY 4.0)', place: 'br' })]] /* v7: blurred map (sloane_street stays sharp in 01b B02) */, // v5: VO "less than three weeks"
+  [158.50, 163.06, 'S34 doc stack', (i) => [n('DocStack', { docs: DOCS() })]] /* v7: hidden bg dropped */, // v5: was wet pavement stock
   [163.06, 167.80, 'S35 route map', (i) => [n('Grade', { sat: 1, con: 1.05, bri: 1, vig: 0.55, grain: 0.07 }, n('RouteMap', {
     ...MAP,
     keys: [[0, 1800, 1220, 0.9, 18], [60, 1700, 1180, 1.25, 10], [284, 1830, 1240, 1.4, 8]],
