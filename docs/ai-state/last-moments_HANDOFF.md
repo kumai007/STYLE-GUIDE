@@ -38,3 +38,11 @@ State:
   page, map, photos, B-roll; retry 10 failed Commons photos), then `bash tools/case-build/preview.sh lm_intro,lm_case01`.
 Original plan: build devices (new channel look, `hf-engine/devices/lm.mjs`) + `cases/lm_intro.mjs`, `cases/lm_case01.mjs`
 (media root `hf-engine/media/last-moments`), node build.mjs, hyperframes check, preview.sh.
+- 2026-11-19 owner notes on preview 1 (saved in memory _topic-abyssal-edit-feedback.md): visible warning glitch + no abrupt
+  audio/clipped first word; intro narration-precise; no zoom on case 01; ONE title screen (CASE 1 + title below, typewriter,
+  VCR OSD Mono font); pro lower third; CCTV date ring on the stamp; no repeated stock; real articles in 3-D.
+  RUNNING 3 agents: intro fix (lm_intro.mjs, lm_v2.mjs, font; sheet qa/lm_intro_v3_sheet.jpg), pro kit `devices/lm_pro.mjs`
+  + part B rework (qa/lm_case01b_v2_sheet.jpg), part A rework (qa/lm_case01a_v2_sheet.jpg). Then lead checks sheets; preview
+  reloads by itself (server "last-moments-preview", port 4848).
+- Final Phase Lite local fixes: claude.exe path, clean env for child claude, drawing tools. Owner's CLI is signed out:
+  `tools/final-phase-lite/login_clean.ps1` signs in (owner must do it); until then notes are fixed in the main chat.

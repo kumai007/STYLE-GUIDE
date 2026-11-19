@@ -50,3 +50,7 @@ Task: owner rejected intro graphics as "AI slop". Rebuild warning, 21-case list,
   Confirm in a live preview (`tools/case-build/preview.sh lm_intro`) that every name reads.
 - CASE card small "CASE 01" mono label over the name is faint; plate = HCR (subject visible, as v1).
 - Return push uses getBoundingClientRect (pure per frame); verify on the farm render that the push lands on case 01.
+
+## v3 owner-notes pass (2026-11-19, in progress)
+- FONT DONE: `hf-engine/fonts/VCROSDMono-latin.woff2` (VCR OSD Mono 1.001, dafont free; woff2 from the ttf). build.mjs
+  fontFace(): file prefix `VCROSDMono` -> family `'VCR OSD Mono'` weight 400. Use: add 'VCROSDMono-latin.woff2' to the case `fonts`.

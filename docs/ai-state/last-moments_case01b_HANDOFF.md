@@ -127,3 +127,12 @@ Check: all shots >= 3 s; no same text device back to back; one big text device a
   Sheet: productions/last-moments/edit/qa/lm_case01b_sheet.jpg (70 stills). Scratch stills: scratchpad/c01b/snapF.
 - OPEN: harrods_side / sloane_street / sis photos not checked at full size for faces (small, distant); dark_empty_hallway still
   Y31-34 and B26 card Y26 (night clip, bri 3.0 max before noise); page B41 Y109 (white paper); mix not measured.
+## Agent 3 (pro kit + case01b v2, 2026-11-19)
+- LM_PRO READY (module loads; render check in progress, see below): `hf-engine/devices/lm_pro.mjs`. Case: devices [...,'lm_pro'];
+  fonts BebasNeue, IBMPlexMono-600 (+ VCR OSD Mono file when the intro agent adds it; falls back to VT323 / ShareTechMono).
+  - `LowerThird {name, role, at=0, hold=200, pos='l'|'c'|'r', size=92, pin=false, y=118}` ink brush bar + eroded Bebas caps + torn paper role strip. Drop-in for Tag.
+  - `Article3D {img, iw, ih, bands:[[x,y,w,h,f0]], src, date, focus:[x,y], W=1480, H=820, rx=[11,2], ry=[-12,-2], s=[.9,1.1]}` wrapper, kids = backdrop. Bands in img px, max 2. Bake mosaics into img.
+  - `StampRing {x,y,w,h, at=0, hold=1e9, rect=[0,0,1920,1080], zoom=1.3, dim=.55, zin=40}` wrapper, kids = footage; x,y,w,h = timestamp box in screen px; rect = picture area (contain letterbox). Ring clamped inside rect.
+  - `TitleType {kick, lines:[..], at=8, size=78, cps=22, align='c'|'l'}` VCR typed card, same props as TCard; put over a backdrop.
+- Ref look studied (latest5 f1): name tag = black brush blob + white distressed condensed caps bottom-centre; article = white crop,
+  serif, yellow marker phrase by phrase on a posterized/dark backdrop; date = VCR type top-left with block cursor.

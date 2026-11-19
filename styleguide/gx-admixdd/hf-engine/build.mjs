@@ -133,6 +133,7 @@ const fontFace = (f) => {
   if (f.startsWith('Oswald')) return `@font-face{font-family:'Oswald';src:url(assets/fonts/${f}) format('woff2');font-weight:200 700}`;
   if (f.startsWith('BebasNeue')) return `@font-face{font-family:'Bebas Neue';src:url(assets/fonts/${f}) format('woff2');font-weight:400}`;
   if (f.startsWith('SourceSerif4')) return `@font-face{font-family:'Source Serif 4';src:url(assets/fonts/${f}) format('woff2');font-weight:200 900}`;
+  if (f.startsWith('VCROSDMono')) return `@font-face{font-family:'VCR OSD Mono';src:url(assets/fonts/${f}) format('woff2');font-weight:400}`; // VCR OSD Mono 1.001 (free, dafont), fonts/VCROSDMono-latin.woff2
   const fam = f.startsWith('VT323') ? 'VT323' : f.startsWith('SpecialElite') ? 'Special Elite' : f.startsWith('CourierPrime') ? 'Courier Prime' : f.startsWith('Michroma') ? 'Michroma' : 'Share Tech Mono';
   return `@font-face{font-family:'${fam}';src:url(assets/fonts/${f}) format('woff2');font-weight:${f.includes('700') ? 700 : 400}}`;
 };
