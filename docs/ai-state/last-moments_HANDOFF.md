@@ -1,4 +1,5 @@
 # last-moments (2026-11-18) handoff
+> NEWEST STATE: read `docs/ai-state/last-moments_MASTER_HANDOFF.md` first (2026-11-19).
 
 Objective: "Most Disturbing Last Moment Footage Ever Recorded" (21 cases). First deliverable = intro + case 1 as a LIVE preview in
 Final Phase Lite (`bash tools/case-build/preview.sh <intro_id>,<case1_id>`), no render. Then one full render on GitHub after owner OK.
