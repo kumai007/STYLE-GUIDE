@@ -12,9 +12,14 @@
 //  GlitchOut2 {n=10, seed}  v3 wrapper: visible glitch-out on the last n frames (see the device). Use instead of lm GlitchCut.
 //  TitleType {a, b, plate, fa, fb, rate}  v3: the ONE title screen (CASE 1 + typed case title, VCR OSD Mono). Replaces
 //        DescentReturn + CaseCard2 in lm_intro (both kept below, unused).
+//  GCam {punch:{at,n,s,origin}}  v4 (owner 2026-11-19 "first two slides should do something different, the way Abyssal does"):
+//        dark stage for GBox kids; optional punch-in = fast camera push (n f, cubic in-out) to scale s about origin.
+//  GBox {r:[x,y,w,h], from, until, g:[f..], clip:{LClip props}, full, dim:[f,bri], shadow}  v4: one clip box, visible
+//        [from,until); hard on/off; a 6 f dark slice-glitch (luma only, like GlitchOut2) at each frame in g; full = before this
+//        frame the box is scaled from its top-left corner to fill the frame; dim = from frame f darken (+2 px blur) to bri.
 //  CaseCard2 {no, name:[l1,l2], plate:{src,t,speed}}  c4/c5 v2: graded plate + stairwell texture, CASE NN in f14-62,
 //        zoom-through f150-178, name f170-216, red hairline f186-228.
-import { LEDGER } from './lm.mjs';
+import { LEDGER, LClip } from './lm.mjs';
 
 const AF = 'af';
 const MONO = "'IBM Plex Mono',monospace", OSW = "'Oswald',sans-serif", ANT = "'Anton',sans-serif";
@@ -318,4 +323,69 @@ export const TitleType = {
   },
 };
 
-export default [Warning2, Descent, DescentReturn, CaseCard2, GlitchOut2, TitleType];
+// ---------------------------------------------------------------- GCam + GBox (v4, owner 2026-11-19: replace conveyors A + B)
+// Refs (Abyssal hook montages, latest5 b10): ONL 21.9 posterised glitch-in + 25.5 vertical clip over blurred fill + 35.4 punch-in;
+// UIN 23.6 / UC8 27.2 punch-in on the same clip; SB2 25.2 static 2-up split. No slides. Glitch = luma slices only (no colour split).
+const GN = 6;
+export const GCam = {
+  name: 'GCam',
+  html: (p, ctx, node) => `<div class="${AF}" style="background:#0B0B0C"></div><div class="${AF}" ${ctx.dev('GCam', { pu: p.punch || 0 })} style="transform-origin:${p.punch?.origin || '50% 50%'}">${ctx.kids(node)}</div>`,
+  render: function (el, f, p) {
+    if (!p.pu) return;
+    var u = Math.max(0, Math.min(1, (f - p.pu.at) / p.pu.n)), e = u < 0.5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2;
+    el.style.transform = u > 0 ? 'scale(' + (1 + (p.pu.s - 1) * e).toFixed(5) + ')' : '';
+  },
+};
+export const GBox = {
+  name: 'GBox',
+  html: (p, ctx) => {
+    const [x, y, w, h] = p.r, from = p.from ?? 0, until = p.until ?? ctx.win[1], c = p.clip, sp = c.speed ?? 1, sl = [], idx = [];
+    const lc = (o) => LClip.html({ W: w, H: h, ...c, ...o }, ctx);
+    // slice copies only exist for their 6 glitch frames (own short <video>, source time matched to the main clip)
+    for (const g of p.g || []) {
+      const a = Math.max(from, g), b = Math.min(until, g + GN);
+      idx.push(b > a ? sl.length + 1 : 0);
+      if (b > a) for (let i = 0; i < 2; i++) sl.push(`<div class="${AF}" style="display:none">${lc({ t: c.t + ((a - from) / 60) * sp, from: a, until: b, push: [1, 1] })}</div>`);
+    }
+    const bars = [0, 1].map(() => `<i style="position:absolute;left:0;width:100%;top:0;height:8px;background:rgb(236,234,228);mix-blend-mode:screen;display:none"></i>`).join('');
+    const fs = p.full != null ? Math.max(1920 / w, 1080 / h) : 0;
+    return `<div ${ctx.dev('GBox', { from, until, g: p.g || [], idx, full: p.full ?? -1, fs, dim: p.dim || 0, seed: ctx.id('gb'), h })} style="position:absolute;left:${x}px;top:${y}px;width:${w}px;height:${h}px;overflow:hidden;background:#0B0B0C;transform-origin:0 0;${p.shadow ? 'box-shadow:0 26px 80px rgba(0,0,0,.8),0 0 0 2px rgba(11,11,12,.9);' : ''}"><div class="${AF}">${lc({ from, until })}</div>${sl.join('')}${bars}<div class="${AF}" style="background:#000;opacity:0;pointer-events:none"></div></div>`;
+  },
+  render: function (el, f, p, G) {
+    var on = f >= p.from && f < p.until;
+    el.style.display = on ? '' : 'none';
+    if (!on) return;
+    var c = el.children, n = c.length, main = c[0], dark = c[n - 1], b0 = n - 3;
+    el.style.transform = f < p.full ? 'scale(' + p.fs + ')' : '';
+    var dm = p.dim && f >= p.dim[0];
+    for (var i = 1; i < b0; i++) c[i].style.display = 'none';
+    c[b0].style.display = 'none'; c[b0 + 1].style.display = 'none';
+    dark.style.opacity = 0; el.style.filter = ''; main.style.transform = '';
+    main.style.filter = dm ? 'brightness(' + p.dim[1] + ') blur(2px)' : '';
+    var k = -1, q = 0;
+    for (var j = 0; j < p.g.length; j++) if (f >= p.g[j] && f < p.g[j] + 6) { k = j; q = f - p.g[j]; }
+    if (k < 0) return;
+    // 6 f: pop+slices | near-black + tear bars | slices | half dark | small offset | settle
+    var R = function (s) { return G.random(p.seed + s + '_' + k + '_' + q); };
+    var pop = [2.3, 1, 1.6, 1.2, 1.15, 1.05][q];
+    el.style.filter = 'saturate(.35) contrast(1.25) brightness(' + pop + ')';
+    dark.style.opacity = [0, 0.86, 0, 0.5, 0, 0][q];
+    var amp = [1, 0.6, 0.8, 0.4, 0.15, 0.04][q];
+    main.style.transform = 'translateX(' + ((R('m') - 0.5) * 120 * amp).toFixed(1) + 'px)';
+    if (p.idx[k]) for (var s = 0; s < 2; s++) {
+      var d = c[p.idx[k] + s], t = R('t' + s) * 80, hh = 6 + R('h' + s) * 22;
+      d.style.display = q < 4 ? '' : 'none';
+      d.style.clipPath = 'inset(' + t.toFixed(1) + '% 0 ' + Math.max(0, 100 - t - hh).toFixed(1) + '% 0)';
+      d.style.transform = 'translateX(' + ((s ? 1 : -1) * (60 + R('x' + s) * 240) * amp).toFixed(1) + 'px)';
+    }
+    for (var b = 0; b < 2; b++) {
+      var bar = c[b0 + b];
+      bar.style.display = q < 3 && R('b' + b) < 0.8 ? '' : 'none';
+      bar.style.top = (R('y' + b) * (p.h - 20)).toFixed(0) + 'px';
+      bar.style.height = (3 + 26 * R('z' + b)).toFixed(0) + 'px';
+      bar.style.opacity = (0.25 + 0.45 * R('o' + b)).toFixed(2);
+    }
+  },
+};
+
+export default [Warning2, Descent, DescentReturn, CaseCard2, GlitchOut2, TitleType, GCam, GBox];

@@ -73,3 +73,19 @@ Task: owner rejected intro graphics as "AI slop". Rebuild warning, 21-case list,
 - Open: CRV 236 beyond source 237.6 shows the vlogger's face (do not raise the speed); HCR in the 2-up panel shows the doorway
   only (man enters when it goes full); CGF selfie now appears twice (conveyor A + C); intro is 2.07 s shorter (any part that
   assumed 61.11 s must use 59.04).
+
+## v4 conveyor A/B replacement (2026-11-19, done)
+- Owner: "sliding used 3 times; the ending one is good; first two do something different, the way Abyssal Detective does". C unchanged.
+- Refs (latest5 b10 hooks): hard full-frame cuts, ONL 21.9 posterised glitch-in, ONL 25.5 clip boxed over blurred fill, punch-ins on the
+  same clip (ONL 35.4, UIN 23.6, UC8 27.2), ghost dissolves (UIN/UC8), SB2 25.2 static 2-up split. No slides anywhere.
+- New devices (lm_v2.mjs): GCam (dark stage + punch-in), GBox (clip box, hard on/off, 6 f luma slice-glitch per frame in g, dim, full).
+- A 8.105-17.145: split re-lays out on each word with a glitch cut: LIP full -> halves (+CGF 9.685) -> thirds (+CRV 10.985) -> 2x2
+  (+HCR 12.80) -> 10 f punch-in on the doorway cell 14.30. CGF speed 0.9 -> 0.72 (stays inside CG_A keys). CRV scale 1.6 (no head).
+- B 25.565-32.855: CRV full; "friend's phone" 27.40 CGF square box 780 px (right) glitches in, CRV dims (0.5 + 2 px blur);
+  "security camera" 29.005 frame glitch-cuts to WED, box stays; box glitches out 30.90; credit moved to bl 214.
+- SFX: whooshes for A/B moves removed; new `sfx/lm_glitch_s.wav` (lm_glitch first 0.17 s, fade 0.09-0.17; I -28.9, max M -26.2
+  padded, TP -17.8) on all 6 glitch cuts at music -3; one whoosh (music -4) on the punch-in (peak on its mid, start 13.914).
+- Build exit 0; check ok, 0 errors (7 lint warnings: +1 duplicate-media from slice copies; 2 craft, old). Sheet
+  `productions/last-moments/edit/qa/lm_intro_v4_sheet.jpg`. Backups: scratch `v4/` lm_intro.v3.bak.mjs, lm_v2.v3.bak.mjs.
+- Open: LIP third (11-12.8) shows mostly water (diver leaves frame in source); audio checked by numbers only; lm_glitch_s needs
+  Drive upload for the farm.
