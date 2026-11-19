@@ -17,7 +17,7 @@ const n = (d, p = {}, ...k) => ({ d, p, k });
 const VO_PK = -1.9, MUS_T = -39.2;
 const SFX = { lm_boom: [4.183, -21.7, -17.7, -11.6, 0.176], lm_whoosh: [1.549, -19.3, -16.3, -2.4, 0.469], lm_brush: [0.775, -19.8, -17.5, -3.1, 0.03],
   lm_paper: [0.785, -19.9, -19.6, -2.9, 0.039], lm_settle: [0.396, -70, -23.2, -0.5, 0.033], lm_marker: [0.525, -14.4, -14.2, -3.0, 0.139],
-  lm_key: [0.11, -70, -25.6, -4.6, 0.016], riser_dark: [5.91, -23.0, -16.7, -10.6, -1], lm_hum: [12, -32.7, -31.4, -19.0, 0] };
+  lm_key: [0.11, -70, -25.6, -4.6, 0.016], lm_click: [0.365, -70, -22.2, -1.0, 0.223], riser_dark: [5.91, -23.0, -16.7, -10.6, -1], lm_hum: [12, -32.7, -31.4, -19.0, 0] };
 const db = (x) => +Math.pow(10, x / 20).toFixed(4);
 const sfx = (name, at, off = -3, len) => {
   const [d0, , M, , pk] = SFX[name], d = len ?? d0, a0 = pk < 0 ? at + d - 1.5 : at + Math.max(0, pk - 0.05);
@@ -35,10 +35,10 @@ const typing = (at, lines, cps = 22) => { const ts = []; let tot = 0;
 // device events (part s). LowerThird ink wipe -> brush (S06 28.43 skipped: dip boom 28.30); Article3D in -> paper slide at the cut + settle
 // +0.45 (S36 settle skipped: marker 0.22 s later); marker wipe (f0, f0+26) -> marker, start -0.03; StampRing punch-in + map pushes -> whoosh,
 // peak (0.469) on the move; booms: dip end + raw cuts (peak 0.176 on the cut); risers land on the raw cuts.
-const BRUSH = [1.54, 6.24, 50.0, 66.26, 77.62, 115.67, 124.81];
+const BRUSH = [1.54];
 const ARTS = [[43.80, 70, true], [73.54, 50, true], [167.80, 40, false]];
-const TYPED = [[32.62 + 10 / 60, ['26 SEPTEMBER 1978']], [57.94 + 8 / 60, ['2001', 'GCHQ', 'CHELTENHAM']], [90.98, ['SUMMER 2010']], [106.40, ['3 SEPTEMBER 2010']],
-  [108.93 + 8 / 60, ['11 AUGUST 2010', 'HOME FROM THE US']], [120.21 - 0.5, ['SATURDAY 14 AUGUST 2010']], [172.3, ['15 AUGUST, 14:27']]];
+// v4 click SFX at each text fade-in (part s): places, dates, cards (TYPED key stream removed: typing only on title screens)
+const CLICKS = [6.24, 28.2 + 44 / 60, 32.62 + 10 / 60, 50.0, 57.94 + 8 / 60, 66.26, 77.62, 90.98, 106.40, 108.93 + 8 / 60, 115.67, 120.21 - 0.5, 124.81, 172.3];
 const WHOOSH = [19.56 + 0.33 - 0.469, 130.87 + 0.5 + 0.33 - 0.469, 163.06 + 50 / 60 - 0.469, 163.06 + 175 / 60 - 0.469];
 const stS = (f) => {
   const e = spawnSync('ffmpeg', ['-hide_banner', '-nostats', '-i', path.join(MED, f), '-af', 'ebur128', '-f', 'null', '-'], { encoding: 'utf8', maxBuffer: 1 << 28 }).stderr;
@@ -86,11 +86,11 @@ const DRIFT = [
 ];
 const cam = (i, s, css, ...k) => n('Cam', { s, ...DRIFT[i % DRIFT.length], css }, ...k);
 const vid = (name, t, o = {}) => n('_V', { src: name.length <= 3 ? name : `c01a/${name}`, trim: t, speed: o.speed ?? 1, fit: 'cover', pos: o.pos });
-// stock b-roll: mono grade + ILLUSTRATIVE
+// stock b-roll: same colour grade as raws (owner 2026-11-19: never B&W) + ILLUSTRATIVE
 const foot = (i, name, t, o = {}) => {
   const s = o.s ?? [1.06, 1.12];
   return [
-    n('Grade', { mono: true, bri: o.bri ?? 1.0, con: 1.1 }, cam(i, s, o.css, vid(name, t, o))),
+    n('Grade', { sat: 0.55, bri: o.bri ?? 1.0, con: 1.1 }, cam(i, s, o.css, vid(name, t, o))),
     ...(o.inCam ? [cam(i, s, '', ...o.inCam)] : []),
     n('Lbl', { text: 'ILLUSTRATIVE', at: o.lbl || 'bl' }), ...(o.over || []),
   ];
@@ -104,7 +104,7 @@ const photo = (i, file, o = {}) => {
   ];
 };
 // blurred backdrops for title cards
-const bgV = (i, name, t, bri = 0.7) => n('Grade', { mono: true, bri, con: 1.08 }, cam(i, [1.1, 1.18], 'filter:blur(12px)', vid(name, t)));
+const bgV = (i, name, t, bri = 0.7) => n('Grade', { sat: 0.55, bri, con: 1.08 }, cam(i, [1.1, 1.18], 'filter:blur(12px)', vid(name, t)));
 const bgP = (i, file, bri = 0.62, pos) => n('Grade', { sat: 0.3, bri, con: 1.05 }, cam(i, [1.1, 1.18], 'filter:blur(12px)', n('Img', { src: `c01a/${file}.jpg`, pos })));
 // raw freeze frame (640x480): contain over its own blurred cover copy; camP = Cam props of the sharp layer
 const frz = (src, nf, o, camP, extra = []) => [
@@ -123,7 +123,10 @@ const met = (place = 'tr') => n('Credit', { text: MET, place });
 // v2 (owner 2026-11-19, lm_pro kit): name/place tags = LowerThird (ink brush bar), dates/cards = TitleType (VCR typed),
 // camera stamps = StampRing (ring on the burned-in stamp, clamped to the picture, punch-in), articles = Article3D.
 const tag = (L, at, name, role, pin = true, o = {}) => n('LowerThird', { at, name, role, pin, hold: Math.max(60, L - at - 48 - 24 - 6), ...o });
-const td = (at, text) => n('TitleType', { at, lines: [text], size: 66, align: 'l' });
+const td = (at, text, o = {}) => n('TextFade', { at, lines: [text], pos: 'tl', ...o });
+// v4 (owner 2026-11-19): LowerThird only for Gareth Williams; places = PlaceText (VCR caps on the footage, no box); dates = TextFade
+// top-left (Abyssal ref spot), cards = TitleType mode 'fade'; every text in gets one click SFX (lm_click), no typing keys in this part.
+const place = (at, text, sub, o = {}) => n('PlaceText', { at, text, sub, ...o });
 // real article crops (build/c01a_articles.py): {img, iw, ih, bands, src, date}; marker starts at f0, 2nd line 26 f later
 const ART = JSON.parse(fs.readFileSync(path.join(MED, 'pages', 'c01a_articles.json'), 'utf8'));
 const art = (k, f0, bg, o = {}) => n('Article3D', { ...ART[k], bands: ART[k].bands.map((b, j) => [...b, f0 + 26 * j]), ...o }, bg);
@@ -137,35 +140,34 @@ const MAP = { z12: 'c01a/map_z12.jpg', z14: 'c01a/map_z14.jpg', off: [-5376, -30
 // shot table: [start, end, name, (i, L = len f, A = part s -> local f) => nodes]
 const T = [
   // p01a (0.50-43.88)
-  [0, 4.16, 'S01 HCR freeze man', (i, L, A) => frz('HCR', 114, { bri: 0.78 }, { s: [1.0, 1.08], o: '42% 30%' }, [met('tr'), tag(L, A(1.54), 'GARETH WILLIAMS', 'CODEBREAKER', false)])],
-  [4.16, 10.40, 'S02 hans crescent harrods', (i, L, A) => photo(i, 'hans_crescent_harrods_side', { bri: 0.75, over: [tag(L, A(6.24), 'HANS CRESCENT', 'KNIGHTSBRIDGE, LONDON')] })],
+  [0, 4.16, 'S01 HCR freeze man', (i, L, A) => frz('HCR', 114, { bri: 0.78 }, { s: [1.0, 1.08], o: '42% 30%' }, [met('tr'), tag(L, A(1.54), 'GARETH WILLIAMS', 'CODEBREAKER', false, { pos: 'c' })])],
+  [4.16, 10.40, 'S02 hans crescent harrods', (i, L, A) => photo(i, 'hans_crescent_harrods_side', { bri: 0.75, over: [place(A(6.24), 'HANS CRESCENT', 'KNIGHTSBRIDGE, LONDON')] })],
   [10.40, 17.96, 'S03 HCR walk', (i) => live(i, 'HCR', 0, 0.5, { bri: 0.75 }, [met('tr')])],
   [17.96, 24.64, 'S04 HCR stamp zoom', (i, L, A) => [n('StampRing', { ...STAMP.HCR, at: A(19.56), zoom: 1.7, zin: 50 }, ...frz('HCR', 224, { bri: 0.78 }, { s: [1, 1] }))]],
   [24.64, 28.10, 'S05 HCR empty doorway', (i, L) => frz('HCR', 222, { bri: 0.74, mono: true }, { s: [1.0, 1.05], o: '50% 40%' }, [n('Dip', { outN: 16 })])],
-  [28.10, 32.62, 'S06 valley station', (i, L, A) => [...photo(i, 'valley_anglesey_station', { bri: 0.65, over: [tag(L, A(28.2) + 14, 'VALLEY', 'ANGLESEY, WALES')] }), n('Dip', { inN: 14 })]],
+  [28.10, 32.62, 'S06 valley station', (i, L, A) => [...photo(i, 'valley_anglesey_station', { bri: 0.65, over: [place(A(28.2) + 44, 'VALLEY', 'ANGLESEY, WALES')] }), n('Dip', { inN: 14 })]],
   [32.62, 37.34, 'S07 valley church', (i, L, A) => photo(i, 'valley_anglesey_church', { bri: 0.55, over: [td(A(32.62) + 10, '26 SEPTEMBER 1978')] })],
   [37.34, 43.80, 'S08 bangor', (i, L, A) => photo(i, 'bangor_university', { bri: 0.6 })],
   // p01b (43.80-95.56)
   [43.80, 49.78, 'S09 article profile', (i) => [art('profile', 70, bgV(i, 'snowdonia_a', 1, 0.6))]], // full-bleed page: no backdrop label (QA 2026-11-19)
-  [49.78, 54.22, 'S10 manchester', (i, L, A) => photo(i, 'manchester_university', { bri: 0.72, over: [tag(L, A(49.9) + 6, 'UNIVERSITY OF MANCHESTER', 'MANCHESTER')] })],
+  [49.78, 54.22, 'S10 manchester', (i, L, A) => photo(i, 'manchester_university', { bri: 0.72, over: [place(A(50.0), 'UNIVERSITY OF MANCHESTER')] })],
   [54.22, 57.94, 'S11 st catharines', (i) => photo(i, 'st_catharines_cambridge', { over: [n('SpotC01', { cx: 960, cy: 500, r: 460, at: 20, hold: 150 })] })],
-  [57.94, 63.80, 'S12 card 2001 GCHQ', (i) => [bgP(i, 'prestbury_village', 0.72), n('TitleType', { kick: '2001', lines: ['GCHQ', 'CHELTENHAM'] })]],
-  [63.80, 68.74, 'S13 prestbury', (i, L, A) => photo(i, 'prestbury_village', { bri: 0.75, s: [1.15, 1.22], pos: '30% 60%', over: [tag(L, A(66.26), 'PRESTBURY', 'CHELTENHAM')] })],
+  [57.94, 63.80, 'S12 card 2001 GCHQ', (i) => [n('Grade', { sat: 0.55, bri: 0.3, con: 1.15, vig: 0.8 }, cam(i, [1.1, 1.18], 'filter:blur(10px)', n('_V', { src: 'broll/nb_cctv_camera', trim: 0, speed: 1, fit: 'cover' }))), n('Lbl', { text: 'ILLUSTRATIVE', at: 'bl' }), n('TitleType', { mode: 'fade', kick: '2001', lines: ['GCHQ', 'CHELTENHAM'] })]],
+  [63.80, 68.74, 'S13 prestbury', (i, L, A) => photo(i, 'prestbury_village', { bri: 0.75, s: [1.15, 1.22], pos: '30% 60%', over: [place(A(66.26), 'PRESTBURY', 'CHELTENHAM')] })],
   [68.74, 73.54, 'S14 cyclist road', (i) => foot(i, 'cyclist_drone_road', 2, { bri: 0.9 })],
   [73.54, 77.40, 'S15 article secondment', (i) => [art('secondment', 50, bgP(i, 'sis_building_vauxhall_b', 0.6), { ry: [10, 2] })]],
-  [77.40, 80.52, 'S16 SIS', (i, L, A) => photo(i, 'sis_building_vauxhall', { bri: 0.62, over: [tag(L, A(77.62), 'SIS BUILDING', 'VAUXHALL, LONDON')] })],
+  [77.40, 80.52, 'S16 SIS', (i, L, A) => photo(i, 'sis_building_vauxhall', { bri: 0.62, over: [place(A(77.62), 'SIS BUILDING', 'VAUXHALL, LONDON')] })],
   [80.52, 84.42, 'S17 SIS b', (i) => photo(i, 'sis_building_vauxhall_b', { over: [n('SpotC01', { cx: 960, cy: 520, r: 420, at: 20, hold: 150 })] })],
   [84.42, 90.78, 'S18 rain street a', (i) => foot(i, 'london_rain_street_a', 0.5)],
-  [90.78, 95.57, 'S19 rain window', (i, L, A) => [n('Grade', { mono: true, bri: 2.6, con: 1.0 }, cam(i, [1.0, 1.05], '', n('Vertical', { src: 'c01a/rain_window_night', t: 12, sw: 1080, sh: 1920, fw: 608, fh: 1080 }))),
-    n('Lbl', { text: 'ILLUSTRATIVE', at: 'bl' }), td(A(90.98), 'SUMMER 2010')]],
+  [90.78, 95.57, 'S19 rain window', (i, L, A) => foot(i, 'rain_window_night', 12, { bri: 2.6, s: [1.04, 1.1], over: [td(A(90.98), 'SUMMER 2010')] })], // v4: cover full frame (was narrow vertical strip)
   // p01c (95.57-133.77)
   [95.57, 101.93, 'S20 rain street b', (i) => foot(i, 'london_rain_street_b', 42)],
   [101.93, 105.47, 'S21 SIS tight', (i, L, A) => photo(i, 'sis_building_vauxhall', { bri: 0.68, s: [1.32, 1.4], pos: '30% 40%' })],
-  [105.47, 108.93, 'S22 prestbury b', (i, L, A) => photo(i, 'prestbury_village', { bri: 0.65, s: [1.2, 1.26], pos: '70% 40%', over: [td(A(106.40), '3 SEPTEMBER 2010')] })],
-  [108.93, 113.65, 'S23 card home from US', (i) => [bgV(i, 'wet_pavement_night', 20, 0.95), n('Lbl', { text: 'ILLUSTRATIVE', at: 'bl' }), n('TitleType', { kick: '11 AUGUST 2010', lines: ['HOME FROM THE US'] })]],
-  [113.65, 119.21, 'S24 regent street', (i, L, A) => foot(i, 'regent_street_rain_night', 4, { bri: 1.2, lbl: 'tl', over: [tag(L, A(115.67), 'WEST END', 'LONDON')] })],
-  [119.21, 122.31, 'S25 date on HPK backdrop', (i, L, A) => [n('Grade', { mono: true, bri: 0.8, con: 1.08 }, cam(i, [1.12, 1.2], 'filter:blur(10px)', n('Frz', { src: 'HPK', n: 150, fit: 'cover' }))), met('tl'), td(A(120.21) - 30, 'SATURDAY 14 AUGUST 2010')]],
-  [122.31, 127.60, 'S26 HPK freeze', (i, L, A) => frz('HPK', 0, { bri: 1.05 }, { s: [1.04, 1.1], o: '50% 100%' }, [met('tl'), tag(L, A(124.81), 'HOLLAND PARK STATION', 'CENTRAL LINE, LONDON', true, { y: 268 })])],
+  [105.47, 108.93, 'S22 drone road', (i, L, A) => foot(i, 'cyclist_drone_road', 6.4, { bri: 0.7, s: [1.2, 1.28], over: [td(A(106.40), '3 SEPTEMBER 2010')] })],
+  [108.93, 113.65, 'S23 card home from US', (i) => [bgV(i, 'wet_pavement_night', 20, 0.95), n('Lbl', { text: 'ILLUSTRATIVE', at: 'bl' }), n('TitleType', { mode: 'fade', kick: '11 AUGUST 2010', lines: ['HOME FROM THE US'] })]],
+  [113.65, 119.21, 'S24 regent street', (i, L, A) => foot(i, 'regent_street_rain_night', 4, { bri: 1.2, lbl: 'tl', over: [place(A(115.67), 'WEST END', 'LONDON')] })],
+  [119.21, 122.31, 'S25 date on HPK backdrop', (i, L, A) => [n('Grade', { mono: true, bri: 0.8, con: 1.08 }, cam(i, [1.12, 1.2], 'filter:blur(10px)', n('Frz', { src: 'HPK', n: 150, fit: 'cover' }))), met('tl'), td(A(120.21) - 30, 'SATURDAY 14 AUGUST 2010', { pos: 'l', size: 66 })]],
+  [122.31, 127.60, 'S26 HPK freeze', (i, L, A) => frz('HPK', 0, { bri: 1.05 }, { s: [1.04, 1.1], o: '50% 100%' }, [met('tr'), place(A(124.81), 'HOLLAND PARK STATION', 'CENTRAL LINE, LONDON', { x: 284, y: 64 })])],
   [127.60, 130.87, 'S27 HPK cone', (i) => frz('HPK', 0, { bri: 1.05 }, { s: [1.0, 1.04], o: '38% 85%' }, [n('SpotC01', { cx: 724, cy: 922, r: 240, at: 18, hold: 120 })])],
   [130.87, 133.95, 'S28 HPK stamp zoom', (i) => [n('StampRing', { ...STAMP.HPK, at: 30, zoom: 1.7, zin: 50 }, ...frz('HPK', 0, { bri: 1.1 }, { s: [1, 1] }))]],
   [133.95, 138.98, 'S29 HPK raw', (i) => live(i, 'HPK', 0, 1, { bri: 1.05 }, [met('tl')])],
@@ -206,7 +208,7 @@ export default {
     room(...RAWS[0]), room(...RAWS[1]),
     ...BRUSH.map((t) => sfx('lm_brush', t)),
     ...ARTS.flatMap(([c, f0, st]) => [sfx('lm_paper', c), ...(st ? [sfx('lm_settle', c + 0.45)] : []), sfx('lm_marker', c + f0 / 60 - 0.03), sfx('lm_marker', c + (f0 + 26) / 60 - 0.03)]),
-    ...TYPED.flatMap(([at, lines]) => typing(at, lines)),
+    ...CLICKS.map((t) => sfx('lm_click', t - 0.15)), // peak 0.223 s in the file -> lands ~0.07 s into the 0.5 s fade
     ...WHOOSH.map((t) => sfx('lm_whoosh', t)),
     sfx('lm_boom', 28.30), // dip into S06 (peak 28.48, music back)
     sfx('riser_dark', 133.95 - 5.91),

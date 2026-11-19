@@ -14,7 +14,8 @@ Done in `cases/lm_intro.mjs`, `cases/lm_case01a.mjs` (audio only). Backups of th
 | lm_boom.wav | Designed Boom Impact Dark Cinematic Low Hit | title card, dip ends, raw cuts, riser landings (peak on the cut: at = cut - 0.17) | 4.183 | -21.7 | -17.7 | -11.6 | 0.176 |
 | lm_hum.wav | Ambience Room Tone Hotel Corridor Electrical Hum 01 (20-32 s) | CCTV room tone under raws | 12 | -32.7 | -31.4 | -19.0 | - |
 | riser_dark.wav (old, kept) | - | riser into reveals / raws (loud at the end) | 5.91 | -23.0 | -16.7 | -10.6 | end |
-| glitch_click.wav, static_lp.wav (old, kept) | - | warning only | | -22.2 / -32.4 | -21.1 / -31.1 | | |
+| lm_glitch.wav (v3, 2026-11-19) | Designed, Impact, Processed Impact Distortion (id ce1efce9-1ca3-4d7b-9d20-ea5b9ff08808; trim 0.018-0.598, fade out 0.44-0.58) | warning GlitchOut2 exit (intro's ONE big hit) | 0.580 | -23.7 | -22.9 | -17.8 | 0.005 |
+| static_lp.wav (old, kept); glitch_click.wav (old, no longer used by intro) | - | warning only | | -32.4 | -31.1 | | |
 Old boom_low / tick_soft / roomtone_lp no longer used by intro/c01a (still on disk; case01b may use them).
 
 ## Level model (in the case files: `SFX` table + `sfx(name, at, off=-3, len)`)
@@ -44,3 +45,14 @@ Old boom_low / tick_soft / roomtone_lp no longer used by intro/c01a (still on di
 
 ## Part B (lm_case01b) recipe
 Copy the `SFX` table, `sfx`, `typing`, `room` helpers from lm_case01a.mjs (needs that file's `tgtG`); one family per device as above.
+
+## Warning glitch SFX v3 (owner 2026-11-19 "Good SFX, glitch SFX in the warning transition")
+- Candidates (ES, 0.6-0.9 s): Processed Impact Distortion (chosen: hard onset, dense crunchy distortion, centroid ~2.5 kHz, no beep),
+  Glitchy Impact Various 04 (darker ~1.4 kHz but 60 ms soft attack), Radio Interference Burst (bright ~4.5 kHz). Rejected UI glitch clicks/beeps.
+- Level: max M = VO max M (c00 -20.7) - 7 = -27.7 (gain -4.8 dB; ~11 dB over music, louder than every other SFX). TP ~ -22.6 (crest of
+  the file is ~5 dB, so a sample-peak 7 dB under the VO peak would sit ~5 dB OVER the VO's loudness; loudness match used instead).
+- Sync (lm_intro audio, at 2.433 = GlitchOut2 f0 of shot 0-2.60): full on f0-2 pop, -6 dB on dark f3, full f4-8 (f5 pop), -8 dB on
+  near-black f9, 0.8 at the cut 2.60, fade to 0 by 2.85 (VO 2.90). Static bed unchanged (-9 dB at 2.40-2.50).
+- Other intro SFX unchanged: whooshes music-4, riser/booms music-3, key stream music-6 (title only), static bed I music-2 (bed, not a hit).
+  Typewriter: TitleType (L08) is the only typing device in the intro (Warning2/Descent/Credit fade, no char reveal); keys still on.
+- Checks: build exit 0; check ok, 0 errors (lint 6 warnings, old). Not listened / not rendered.

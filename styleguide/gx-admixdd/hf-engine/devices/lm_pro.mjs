@@ -13,11 +13,11 @@
 //      wrapper (kids = the footage). x,y,w,h = burned-in timestamp box in screen px; rect = visible picture area. Hand-drawn red
 //      ring (1.1 turns, doubled stroke) draws ON the stamp, surround dims, punch-in toward the stamp. Ring box is clamped into rect
 //      and the zoom origin snaps to the nearest picture edge, so nothing ever leaves the picture.
-//  TextFade {kick, lines:[..], at=8, pos='c'|'l'|'tl', size=72 (tl 56), hold=f|null (null = to shot end -20), font='vcr'|'mono', x,y (tl)}
+//  TextFade {kick, lines:[..], at=8, pos='c'|'l'|'tl', size=78 (tl 56), hold=f|null (null = to shot end -20), font='vcr'|'mono', x,y (tl)}
 //      v4 non-title text: lines fade in 30 f eased + 8 px rise (6 f stagger), out 18 f; 'c'/'l' = card over a soft scrim, 'tl' = date
 //      top-left x100 y62 like the Abyssal refs (no scrim). Pair with a click SFX (case side). TitleType {mode:'fade'} = TextFade.
-//  PlaceText {text, sub, at=0, hold=f|null, pos='bl'|'br'|'tl'|'tr' or x,y (top-left px), size=40, font='vcr'|'mono'}
-//      v4 plain place name on the footage: VCR caps, soft shadow, no bar/box, optional Plex sub line; fade 30 f + 8 px rise, out 18 f.
+//  PlaceText {text, sub, at=0, hold=f|null, pos='bl'|'br'|'tl'|'tr' or x,y (top-left px), size=50, font='vcr'|'mono'}
+//      v4 plain place name on the footage: VCR caps 50 px, soft shadow, no bar/box, optional Plex sub line; fade 30 f + 8 px rise, out 18 f.
 //  TitleType {kick, lines:[..], at=8, size=78, cps=22, align='c'|'l'}  (title screens only)
 //      text card typed in 'VCR OSD Mono' (fallback VT323 / Share Tech Mono): type-on with block cursor, slight tape fringe, soft
 //      scrim. Always put it over a footage/photo backdrop (never flat black). Out 20 f at the end of the shot.
@@ -193,9 +193,9 @@ export const TextFade = {
   name: 'TextFade',
   html: (p, ctx) => {
     const kick = String(p.kick || '').toUpperCase(), lines = (p.lines || []).map((l) => String(l).toUpperCase()), pos = p.pos || (p.align === 'l' ? 'l' : 'c');
-    const size = p.size ?? (pos === 'tl' ? 56 : 72), ff = p.font === 'mono' ? MONO : VCR, al = pos !== 'c';
+    const size = p.size ?? (pos === 'tl' ? 56 : 78), ff = p.font === 'mono' ? MONO : VCR, al = pos !== 'c';
     const dv = ctx.dev('TextFade', { at: p.at ?? 8, hold: p.hold ?? null });
-    const rows = (kick ? `<div data-l style="font-size:${F(size * 0.42)}px;line-height:1;letter-spacing:0.14em;color:${C.amb};margin-bottom:${F(size * 0.12)}px;${SH}">${ctx.esc(kick)}</div>` : '')
+    const rows = (kick ? `<div data-l style="font-size:${F(size * 0.5)}px;line-height:1;letter-spacing:0.14em;color:${C.amb};margin-bottom:${F(size * 0.12)}px;${SH}">${ctx.esc(kick)}</div>` : '')
       + lines.map((l) => `<div data-l style="font-size:${size}px;line-height:1.08;letter-spacing:0.06em;white-space:pre;${SH}">${ctx.esc(l)}</div>`).join('');
     if (pos === 'tl') return `<div ${dv} style="position:absolute;left:${p.x ?? 100}px;top:${p.y ?? 62}px;display:flex;flex-direction:column;align-items:flex-start;font-family:${ff};color:${C.tx};opacity:0">${rows}</div>`;
     return `<div class="${AF}" style="pointer-events:none;background:radial-gradient(ellipse 66% 50% at ${al ? '34%' : '50%'} 50%,rgba(0,0,0,.58) 0%,rgba(0,0,0,.32) 55%,rgba(0,0,0,0) 100%)"></div>`
@@ -206,11 +206,11 @@ export const TextFade = {
 export const PlaceText = {
   name: 'PlaceText',
   html: (p, ctx) => {
-    const size = p.size ?? 40, ff = p.font === 'mono' ? MONO : VCR, pos = p.pos || 'bl', t = String(p.text || '').toUpperCase(), sub = String(p.sub || '').toUpperCase();
+    const size = p.size ?? 50, ff = p.font === 'mono' ? MONO : VCR, pos = p.pos || 'bl', t = String(p.text || '').toUpperCase(), sub = String(p.sub || '').toUpperCase();
     const xy = p.x != null ? `left:${p.x}px;top:${p.y}px` : `${pos[1] === 'r' ? 'right:96px' : 'left:96px'};${pos[0] === 't' ? 'top:70px' : `bottom:${p.y ?? 84}px`}`;
     return `<div ${ctx.dev('PlaceText', { at: p.at ?? 0, hold: p.hold ?? null })} style="position:absolute;${xy};display:flex;flex-direction:column;align-items:${pos[1] === 'r' ? 'flex-end' : 'flex-start'};gap:8px;font-family:${ff};color:${C.tx};opacity:0">`
-      + `<div data-l style="font-size:${size}px;line-height:1;letter-spacing:0.06em;white-space:nowrap;text-shadow:0 2px 4px rgba(0,0,0,.85),0 0 16px rgba(0,0,0,.55)">${ctx.esc(t)}</div>`
-      + (sub ? `<div data-l style="font:500 ${F(size * 0.55)}px/1 ${MONO};letter-spacing:0.14em;color:#CFC9BC;white-space:nowrap;text-shadow:0 2px 4px rgba(0,0,0,.85),0 0 14px rgba(0,0,0,.5)">${ctx.esc(sub)}</div>` : '') + `</div>`;
+      + `<div data-l style="font-size:${size}px;line-height:1;letter-spacing:0.06em;white-space:nowrap;text-shadow:0 0 3px rgba(0,0,0,.75),0 2px 4px rgba(0,0,0,.85),0 0 18px rgba(0,0,0,.6)">${ctx.esc(t)}</div>`
+      + (sub ? `<div data-l style="font:500 ${F(size * 0.52)}px/1 ${MONO};letter-spacing:0.14em;color:#CFC9BC;white-space:nowrap;text-shadow:0 0 3px rgba(0,0,0,.8),0 2px 4px rgba(0,0,0,.85),0 0 14px rgba(0,0,0,.55)">${ctx.esc(sub)}</div>` : '') + `</div>`;
   },
   render: fadeR(8),
 };
