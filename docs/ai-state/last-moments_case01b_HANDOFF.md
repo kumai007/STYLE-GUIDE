@@ -144,3 +144,9 @@ Check: all shots >= 3 s; no same text device back to back; one big text device a
   - c01b3 https://www.theguardian.com/uk-news/2013/nov/13/mi6-spy-dead-bag-locked-himself-gareth-williams : "Outlining the results of a three-year investigation on Wednesday, the Metropolitan police said Gareth Williams most likely died alone in his flat."
   - c01b4 https://www.theguardian.com/uk-news/2024/feb/05/no-new-dna-evidence-gareth-williams-likely-died-alone-forensic-review-finds : "No new DNA evidence was found and no further lines of inquiry were identified."
 - Next: rerun the same prep command when GitHub dispatch works, then crop (steps c-e) -> pages/c01b_art_<id>.jpg + c01b_articles.json. Not done: crops, c01b_articles.json, MEDIA_LOG rows.
+
+## Media agent (2026-11-19)
+- 20 new Pexels clips `nb_*.mp4` (1920x1080 60fps h264, no audio, 8-20 s) in `assets/broll/` and hf-engine `media/last-moments/broll/`; metadata in `hf-engine/media/last-moments/c01b_new_media.json` (dur, yavg, author, licence, note); all logged in `assets/MEDIA_LOG.md`.
+- Weak matches (see json notes): nb_door_night (daylight door, not night), nb_bathroom_dark (bright empty drain), nb_fingerprint_dust (ink fingerprinting, not powder), nb_wales_coast (sunny), nb_cctv_camera (pole cameras, bright), nb_stopwatch (pocket watch dial). Faces checked on one contact sheet: none identifiable.
+- 7 `np_*` Commons photos NOT delivered: upload.wikimedia.org answered HTTP 429 to every request for 40+ min (IP throttle). Rerun `python -I -X utf8 productions/last-moments/build/commons_photos_np.py` from the folder root when it clears; it downloads, copies to both photo dirs and adds json entries (then check faces, add notes).
+- Pexels search blocked scripted queries (HTTP 403) after ~15 searches; clips were chosen from page titles, only the contact sheet was viewed.
