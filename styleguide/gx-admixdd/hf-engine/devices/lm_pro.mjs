@@ -3,8 +3,8 @@
 // 60 fps frames; f = shot-local frame. Case: devices [...,'lm_pro'], fonts need BebasNeue, IBMPlexMono-600, (VCR OSD Mono file when added).
 // API
 //  LowerThird {name, role, at=0, hold=200, pos='l'|'c'|'r', size=92, pin=false, y=118}
-//      hand-inked black brush bar (ragged SVG + displacement) wipes on L->R behind a ragged mask, distressed Bebas caps (eroded by a
-//      noise mask), role in Plex Mono on a smaller torn paper strip, -1.5 deg, overshoot settle, wipe-off exit. pin = red place mark.
+//      v4: clean dark brush bar (soft edge, light grain), clean Bebas caps, role in Plex Mono on a small dark strip, -1 deg, straight
+//      clip wipe in 24 f / off 16 f. Max 1-2 per case (key people only); places -> PlaceText. pin = red place mark.
 //  Article3D {img, iw, ih, bands:[[x,y,w,h,f0]], src, date, focus:[x,y], key=1190, tilt=3.5}
 //      FULL-BLEED real page crop: always covers the whole frame (cover x1.15, tilt <= 3.5 deg easing flat, clamped push toward the
 //      key line, key line ~key px wide where the crop allows), paper grain, far-edge focus blur, hand-drawn amber marker (uneven ink,
@@ -13,7 +13,12 @@
 //      wrapper (kids = the footage). x,y,w,h = burned-in timestamp box in screen px; rect = visible picture area. Hand-drawn red
 //      ring (1.1 turns, doubled stroke) draws ON the stamp, surround dims, punch-in toward the stamp. Ring box is clamped into rect
 //      and the zoom origin snaps to the nearest picture edge, so nothing ever leaves the picture.
-//  TitleType {kick, lines:[..], at=8, size=78, cps=22, align='c'|'l'}
+//  TextFade {kick, lines:[..], at=8, pos='c'|'l'|'tl', size=72 (tl 56), hold=f|null (null = to shot end -20), font='vcr'|'mono', x,y (tl)}
+//      v4 non-title text: lines fade in 30 f eased + 8 px rise (6 f stagger), out 18 f; 'c'/'l' = card over a soft scrim, 'tl' = date
+//      top-left x100 y62 like the Abyssal refs (no scrim). Pair with a click SFX (case side). TitleType {mode:'fade'} = TextFade.
+//  PlaceText {text, sub, at=0, hold=f|null, pos='bl'|'br'|'tl'|'tr' or x,y (top-left px), size=40, font='vcr'|'mono'}
+//      v4 plain place name on the footage: VCR caps, soft shadow, no bar/box, optional Plex sub line; fade 30 f + 8 px rise, out 18 f.
+//  TitleType {kick, lines:[..], at=8, size=78, cps=22, align='c'|'l'}  (title screens only)
 //      text card typed in 'VCR OSD Mono' (fallback VT323 / Share Tech Mono): type-on with block cursor, slight tape fringe, soft
 //      scrim. Always put it over a footage/photo backdrop (never flat black). Out 20 f at the end of the shot.
 const AF = 'af';
@@ -41,34 +46,43 @@ function brush(w, h, r, fingers = 7) {
   return 'M' + P.map(([x, y]) => `${F(x)} ${F(y)}`).join('L') + 'Z';
 }
 
+// v4 (owner 2026-11-19 "too much texture"): clean dark brush bar (soft low-amplitude edge, 3 short dry-brush fingers), clean Bebas
+// caps (no distress), very light grain on the bar only, straight clip wipe in (power2.out 24 f) / wipe off L->R (16 f), -1 deg.
+function bar(w, h, r) {
+  const P = [], st = 22;
+  for (let x = 0; x <= w; x += st) P.push([x, r() * h * 0.03 + (x < 22 ? (22 - x) * 0.22 : 0)]);
+  for (let k = 0; k < 3; k++) { const y0 = (h * k) / 3, y1 = (h * (k + 1)) / 3, e = w + h * 0.1 + r() * h * 0.16; P.push([e, y0 + h * 0.07], [e - h * 0.04, y1 - h * 0.05], [w + h * 0.02, y1]); }
+  for (let x = w; x >= 0; x -= st) P.push([x, h - r() * h * 0.03 - (x < 22 ? (22 - x) * 0.22 : 0)]);
+  P.push([-5, h * 0.68], [-7, h * 0.34]);
+  return 'M' + P.map(([x, y]) => `${F(x)} ${F(y)}`).join('L') + 'Z';
+}
+const cdefs = (id, seed) => `<svg width="0" height="0" style="position:absolute"><defs>`
+  + `<filter id="${id}S" x="-3%" y="-10%" width="106%" height="120%"><feTurbulence type="fractalNoise" baseFrequency="0.02 0.07" numOctaves="1" seed="${seed % 97}"/><feDisplacementMap in="SourceGraphic" scale="3" xChannelSelector="R" yChannelSelector="G"/></filter>`
+  + `<filter id="${id}G" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="${seed % 71}"/><feColorMatrix values="0 0 0 0 .5 0 0 0 0 .48 0 0 0 0 .44 0 0 0 .55 0"/></filter></defs></svg>`;
 export const LowerThird = {
   name: 'LowerThird',
   html: (p, ctx) => {
     const id = `lp${++UID}`, r = rng(hash(p.name + '|' + p.role)), size = p.size ?? 92, name = String(p.name || '').toUpperCase(), role = String(p.role || '').toUpperCase();
-    const tw = name.length * size * 0.415 + (p.pin ? 46 : 0), bw = tw + 110, bh = size * 1.22, rw = role.length * 17.6 + 52, rh = 44;
-    const pos = p.pos === 'c' ? `left:50%;margin-left:${-bw / 2}px` : p.pos === 'r' ? 'right:120px' : 'left:112px';
-    const spl = Array.from({ length: 7 }, () => `<circle cx="${F(bw + 14 + r() * 70)}" cy="${F(r() * bh)}" r="${F(1 + r() * 3.2)}"/>`).join('');
-    const pin = p.pin ? `<i style="display:inline-block;width:22px;height:30px;margin-right:20px;background:${C.red};clip-path:polygon(50% 100%,2% 42%,0 22%,22% 0,80% 2%,100% 26%,96% 44%)"></i>` : '';
-    return `${defs(id, hash(name))}<div ${ctx.dev('LowerThird', { at: p.at ?? 0, hold: p.hold ?? 200 })} style="position:absolute;${pos};bottom:${p.y ?? 118}px;transform-origin:8% 60%;opacity:0;filter:drop-shadow(0 10px 22px rgba(0,0,0,.55))">`
-      + `<div data-b style="position:relative;width:${F(bw)}px;height:${F(bh)}px">`
-      + `<svg viewBox="-14 -14 ${F(bw + 110)} ${F(bh + 28)}" style="position:absolute;left:-14px;top:-14px;width:${F(bw + 110)}px;height:${F(bh + 28)}px;overflow:visible"><g filter="url(#${id}R)" fill="${C.ink}"><path d="${brush(bw, bh, r)}"/>${spl}</g>`
-      + `<path data-u d="M${F(26 + r() * 10)} ${F(bh + 6)}C${F(bw * 0.2)} ${F(bh + 1 + r() * 5)},${F(bw * 0.38)} ${F(bh + 11)},${F(bw * 0.52 + r() * 30)} ${F(bh + 4 + r() * 4)}" fill="none" stroke="${C.red}" stroke-width="6" stroke-linecap="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" filter="url(#${id}R)"/></svg>`
-      + `<div data-n style="position:absolute;left:52px;top:0;height:${F(bh)}px;display:flex;align-items:center;white-space:nowrap;font:400 ${size}px/1 'Bebas Neue',sans-serif;letter-spacing:0.045em;color:${C.tx};padding-top:${F(size * 0.07)}px;filter:url(#${id}T)">${pin}${ctx.esc(name)}</div></div>`
-      + (role ? `<div data-o style="position:relative;margin:-9px 0 0 ${F(38 + r() * 26)}px;width:${F(rw)}px;height:${rh}px;transform:rotate(${F(0.6 + r() * 0.9)}deg)">`
-        + `<svg viewBox="-8 -8 ${F(rw + 40)} ${rh + 16}" style="position:absolute;left:-8px;top:-8px;width:${F(rw + 40)}px;height:${rh + 16}px"><path d="${brush(rw, rh, r, 3)}" fill="${C.paper}" filter="url(#${id}R)"/></svg>`
-        + `<div style="position:absolute;left:24px;top:0;height:${rh}px;display:flex;align-items:center;white-space:nowrap;font:600 24px/1 ${MONO};letter-spacing:0.13em;color:#151413;filter:url(#${id}T)">${ctx.esc(role)}</div></div>` : '')
+    const tw = name.length * size * 0.4 + (p.pin ? 44 : 0), bw = tw + 104, bh = Math.round(size * 1.2), rw = role.length * 15.6 + 48, rh = 40, W = Math.ceil(bw + bh * 0.3 + 16);
+    const pos = p.pos === 'c' ? `left:50%;margin-left:${F(-bw / 2)}px` : p.pos === 'r' ? 'right:120px' : 'left:112px';
+    const bp = bar(bw, bh, r), rp = role ? bar(rw, rh, r) : '';
+    const pin = p.pin ? `<i style="display:inline-block;width:20px;height:28px;margin-right:18px;background:${C.red};clip-path:polygon(50% 100%,4% 40%,4% 20%,24% 0,76% 0,96% 20%,96% 40%)"></i>` : '';
+    return `${cdefs(id, hash(name))}<div ${ctx.dev('LowerThird', { at: p.at ?? 0, hold: p.hold ?? 200 })} style="position:absolute;${pos};bottom:${p.y ?? 118}px;width:${W}px;transform:rotate(-1deg);transform-origin:10% 60%;opacity:0;filter:drop-shadow(0 8px 18px rgba(0,0,0,.45))">`
+      + `<div style="position:relative;width:${F(bw)}px;height:${bh}px">`
+      + `<svg viewBox="-10 -6 ${W + 10} ${bh + 12}" style="position:absolute;left:-10px;top:-6px;width:${W + 10}px;height:${bh + 12}px;overflow:visible"><clipPath id="${id}C"><path d="${bp}"/></clipPath>`
+      + `<path d="${bp}" fill="${C.ink}" fill-opacity=".9" filter="url(#${id}S)"/><rect x="-10" y="-6" width="${W + 10}" height="${bh + 12}" filter="url(#${id}G)" clip-path="url(#${id}C)" opacity=".16"/></svg>`
+      + `<div data-n style="position:absolute;left:52px;top:0;height:${bh}px;display:flex;align-items:center;white-space:nowrap;font:400 ${size}px/1 'Bebas Neue',sans-serif;letter-spacing:0.04em;color:${C.tx};padding-top:${F(size * 0.07)}px">${pin}${ctx.esc(name)}</div></div>`
+      + (role ? `<div data-o style="position:relative;margin:-4px 0 0 40px;width:${F(rw)}px;height:${rh}px">`
+        + `<svg viewBox="-6 -4 ${F(rw + rh * 0.3 + 12)} ${rh + 8}" style="position:absolute;left:-6px;top:-4px;width:${F(rw + rh * 0.3 + 12)}px;height:${rh + 8}px;overflow:visible"><path d="${rp}" fill="${C.ink}" fill-opacity=".82" filter="url(#${id}S)"/></svg>`
+        + `<div style="position:absolute;left:22px;top:0;height:${rh}px;display:flex;align-items:center;white-space:nowrap;font:500 21px/1 ${MONO};letter-spacing:0.15em;color:#CFC9BC">${ctx.esc(role)}</div></div>` : '')
       + `</div>`;
   },
   render: new Function('el', 'f', 'p', 'G', 'S', E + `
-    var g=f-p.at, T=30, xo=g-(T+18+p.hold), out=c(xo/16); if(g<0||out>=1){el.style.opacity=0;return;} el.style.opacity=1;
-    var u=o3(c(g/T)), s=bk(c(g/(T+14)));
-    var J=[0,5,-3,6,-4,3,0], edge=function(q,off){var a=[];for(var i=0;i<J.length;i++){a.push((q*118-9+J[i]*(q<1?1:0)+off).toFixed(2)+'% '+(i*100/(J.length-1)*1.6-30).toFixed(1)+'%');}return a;};
-    var L=(out*118-9), R=edge(u,0), pts=[L.toFixed(2)+'% -30%'].concat(R).concat([L.toFixed(2)+'% 130%']);
-    var b=el.querySelector('[data-b]'); b.style.clipPath=out>0||u<1?'polygon('+pts.join(',')+')':'none';
-    el.style.transform='rotate('+(-1.5-1.6*(1-s)).toFixed(3)+'deg) translate('+(-26*(1-s)).toFixed(2)+'px,'+(7*(1-s)).toFixed(2)+'px) scale('+(1.035-0.035*s).toFixed(4)+')';
-    var n=el.querySelector('[data-n]'), un=o3(c((g-9)/24)); n.style.clipPath='inset(-20% '+(100*(1-un)).toFixed(2)+'% -20% -5%)';
-    el.querySelector('[data-u]').setAttribute('stroke-dashoffset',(1-io(c((g-T+4)/20))).toFixed(4));
-    var o=el.querySelector('[data-o]'); if(o){var uo=o3(c((g-T+6)/20)); o.style.clipPath='inset(-30% '+(100*(1-uo)*(1-out)+100*out*0).toFixed(2)+'% -30% '+(110*out-5).toFixed(2)+'%)'; o.style.opacity=uo>0?1:0;}`),
+    var g=f-p.at, xo=g-(36+p.hold), out=c(xo/16); if(g<0||out>=1){el.style.opacity=0;return;} el.style.opacity=1;
+    var p2=function(x){return 1-(1-x)*(1-x)}, u=p2(c(g/24)), wo=io(out);
+    el.style.clipPath='inset(-60px '+(100*(1-u)).toFixed(2)+'% -60px '+(-4+104*wo).toFixed(2)+'%)';
+    var n=el.querySelector('[data-n]'), un=o3(c((g-10)/18)); n.style.opacity=un.toFixed(3); n.style.transform='translateX('+(-14*(1-un)).toFixed(2)+'px)';
+    var o=el.querySelector('[data-o]'); if(o){var uo=o3(c((g-16)/18)); o.style.opacity=uo.toFixed(3); o.style.transform='translateX('+(-10*(1-uo)).toFixed(2)+'px)';}`),
 };
 
 // uneven marker stroke over a w x h band (px): wobbly body + a second darker overlap pass
@@ -151,6 +165,7 @@ export const StampRing = {
 export const TitleType = {
   name: 'TitleType',
   html: (p, ctx) => {
+    if (p.mode === 'fade') return TextFade.html(p, ctx); // v4: non-title text fades (TextFade), type-on stays for title screens
     const kick = String(p.kick || '').toUpperCase(), lines = (p.lines || []).map((l) => String(l).toUpperCase()), size = p.size ?? 78, al = p.align === 'l';
     const fr = 'text-shadow:-2px 0 0 rgba(255,60,50,.34),2px 0 0 rgba(60,200,255,.28),0 0 22px rgba(236,232,223,.28),0 4px 14px rgba(0,0,0,.9)';
     const row = (t, i, st) => `<div data-l="${i}" style="${st};white-space:pre"><span></span><i style="display:inline-block;width:.6em;height:.78em;background:currentColor;vertical-align:-.04em;opacity:0;box-shadow:0 0 14px rgba(236,232,223,.5)"></i><span style="visibility:hidden"></span></div>`;
@@ -168,4 +183,36 @@ export const TitleType = {
     var out=c((f-(S.len-20))/20); el.style.opacity=(1-out).toFixed(4); el.style.filter=out>0?'blur('+(5*out).toFixed(2)+'px)':'none';`),
 };
 
-export default [LowerThird, Article3D, StampRing, TitleType];
+// v4 (owner 2026-11-19): typewriter type-on ONLY for title screens; every other text = TextFade (eased fade + 8 px rise) + click SFX.
+const SH = 'text-shadow:0 2px 6px rgba(0,0,0,.8),0 0 20px rgba(0,0,0,.45)';
+const fadeR = (stag) => new Function('el', 'f', 'p', 'G', 'S', E + `
+    var g=f-p.at, end=p.hold!=null?p.at+30+p.hold:S.len-20, out=c((f-end)/18), L=el.querySelectorAll('[data-l]');
+    if(g<0||out>=1){el.style.opacity=0;return;} el.style.opacity=(1-io(out)).toFixed(4);
+    for(var i=0;i<L.length;i++){var u=io(c((g-i*${stag})/30)); L[i].style.opacity=u.toFixed(4); L[i].style.transform='translateY('+(8*(1-u)).toFixed(2)+'px)';}`);
+export const TextFade = {
+  name: 'TextFade',
+  html: (p, ctx) => {
+    const kick = String(p.kick || '').toUpperCase(), lines = (p.lines || []).map((l) => String(l).toUpperCase()), pos = p.pos || (p.align === 'l' ? 'l' : 'c');
+    const size = p.size ?? (pos === 'tl' ? 56 : 72), ff = p.font === 'mono' ? MONO : VCR, al = pos !== 'c';
+    const dv = ctx.dev('TextFade', { at: p.at ?? 8, hold: p.hold ?? null });
+    const rows = (kick ? `<div data-l style="font-size:${F(size * 0.42)}px;line-height:1;letter-spacing:0.14em;color:${C.amb};margin-bottom:${F(size * 0.12)}px;${SH}">${ctx.esc(kick)}</div>` : '')
+      + lines.map((l) => `<div data-l style="font-size:${size}px;line-height:1.08;letter-spacing:0.06em;white-space:pre;${SH}">${ctx.esc(l)}</div>`).join('');
+    if (pos === 'tl') return `<div ${dv} style="position:absolute;left:${p.x ?? 100}px;top:${p.y ?? 62}px;display:flex;flex-direction:column;align-items:flex-start;font-family:${ff};color:${C.tx};opacity:0">${rows}</div>`;
+    return `<div class="${AF}" style="pointer-events:none;background:radial-gradient(ellipse 66% 50% at ${al ? '34%' : '50%'} 50%,rgba(0,0,0,.58) 0%,rgba(0,0,0,.32) 55%,rgba(0,0,0,0) 100%)"></div>`
+      + `<div ${dv} style="position:absolute;left:${al ? '130px' : 0};right:0;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;align-items:${al ? 'flex-start' : 'center'};gap:${F(size * 0.16)}px;font-family:${ff};color:${C.tx};opacity:0">${rows}</div>`;
+  },
+  render: fadeR(6),
+};
+export const PlaceText = {
+  name: 'PlaceText',
+  html: (p, ctx) => {
+    const size = p.size ?? 40, ff = p.font === 'mono' ? MONO : VCR, pos = p.pos || 'bl', t = String(p.text || '').toUpperCase(), sub = String(p.sub || '').toUpperCase();
+    const xy = p.x != null ? `left:${p.x}px;top:${p.y}px` : `${pos[1] === 'r' ? 'right:96px' : 'left:96px'};${pos[0] === 't' ? 'top:70px' : `bottom:${p.y ?? 84}px`}`;
+    return `<div ${ctx.dev('PlaceText', { at: p.at ?? 0, hold: p.hold ?? null })} style="position:absolute;${xy};display:flex;flex-direction:column;align-items:${pos[1] === 'r' ? 'flex-end' : 'flex-start'};gap:8px;font-family:${ff};color:${C.tx};opacity:0">`
+      + `<div data-l style="font-size:${size}px;line-height:1;letter-spacing:0.06em;white-space:nowrap;text-shadow:0 2px 4px rgba(0,0,0,.85),0 0 16px rgba(0,0,0,.55)">${ctx.esc(t)}</div>`
+      + (sub ? `<div data-l style="font:500 ${F(size * 0.55)}px/1 ${MONO};letter-spacing:0.14em;color:#CFC9BC;white-space:nowrap;text-shadow:0 2px 4px rgba(0,0,0,.85),0 0 14px rgba(0,0,0,.5)">${ctx.esc(sub)}</div>` : '') + `</div>`;
+  },
+  render: fadeR(8),
+};
+
+export default [LowerThird, Article3D, StampRing, TitleType, TextFade, PlaceText];

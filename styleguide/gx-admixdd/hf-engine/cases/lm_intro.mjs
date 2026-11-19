@@ -13,9 +13,9 @@ const n = (d, p = {}, ...k) => ({ d, p, k });
 // over 1.5 s from 0; VO never faded. SFX v2 (owner 2026-11-19 "good SFX but a little lower than music"; docs/ai-state/last-moments_sfx_HANDOFF.md):
 // one Epidemic family per device; each SFX max momentary = music target over its loud span - 3 dB (panel whooshes -4, typing stream -6,
 // warning static bed I = music -2). Table = [dur s, I, max M (short files padded), true peak, peak-at s] by ffmpeg ebur128.
-const VO_PK = -3.1, MUS_T = -38.5;
+const VO_PK = -3.1, VO_M = -20.7, MUS_T = -38.5; // VO_M = c00.wav max momentary (ebur128)
 const SFX = { lm_boom: [4.183, -21.7, -17.7, -11.6, 0.176], lm_whoosh: [1.549, -19.3, -16.3, -2.4, 0.469], lm_key: [0.11, -70, -25.6, -4.6, 0.016],
-  glitch_click: [0.53, -22.2, -21.1, -9.5, 0.05], riser_dark: [5.91, -23.0, -16.7, -10.6, -1], static_lp: [6, -32.4, -31.1, -20, 0] };
+  lm_glitch: [0.58, -23.7, -22.9, -17.8, 0.005], riser_dark: [5.91, -23.0, -16.7, -10.6, -1], static_lp: [6, -32.4, -31.1, -20, 0] };
 const db = (x) => +Math.pow(10, x / 20).toFixed(4);
 // gain from the music target min over the loud span (peak-at .. +1 s; risers: last 1.5 s), so dips never let an SFX poke above the bed
 const sfx = (name, at, off = -3, len) => {
@@ -121,7 +121,13 @@ export default {
   audio: [
     // warning static bed (film/static texture only here): I = music -2 (SFX v2; was VO +3), drops 9 dB as the glitch hits (2.43), tails to 2.87
     { src: 'static', id: 'bed_static', file: 'sfx/static_lp.wav', at: 0, to: 2.90, lane: [[0, 0], [1.5, db(MUS_T - 2 + 32.4)], [2.40, db(MUS_T - 2 + 32.4)], [2.50, db(MUS_T - 11 + 32.4)], [2.87, 0]] },
-    sfx('glitch_click', 2.42, -2), // warning exit hit: max M = music -2 (over the -9 dB bed)
+    // warning exit hit (owner 2026-11-19 "glitch SFX in the warning transition"): lm_glitch = ES "Processed Impact Distortion" (onset at
+    // file 0), the intro's ONE big hit: max M = VO max M - 7 (-27.7, ~11 dB over the music bed). Synced to GlitchOut2 (n=10, shot end 2.60):
+    // onset on glitch f0 (2.433, brightness pop), -6 dB on the dark f3, full on the f5 pop, -8 dB on the near-black f9, then 0.25 s fade
+    // after the cut (silent by 2.85, before the VO at 2.90).
+    (() => { const g = db(VO_M - 7 - SFX.lm_glitch[2]), r = (x) => +(g * x).toFixed(4), F = (k) => +(k / 60).toFixed(4);
+      return { src: 'lm_glitch', id: 'sfx_lm_glitch_243', file: 'sfx/lm_glitch.wav', at: 2.433, to: 2.853, lane: [[0, 0], [0.003, g], [F(3) - 0.002, g], [F(3), r(0.5)], [F(4) - 0.002, r(0.5)], [F(4), g],
+        [F(9) - 0.002, g], [F(9), r(0.4)], [F(10) - 0.002, r(0.4)], [F(10), r(0.8)], [0.30, r(0.35)], [0.418, 0]] }; })(),
     { src: 'mus_a', id: 'mus_intro', file: 'music/es_tarmac_radiation.mp3', at: 0, to: END, lane: musLane('music/es_tarmac_radiation.mp3', 0, END, dipT(MUS_T, 0), 1.5, 5.3, dipPts(0)) },
     { src: 'mus_b', id: 'mus_title', file: 'music/es_dark_days.mp3', at: T0 + 0.23, to: END, lane: musLane('music/es_dark_days.mp3', 0, +(END - T0 - 0.23).toFixed(3), () => MUS_T, 2, 0) },
     ...MOVES.map((t) => sfx('lm_whoosh', t, -4)), // panel slides (camera-move family)
