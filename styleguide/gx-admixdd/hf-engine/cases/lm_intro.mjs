@@ -9,16 +9,23 @@ import { fileURLToPath } from 'node:url';
 const MED = path.resolve(process.env.GX_ENGINE_PUBLIC || path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'media'), 'last-moments');
 const n = (d, p = {}, ...k) => ({ d, p, k });
 
-// ---- mix (handoff "STEP 4"): VO -28.5 LUFS I. Music = VO -10 (-38.5 short-term, levelled lane), -12 dB in dips; SFX = VO -14
-// (-42.5 by I) capped at music -1 by max momentary (coc helper); glitch + tick by peak (glitch -14 dB re VO peak over the warning bed,
-// tick -22 re VO peak); warning static bed = VO +3 LU; music/SFX fade in over 1.5 s from 0; VO never faded.
-const VO_PK = -3.1, MUS_T = -38.5, SFX_T = -42.5;
-const SFX = { boom_low: [3.5, -24.4, -20.7, -3.0], glitch_click: [0.53, -22.2, -21.1, -9.5], riser_dark: [5.91, -23.0, -16.7, -10.6], tick_soft: [0.32, -70, -120, -10.5], static_lp: [6, -32.4, -31.1, -20] };
+// ---- mix (handoff "STEP 4"): VO -28.5 LUFS I. Music = VO -10 (-38.5 short-term, levelled lane), -12 dB in dips; music/SFX fade in
+// over 1.5 s from 0; VO never faded. SFX v2 (owner 2026-11-19 "good SFX but a little lower than music"; docs/ai-state/last-moments_sfx_HANDOFF.md):
+// one Epidemic family per device; each SFX max momentary = music target over its loud span - 3 dB (panel whooshes -4, typing stream -6,
+// warning static bed I = music -2). Table = [dur s, I, max M (short files padded), true peak, peak-at s] by ffmpeg ebur128.
+const VO_PK = -3.1, MUS_T = -38.5;
+const SFX = { lm_boom: [4.183, -21.7, -17.7, -11.6, 0.176], lm_whoosh: [1.549, -19.3, -16.3, -2.4, 0.469], lm_key: [0.11, -70, -25.6, -4.6, 0.016],
+  glitch_click: [0.53, -22.2, -21.1, -9.5, 0.05], riser_dark: [5.91, -23.0, -16.7, -10.6, -1], static_lp: [6, -32.4, -31.1, -20, 0] };
 const db = (x) => +Math.pow(10, x / 20).toFixed(4);
-const sfx = (name, at, gdB, len) => {
-  const [d0, L, M] = SFX[name], d = len ?? d0, g = db(gdB ?? Math.min(SFX_T - L, MUS_T - 1 - M));
-  return { src: name, id: `sfx_${name}_${Math.round(at * 100)}`, file: `sfx/${name}.wav`, at, to: +(at + d - 0.02).toFixed(3), lane: [[0, 0], [0.02, g], [d - 0.1, g], [d - 0.03, 0]] };
+// gain from the music target min over the loud span (peak-at .. +1 s; risers: last 1.5 s), so dips never let an SFX poke above the bed
+const sfx = (name, at, off = -3, len) => {
+  const [d0, , M, , pk] = SFX[name], d = len ?? d0, tg = dipT(MUS_T, 0), a0 = pk < 0 ? at + d - 1.5 : at + Math.max(0, pk - 0.05);
+  let m = 99; for (let u = 0; u <= (pk < 0 ? 1.5 : 1.0) + 1e-6; u += 0.05) m = Math.min(m, tg(a0 + u));
+  const g = db(m + off - M), fo = name === 'lm_boom' ? 0.8 : 0.03;
+  return { src: name, id: `sfx_${name}_${Math.round(at * 100)}`, file: `sfx/${name}.wav`, at: +at.toFixed(3), to: +(at + d - 0.02).toFixed(3), lane: [[0, 0], [0.015, g], [+(d - fo - 0.02).toFixed(3), g], [+(d - 0.03).toFixed(3), 0]] };
 };
+// conveyor panel moves (36 f): whoosh peak (0.469 s) on the move midpoint (+0.3 s) -> start = move start - 0.17 (C 476 skipped: riser starts there)
+const MOVES = [[8.105, [95, 173, 282, 372]], [25.565, [110, 206, 320]], [32.855, [108, 210, 371, 568]]].flatMap(([c, fs]) => fs.map((f) => +(c + f / 60 - 0.17).toFixed(3)));
 const stS = (f) => {
   const e = spawnSync('ffmpeg', ['-hide_banner', '-nostats', '-i', path.join(MED, f), '-af', 'ebur128', '-f', 'null', '-'], { encoding: 'utf8', maxBuffer: 1 << 28 }).stderr;
   return [...e.matchAll(/t:\s*([\d.]+)\s+TARGET.*?S:\s*(-?(?:[\d.]+|inf|nan))/g)].map((m) => (Number.isFinite(+m[2]) ? +m[2] : -70));
@@ -80,8 +87,9 @@ const T0 = 53.535, END = 59.04, TY = { a: 'CASE 1', b: 'THE CODEBREAKER WHO WALK
 const ticks = [];
 for (const [txt, f0] of [[TY.a, TY.fa], [TY.b, TY.fb]]) for (let k = 0; k < txt.length; k += 2) {
   if (txt[k] === ' ' && k + 1 < txt.length) k += 1;
-  const at = +(T0 + (f0 + Math.ceil((k + 1) / TY.rate)) / 60).toFixed(3), g = db(VO_PK - 20 - SFX.tick_soft[3]);
-  ticks.push({ src: 'tick_soft', id: `tk_${Math.round(at * 1000)}`, file: 'sfx/tick_soft.wav', at, to: +(at + 0.3).toFixed(3), lane: [[0, g], [0.2, g], [0.28, 0]] });
+  // typewriter key (lm_key); stream of ~9 keys/s reads +5.6 dB over one key's padded M -> stream max M = music - 6
+  const at = +(T0 + (f0 + Math.ceil((k + 1) / TY.rate)) / 60).toFixed(3), g = db(MUS_T - 6 - (SFX.lm_key[2] + 10 * Math.log10(0.4 * TY.rate * 30)));
+  ticks.push({ src: 'lm_key', id: `tk_${Math.round(at * 1000)}`, file: 'sfx/lm_key.wav', at, to: +(at + 0.105).toFixed(3), lane: [[0, 0], [0.005, g], [0.08, g], [0.1, 0]] });
 }
 
 export default {
@@ -111,13 +119,15 @@ export default {
     { name: 'L08 CASE 1 title', c: T0, to: END, k: 'hard', n: 0, el: () => [n('TitleType', { ...TY, plate: { src: 'HCR', t: 1.5, speed: 0.25 } }), n('Dip', { inN: 14 })] },
   ],
   audio: [
-    // static bed: drops 9 dB as the glitch hits (2.43), then tails out to 2.87 (0.44 s crossfade into music + VO at 2.90)
-    { src: 'static', id: 'bed_static', file: 'sfx/static_lp.wav', at: 0, to: 2.90, lane: [[0, 0], [1.5, db(-25.5 + 32.4)], [2.40, db(-25.5 + 32.4)], [2.50, db(-34.5 + 32.4)], [2.87, 0]] },
-    sfx('glitch_click', 2.42, VO_PK - 9 - SFX.glitch_click[3]), // v3: peak 9 dB under the VO peak (was -14 and masked by the bed)
+    // warning static bed (film/static texture only here): I = music -2 (SFX v2; was VO +3), drops 9 dB as the glitch hits (2.43), tails to 2.87
+    { src: 'static', id: 'bed_static', file: 'sfx/static_lp.wav', at: 0, to: 2.90, lane: [[0, 0], [1.5, db(MUS_T - 2 + 32.4)], [2.40, db(MUS_T - 2 + 32.4)], [2.50, db(MUS_T - 11 + 32.4)], [2.87, 0]] },
+    sfx('glitch_click', 2.42, -2), // warning exit hit: max M = music -2 (over the -9 dB bed)
     { src: 'mus_a', id: 'mus_intro', file: 'music/es_tarmac_radiation.mp3', at: 0, to: END, lane: musLane('music/es_tarmac_radiation.mp3', 0, END, dipT(MUS_T, 0), 1.5, 5.3, dipPts(0)) },
     { src: 'mus_b', id: 'mus_title', file: 'music/es_dark_days.mp3', at: T0 + 0.23, to: END, lane: musLane('music/es_dark_days.mp3', 0, +(END - T0 - 0.23).toFixed(3), () => MUS_T, 2, 0) },
-    sfx('riser_dark', 40.625),
-    sfx('boom_low', T0 + 0.23, SFX_T - SFX.boom_low[1]),
-    ...ticks,
+    ...MOVES.map((t) => sfx('lm_whoosh', t, -4)), // panel slides (camera-move family)
+    sfx('riser_dark', 40.625), // riser lands on the ledger cut 46.535
+    sfx('lm_boom', 46.535 - 0.17), // boom peak on the ledger reveal
+    sfx('lm_boom', T0 + 0.23), // title card hit (peak 53.94, music back from the dip)
+    ...ticks.filter((t) => t.at >= T0 + 0.23 + 0.3), // no key inside 0.3 s of the title boom
   ],
 };

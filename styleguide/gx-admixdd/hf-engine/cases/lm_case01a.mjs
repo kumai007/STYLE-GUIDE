@@ -10,16 +10,36 @@ import { fileURLToPath } from 'node:url';
 const MED = path.resolve(process.env.GX_ENGINE_PUBLIC || path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'media'), 'last-moments');
 const n = (d, p = {}, ...k) => ({ d, p, k });
 
-// ---- mix: VO -29.2 LUFS I (avg of 4), peak max -1.9. Music = VO -10 (-39.2, levelled lane), -6 dB under raws, -12 dB in the dip;
-// SFX = VO -14 (-43.2) capped at music -1 by max momentary; tick -22 re VO peak; room tone on raws at -12.6 dB (~-48 LUFS).
-const VO_PK = -1.9, MUS_T = -39.2, SFX_T = -43.2;
-const SFX = { boom_low: [3.5, -24.4, -20.7, -3.0], riser_dark: [5.91, -23.0, -16.7, -10.6], tick_soft: [0.32, -70, -120, -10.5] };
+// ---- mix: VO -29.2 LUFS I (avg of 4), peak max -1.9. Music = VO -10 (-39.2, levelled lane), -6 dB under raws, -12 dB in the dip.
+// SFX v2 (owner 2026-11-19 "good SFX but a little lower than music"; docs/ai-state/last-moments_sfx_HANDOFF.md): one Epidemic family per
+// device; each SFX max momentary = music target (tgtG) over its loud span - 3 dB, typing stream -6, CCTV hum under raws ~-48 LUFS I.
+// Table = [dur s, I, max M (short files padded), true peak, peak-at s (-1 = loud at the end)] by ffmpeg ebur128.
+const VO_PK = -1.9, MUS_T = -39.2;
+const SFX = { lm_boom: [4.183, -21.7, -17.7, -11.6, 0.176], lm_whoosh: [1.549, -19.3, -16.3, -2.4, 0.469], lm_brush: [0.775, -19.8, -17.5, -3.1, 0.03],
+  lm_paper: [0.785, -19.9, -19.6, -2.9, 0.039], lm_settle: [0.396, -70, -23.2, -0.5, 0.033], lm_marker: [0.525, -14.4, -14.2, -3.0, 0.139],
+  lm_key: [0.11, -70, -25.6, -4.6, 0.016], riser_dark: [5.91, -23.0, -16.7, -10.6, -1], lm_hum: [12, -32.7, -31.4, -19.0, 0] };
 const db = (x) => +Math.pow(10, x / 20).toFixed(4);
-const sfx = (name, at, gdB, len) => {
-  const [d0, L, M] = SFX[name], d = len ?? d0, g = db(gdB ?? Math.min(SFX_T - L, MUS_T - 1 - M));
-  return { src: name, id: `sfx_${name}_${Math.round(at * 100)}`, file: `sfx/${name}.wav`, at, to: +(at + d - 0.02).toFixed(3), lane: [[0, 0], [0.02, g], [d - 0.1, g], [d - 0.03, 0]] };
+const sfx = (name, at, off = -3, len) => {
+  const [d0, , M, , pk] = SFX[name], d = len ?? d0, a0 = pk < 0 ? at + d - 1.5 : at + Math.max(0, pk - 0.05);
+  let m = 99; for (let u = 0; u <= (pk < 0 ? 1.5 : Math.min(1.0, d)) + 1e-6; u += 0.05) m = Math.min(m, tgtG(a0 + u));
+  const g = db(m + off - M), fo = name === 'lm_boom' ? 0.8 : 0.03;
+  return { src: name, id: `sfx_${name}_${Math.round(at * 100)}`, file: `sfx/${name}.wav`, at: +at.toFixed(3), to: +(at + d - 0.02).toFixed(3), lane: [[0, 0], [0.015, g], [+(d - fo - 0.02).toFixed(3), g], [+(d - 0.03).toFixed(3), 0]] };
 };
-const tick = (at) => sfx('tick_soft', at, VO_PK - 22 - SFX.tick_soft[3]);
+// TitleType typing (lm_pro: char j of line i lands at at + (tot_i + j + 1) / cps, lines +4 gap): a key on every 2nd char (spaces skipped);
+// a stream of cps/2 keys/s reads 10log10(0.4 cps / 2) dB over one key's padded M -> stream max M = music - 6
+const typing = (at, lines, cps = 22) => { const ts = []; let tot = 0;
+  for (const t of lines) { for (let j = 0; j < t.length; j += 2) { const k = t[j] === ' ' ? j + 1 : j; if (k < t.length) ts.push(+(at + (tot + k + 1) / cps).toFixed(3)); } tot += t.length + 4; }
+  return ts.map((tm) => { const g = db(tgtG(tm) - 6 - (SFX.lm_key[2] + 10 * Math.log10(0.4 * cps / 2)));
+    return { src: 'lm_key', id: `key_${Math.round(tm * 1000)}`, file: 'sfx/lm_key.wav', at: tm, to: +(tm + 0.09).toFixed(3), lane: [[0, 0], [0.005, g], [0.07, g], [0.085, 0]] }; });
+};
+// device events (part s). LowerThird ink wipe -> brush (S06 28.43 skipped: dip boom 28.30); Article3D in -> paper slide at the cut + settle
+// +0.45 (S36 settle skipped: marker 0.22 s later); marker wipe (f0, f0+26) -> marker, start -0.03; StampRing punch-in + map pushes -> whoosh,
+// peak (0.469) on the move; booms: dip end + raw cuts (peak 0.176 on the cut); risers land on the raw cuts.
+const BRUSH = [1.54, 6.24, 50.0, 66.26, 77.62, 115.67, 124.81];
+const ARTS = [[43.80, 70, true], [73.54, 50, true], [167.80, 40, false]];
+const TYPED = [[32.62 + 10 / 60, ['26 SEPTEMBER 1978']], [57.94 + 8 / 60, ['2001', 'GCHQ', 'CHELTENHAM']], [90.98, ['SUMMER 2010']], [106.40, ['3 SEPTEMBER 2010']],
+  [108.93 + 8 / 60, ['11 AUGUST 2010', 'HOME FROM THE US']], [120.21 - 0.5, ['SATURDAY 14 AUGUST 2010']], [172.3, ['15 AUGUST, 14:27']]];
+const WHOOSH = [19.56 + 0.33 - 0.469, 130.87 + 0.5 + 0.33 - 0.469, 163.06 + 50 / 60 - 0.469, 163.06 + 175 / 60 - 0.469];
 const stS = (f) => {
   const e = spawnSync('ffmpeg', ['-hide_banner', '-nostats', '-i', path.join(MED, f), '-af', 'ebur128', '-f', 'null', '-'], { encoding: 'utf8', maxBuffer: 1 << 28 }).stderr;
   return [...e.matchAll(/t:\s*([\d.]+)\s+TARGET.*?S:\s*(-?(?:[\d.]+|inf|nan))/g)].map((m) => (Number.isFinite(+m[2]) ? +m[2] : -70));
@@ -40,7 +60,8 @@ const tgtG = (t) => {
 };
 const tgtAt = (at) => (u) => tgtG(at + u);
 const ptsAt = (at) => [...RAWS.flatMap(([a, b]) => [a - 0.3, a, b, b + 0.3]), DIP[0] - 0.1, DIP[0], DIP[1], DIP[1] + 0.1].map((t) => t - at);
-const room = (a, b) => ({ src: 'roomtone', id: `room_${Math.round(a * 100)}`, file: 'sfx/roomtone_lp.wav', at: a, to: b, lane: [[0, 0], [0.05, db(-12.6)], [b - a - 0.08, db(-12.6)], [b - a, 0]] });
+// CCTV room tone under raws: Epidemic hotel-corridor electrical hum (-32.7 LUFS I) at -48.2 LUFS I (= raw music bed -3)
+const room = (a, b) => ({ src: 'lm_hum', id: `room_${Math.round(a * 100)}`, file: 'sfx/lm_hum.wav', at: a, to: b, lane: [[0, 0], [0.05, db(-48.2 + 32.7)], [b - a - 0.08, db(-48.2 + 32.7)], [b - a, 0]] });
 
 // ---- picture helpers. i = shot index (varies the 3-D drift); frame numbers shot-local @60.
 const MET = 'FOOTAGE: METROPOLITAN POLICE';
@@ -165,7 +186,6 @@ const T = [
   [178.42, 182.10, 'S39 HCR entry', (i) => frz('HCR', 0, { bri: 0.85 }, { s: [1.0, 1.06], o: '70% 20%' }, [met('tr'), n('SpotC01', { cx: 1150, cy: 170, r: 330, at: 24, hold: 120 })])],
   [182.10, 185.85, 'S40 HCR raw', (i) => live(i, 'HCR', 0, 1, { bri: 0.75 }, [met('tr')])],
 ];
-const TD_AT = [32.62 + 10 / 60, 90.98, 106.40, 120.21 - 0.5, 172.3];
 
 export default {
   id: 'lm_case01a',
@@ -184,9 +204,14 @@ export default {
     { src: 'mus_b', id: 'mus_b', file: 'music/es_tarmac_radiation.mp3', at: 102, to: 156.5, trim: 61.1, lane: musLane('music/es_tarmac_radiation.mp3', 61.1, 54.5, tgtAt(102), 6, 6, ptsAt(102)) },
     { src: 'mus_a', id: 'mus_a2', file: 'music/es_dark_days.mp3', at: 150.5, to: 185.85, lane: musLane('music/es_dark_days.mp3', 0, 35.35, tgtAt(150.5), 6, 1.5, ptsAt(150.5)) },
     room(...RAWS[0]), room(...RAWS[1]),
+    ...BRUSH.map((t) => sfx('lm_brush', t)),
+    ...ARTS.flatMap(([c, f0, st]) => [sfx('lm_paper', c), ...(st ? [sfx('lm_settle', c + 0.45)] : []), sfx('lm_marker', c + f0 / 60 - 0.03), sfx('lm_marker', c + (f0 + 26) / 60 - 0.03)]),
+    ...TYPED.flatMap(([at, lines]) => typing(at, lines)),
+    ...WHOOSH.map((t) => sfx('lm_whoosh', t)),
+    sfx('lm_boom', 28.30), // dip into S06 (peak 28.48, music back)
     sfx('riser_dark', 133.95 - 5.91),
-    sfx('boom_low', 133.95, SFX_T - SFX.boom_low[1]),
-    sfx('boom_low', 182.10, SFX_T - SFX.boom_low[1], 3.4),
-    ...TD_AT.map(tick),
+    sfx('lm_boom', 133.95 - 0.17),
+    sfx('riser_dark', 182.10 - 5.91),
+    sfx('lm_boom', 182.10 - 0.17, -3, 3.9),
   ],
 };
