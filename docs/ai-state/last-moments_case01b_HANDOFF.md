@@ -150,3 +150,22 @@ Check: all shots >= 3 s; no same text device back to back; one big text device a
 - Weak matches (see json notes): nb_door_night (daylight door, not night), nb_bathroom_dark (bright empty drain), nb_fingerprint_dust (ink fingerprinting, not powder), nb_wales_coast (sunny), nb_cctv_camera (pole cameras, bright), nb_stopwatch (pocket watch dial). Faces checked on one contact sheet: none identifiable.
 - 7 `np_*` Commons photos NOT delivered: upload.wikimedia.org answered HTTP 429 to every request for 40+ min (IP throttle). Rerun `python -I -X utf8 productions/last-moments/build/commons_photos_np.py` from the folder root when it clears; it downloads, copies to both photo dirs and adds json entries (then check faces, add notes).
 - Pexels search blocked scripted queries (HTTP 403) after ~15 searches; clips were chosen from page titles, only the contact sheet was viewed.
+## Agent 3 result (2026-11-19, stopped at context limit)
+- lm_pro.mjs FINAL: LowerThird, Article3D (now FULL-BLEED per owner: covers the whole frame, tilt <= 3.5 deg, clamped push, kids
+  ignored, props img/iw/ih/bands/src/date/focus/key/tilt; old W/H/rx/ry/s props are ignored), StampRing, TitleType (VCR OSD Mono).
+- Articles: GitHub dispatch HTTP 500 -> 3 Guardian pages captured on the PC (`gh_assets.py "page|c01b2|art|<edit>|<prod>"` then
+  `prep_assets.py --post`), all highlights found. Crops `build/c01b_articles.py` -> media pages/c01b_art_c01b{2,3,4}.jpg +
+  pages/c01b_articles.json (1800x1012, bands crop px). Case reads the json (fallback stock if a page is missing).
+- Case v2 (backup of v1: %TEMP%/lm_case01b.v1.bak.mjs): Tag -> LowerThird (8), TCard -> TitleType (16, cps auto), PageC -> Article3D
+  (inquest + 3 new at B09 41.0, B51 224.6, B64 278.6), replay B30 = StampRing on the HCR stamp (243,1029 484x40, rect 240..1680),
+  20 new nb_* Pexels clips (media c01b_new_media.json; brightness auto from yavg), every stock file <= 2 uses (2nd use = other trim
+  + tighter zoom). SFX = part-A helpers (brush on LowerThird, paper + marker on articles, typing on TitleType, whoosh into replay,
+  riser + boom at 184.16), 0.3 s spacing filter.
+- Verified: build lm_case01b exit 0, check ok (0 errors); lm_case01a rebuilt OK with the full-bleed Article3D (not snapshotted).
+  8 device frames viewed: productions/last-moments/edit/qa/lm_case01b_v2_devices.jpg (before the final tighter article crop).
+- NOT DONE / OPEN: (1) full 70-shot sheet qa/lm_case01b_v2_sheet.jpg + ref side-by-side strip not made; new nb_* shots never viewed
+  (several are bright/daylight: nb_bathroom_dark, nb_door_night, nb_documents_desk, nb_cctv_camera, nb_wales_coast - check grade).
+  (2) lm_case01a article shots S09/S15/S36 not snapshotted after the full-bleed change. (3) Article source strip (bottom-left) can
+  sit over small body text (seen on the inquest page). (4) 7 np_* Commons photos missing (HTTP 429; rerun
+  build/commons_photos_np.py), so court/SIS photos still used 2x each; no Pimlico map. (5) Guardian 2013 crop may show a blurred
+  face photo above the text - check. (6) SFX mix not measured; nb_cyclist_hills unused unless an article is missing.

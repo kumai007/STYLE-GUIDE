@@ -5,10 +5,10 @@
 //  LowerThird {name, role, at=0, hold=200, pos='l'|'c'|'r', size=92, pin=false, y=118}
 //      hand-inked black brush bar (ragged SVG + displacement) wipes on L->R behind a ragged mask, distressed Bebas caps (eroded by a
 //      noise mask), role in Plex Mono on a smaller torn paper strip, -1.5 deg, overshoot settle, wipe-off exit. pin = red place mark.
-//  Article3D {img, iw, ih, bands:[[x,y,w,h,f0]], src, date, focus:[x,y], W=1480, H=820, rx=[11,2], ry=[-12,-2], s=[.9,1.1]}
-//      wrapper (kids = backdrop). Real page crop as a physical sheet: perspective tilt easing flat, layered paper shadow, grain,
-//      far-edge depth-of-field blur, camera push toward focus (img px; default = first band), hand-drawn amber marker (uneven ink,
-//      wipes L->R from frame f0, max 2 bands), source + date on an ink strip (mono). Bake face mosaics into the img.
+//  Article3D {img, iw, ih, bands:[[x,y,w,h,f0]], src, date, focus:[x,y], key=1190, tilt=3.5}
+//      FULL-BLEED real page crop: always covers the whole frame (cover x1.15, tilt <= 3.5 deg easing flat, clamped push toward the
+//      key line, key line ~key px wide where the crop allows), paper grain, far-edge focus blur, hand-drawn amber marker (uneven ink,
+//      L->R from frame f0, max 2 bands), source + date ink strip in the corner away from the key line. Kids are ignored.
 //  StampRing {x, y, w, h, at=0, hold=1e9, rect=[0,0,1920,1080], zoom=1.3, dim=.55, zin=40}
 //      wrapper (kids = the footage). x,y,w,h = burned-in timestamp box in screen px; rect = visible picture area. Hand-drawn red
 //      ring (1.1 turns, doubled stroke) draws ON the stamp, surround dims, punch-in toward the stamp. Ring box is clamped into rect
@@ -85,31 +85,37 @@ function marker(w, h, r) {
 
 export const Article3D = {
   name: 'Article3D',
-  html: (p, ctx, node) => {
-    const id = `lp${++UID}`, r = rng(hash(p.img)), sc = Math.min((p.W ?? 1480) / p.iw, (p.H ?? 820) / p.ih), w = p.iw * sc, h = p.ih * sc;
-    const b0 = (p.bands || [])[0], fx = p.focus || (b0 ? [b0[0] + b0[2] / 2, b0[1] + b0[3] / 2] : [p.iw / 2, p.ih / 2]);
-    const ox = fx[0] * sc, oy = fx[1] * sc, src = `assets/media/${p.img}`;
-    const bands = (p.bands || []).slice(0, 2).map(([x, y, bw, bh, f0]) => { const W = bw * sc, H = bh * sc, [body, over] = marker(W, H, r);
+  // FULL-BLEED (owner 2026-11-19 "article should cover the whole video"): the page always covers the frame; tilt <= 3.5 deg; the
+  // push toward the key line is clamped so no page edge / backdrop ever shows. Kids (old backdrop) are not rendered.
+  html: (p, ctx) => {
+    const id = `lp${++UID}`, r = rng(hash(p.img)), bs = (p.bands || []).slice(0, 2);
+    const bwMax = Math.max(1, ...bs.map((b) => b[2])), cover = Math.max(1920 / p.iw, 1080 / p.ih);
+    const S0 = cover * 1.15, S1 = Math.max(S0 * 1.04, Math.min(S0 * 1.3, (p.key ?? 1190) / bwMax)), sc = S1, w = p.iw * sc, h = p.ih * sc;
+    const b0 = bs[0], fx = p.focus || (b0 ? [b0[0] + b0[2] / 2, b0[1] + b0[3] * (bs.length > 1 ? 1 : 0.5)] : [p.iw / 2, p.ih / 2]);
+    const src = `assets/media/${p.img}`, top = (fx[1] / p.ih) > 0.72, dg = (fx[1] / p.ih) < 0.4 ? 0 : 180; // depth blur on the far side of the key line
+    const bands = bs.map(([x, y, bw, bh, f0]) => { const W = bw * sc, H = bh * sc, [body, over] = marker(W, H, r);
       return `<svg data-f0="${f0}" data-w="${Math.round(W)}" viewBox="${F(-H * 0.4)} ${F(-H * 0.2)} ${F(W + H * 0.8)} ${F(H * 1.4)}" style="position:absolute;left:${F(x * sc - H * 0.4)}px;top:${F(y * sc - H * 0.2)}px;width:${F(W + H * 0.8)}px;height:${F(H * 1.4)}px;mix-blend-mode:multiply;transform:rotate(${F((r() - 0.5) * 0.7)}deg);clip-path:inset(0 100% 0 0)"><g filter="url(#${id}R)"><path d="${body}" fill="${C.amb}" opacity=".86"/><path d="${over}" fill="#E09A00" opacity=".4"/></g></svg>`; }).join('');
     const tag = [p.src, p.date].filter(Boolean).map((t) => ctx.esc(String(t).toUpperCase()));
     const tw = tag.join('  /  ').length * 15.4 + 56;
-    return `${ctx.kids(node)}${defs(id, hash(p.img))}<div class="${AF}" ${ctx.dev('Article3D', { rx: p.rx || [11, 2], ry: p.ry || [-12, -2], s: p.s || [0.9, 1.1], cx: 960 - ((1920 - w) / 2 + ox), cy: 540 - ((1080 - h) / 2 + oy) })} style="perspective:1700px;perspective-origin:50% 42%">`
-      + `<div data-pg style="position:absolute;left:${F((1920 - w) / 2)}px;top:${F((1080 - h) / 2)}px;width:${F(w)}px;height:${F(h)}px;transform-origin:${F(ox)}px ${F(oy)}px;background:#e9e3d6;box-shadow:0 2px 3px rgba(0,0,0,.5),0 18px 30px rgba(0,0,0,.5),0 70px 120px rgba(0,0,0,.6)">`
-      + `<img src="${src}" alt="" style="position:absolute;inset:0;width:100%;height:100%;display:block;filter:contrast(1.05) brightness(.95) sepia(.12)">`
-      + `<svg style="position:absolute;inset:0;width:100%;height:100%;mix-blend-mode:multiply;opacity:.55"><rect width="100%" height="100%" filter="url(#${id}G)"/></svg>${bands}`
-      + `<img data-dof src="${src}" alt="" style="position:absolute;inset:0;width:100%;height:100%;display:block;filter:blur(7px) brightness(.9) sepia(.12);-webkit-mask-image:linear-gradient(180deg,#000 0%,rgba(0,0,0,.6) 16%,transparent 40%);mask-image:linear-gradient(180deg,#000 0%,rgba(0,0,0,.6) 16%,transparent 40%)">`
-      + `<div style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(112deg,rgba(255,244,222,.2) 0%,rgba(255,255,255,0) 36%,rgba(0,0,0,.14) 70%,rgba(0,0,0,.4) 100%)"></div>`
-      + `<div style="position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 60px rgba(60,40,10,.22),inset 0 -2px 0 rgba(0,0,0,.25)"></div></div>`
-      + (tag.length ? `<div data-tg style="position:absolute;left:104px;bottom:74px;width:${F(tw)}px;height:46px;transform:rotate(-1.2deg);opacity:0;filter:drop-shadow(0 6px 14px rgba(0,0,0,.6))"><svg viewBox="-8 -8 ${F(tw + 40)} 62" style="position:absolute;left:-8px;top:-8px;width:${F(tw + 40)}px;height:62px"><path d="${brush(tw, 46, r, 3)}" fill="${C.ink}" filter="url(#${id}R)"/></svg>`
-        + `<div style="position:absolute;left:26px;top:0;height:46px;display:flex;align-items:center;white-space:pre;font:600 22px/1 ${MONO};letter-spacing:0.12em;color:${C.tx};filter:url(#${id}T)">${tag[0]}${tag[1] ? `<span style="color:${C.amb}">  /  </span>${tag[1]}` : ''}</div></div>` : '')
+    return `${defs(id, hash(p.img))}<div class="${AF}" ${ctx.dev('Article3D', { t: p.tilt ?? 3.5, k0: S0 / S1, w, h, dx: (p.iw / 2 - fx[0]) * sc, dy: (p.ih / 2 - fx[1]) * sc })} style="perspective:1900px;perspective-origin:50% 45%;background:#cfc8b8;overflow:hidden">`
+      + `<div data-pg style="position:absolute;left:${F((1920 - w) / 2)}px;top:${F((1080 - h) / 2)}px;width:${F(w)}px;height:${F(h)}px;transform-origin:50% 50%;background:#e9e3d6">`
+      + `<img src="${src}" alt="" style="position:absolute;inset:0;width:100%;height:100%;display:block;filter:contrast(1.08) brightness(.74) sepia(.14)">`
+      + `<svg style="position:absolute;inset:0;width:100%;height:100%;mix-blend-mode:multiply;opacity:.5"><rect width="100%" height="100%" filter="url(#${id}G)"/></svg>${bands}`
+      + `<img data-dof src="${src}" alt="" style="position:absolute;inset:0;width:100%;height:100%;display:block;filter:blur(6px) brightness(.7) sepia(.14);-webkit-mask-image:linear-gradient(${dg}deg,#000 0%,rgba(0,0,0,.55) 14%,transparent 34%);mask-image:linear-gradient(${dg}deg,#000 0%,rgba(0,0,0,.55) 14%,transparent 34%)"></div>`
+      + `<div class="${AF}" style="pointer-events:none;background:linear-gradient(112deg,rgba(255,244,222,.16) 0%,rgba(255,255,255,0) 34%,rgba(0,0,0,.10) 68%,rgba(0,0,0,.34) 100%)"></div>`
+      + `<div class="${AF}" style="pointer-events:none;background:radial-gradient(ellipse 78% 74% at 50% 50%,rgba(0,0,0,0) 52%,rgba(14,9,3,.66) 100%),linear-gradient(${top ? 180 : 0}deg,rgba(0,0,0,.5) 0%,rgba(0,0,0,0) 20%)"></div>`
+      + (tag.length ? `<div data-tg style="position:absolute;left:0;right:0;bottom:0;height:30px;opacity:0;background:linear-gradient(90deg,rgba(6,6,6,.94) 0%,rgba(6,6,6,.88) 55%,rgba(6,6,6,.55) 100%);box-shadow:0 -1px 0 rgba(232,160,0,.35)">`
+        + `<div style="position:absolute;left:44px;top:0;height:30px;display:flex;align-items:center;white-space:pre;font:600 16px/1 ${MONO};letter-spacing:0.16em;color:${C.tx}">${tag[0]}${tag[1] ? `<span style="color:${C.amb}">  /  </span>${tag[1]}` : ''}</div></div>`: '')
       + `</div>`;
   },
   render: new Function('el', 'f', 'p', 'G', 'S', E + `
-    var pg=el.querySelector('[data-pg]'), u=bk(c(f/46)), k=io(c(f/S.len)), L=function(v){return v[0]+(v[1]-v[0])*k;}, out=c((f-(S.len-10))/10);
-    pg.style.transform='translate3d('+(p.cx*0.55*k).toFixed(2)+'px,'+(p.cy*0.55*k+170*(1-u)).toFixed(2)+'px,0) rotateX('+(L(p.rx)+8*(1-u)).toFixed(3)+'deg) rotateY('+L(p.ry).toFixed(3)+'deg) rotateZ('+(-1.4+1.0*k).toFixed(3)+'deg) scale('+L(p.s).toFixed(5)+')';
-    pg.style.opacity=c(f/8).toFixed(3);
-    el.querySelector('[data-dof]').style.opacity=(1-0.75*k).toFixed(3);
-    var b=pg.querySelectorAll('svg[data-f0]');for(var i=0;i<b.length;i++){var d=Math.max(26,+b[i].dataset.w/24), q=io(c((f-+b[i].dataset.f0)/d));b[i].style.clipPath='inset(0 '+(100*(1-q)).toFixed(2)+'% 0 0)';}
+    var pg=el.querySelector('[data-pg]'), u=o3(c(f/40)), k=io(c(f/S.len)), s=(p.k0+(1-p.k0)*k)*(1+0.035*(1-u));
+    var mx=Math.max(0,(p.w*s-1920)/2-1920*0.062), my=Math.max(0,(p.h*s-1080)/2-1080*0.062), q=0.25+0.75*k;
+    var tx=Math.max(-mx,Math.min(mx,p.dx*s*q)), ty=Math.max(-my,Math.min(my,p.dy*s*q));
+    pg.style.transform='translate3d('+tx.toFixed(2)+'px,'+ty.toFixed(2)+'px,0) rotateX('+(p.t*(1-0.75*k)).toFixed(3)+'deg) rotateY('+(-p.t*(1-0.7*k)).toFixed(3)+'deg) scale('+s.toFixed(5)+')';
+    pg.style.filter=u<1?'blur('+(4*(1-u)).toFixed(2)+'px)':'none';
+    el.querySelector('[data-dof]').style.opacity=(1-0.7*k).toFixed(3);
+    var b=pg.querySelectorAll('svg[data-f0]');for(var i=0;i<b.length;i++){var d=Math.max(26,+b[i].dataset.w/26), z=io(c((f-+b[i].dataset.f0)/d));b[i].style.clipPath='inset(0 '+(100*(1-z)).toFixed(2)+'% 0 0)';}
     var t=el.querySelector('[data-tg]'); if(t){var ut=o3(c((f-30)/22)); t.style.opacity=ut>0?1:0; t.style.clipPath='inset(-30% '+(100*(1-ut)).toFixed(2)+'% -30% -5%)';}`),
 };
 
@@ -120,18 +126,23 @@ export const StampRing = {
     const [RX, RY, RW, RH] = p.rect || [0, 0, 1920, 1080], m = 12;
     let px = Math.max(26, p.w * 0.13), py = Math.max(22, p.h * 0.55);
     let bw = Math.min(p.w + 2 * px, RW - 2 * m), bh = Math.min(p.h + 2 * py, RH - 2 * m);
-    const bx = Math.max(RX + m, Math.min(RX + RW - m - bw, p.x + p.w / 2 - bw / 2)), by = Math.max(RY + m, Math.min(RY + RH - m - bh, p.y + p.h / 2 - bh / 2));
+    // stamp at the picture's bottom/top edge: keep the ring around the text (no vertical clamp), scale about the stamp and lift the
+    // picture by the overflow during the zoom (lift>0 only then; earlier calls unchanged)
+    const Z = p.zoom ?? 1.3, sc0 = p.y + p.h / 2, edge = (sc0 + bh / 2 > RY + RH - m) || (sc0 - bh / 2 < RY + m);
+    if (edge) { py = Math.max(16, p.h * 0.4); bh = p.h + 2 * py; }
+    const lift = edge ? (sc0 + (bh / 2 + 8) * Z > RY + RH - m ? sc0 + (bh / 2 + 8) * Z - (RY + RH - m) : -Math.max(0, RY + m - (sc0 - (bh / 2 + 8) * Z))) : 0;
+    const bx = Math.max(RX + m, Math.min(RX + RW - m - bw, p.x + p.w / 2 - bw / 2)), by = edge ? sc0 - bh / 2 : Math.max(RY + m, Math.min(RY + RH - m - bh, p.y + p.h / 2 - bh / 2));
     const cx = bx + bw / 2, cy = by + bh / 2, a = bw / 2 - 6, b = bh / 2 - 6, ph = r() * 6.28;
     const ring = (k, turns) => { const P = []; for (let i = 0; i <= 72; i++) { const u = i / 72, t = -2.5 + u * 6.283 * turns, w = 1 - 0.07 * k + 0.035 * Math.sin(3 * t + ph + k) + 0.06 * u * (1 - k); P.push(`${F(cx + a * w * Math.cos(t))} ${F(cy + b * w * Math.sin(t) * (1 - 0.05 * k))}`); } return 'M' + P.join('L'); };
     const u = (cx - RX) / RW, v = (cy - RY) / RH, sx = u < 0.3 ? 0 : u > 0.7 ? 1 : u, sy = v < 0.3 ? 0 : v > 0.7 ? 1 : v;
-    return `<div class="${AF}" ${ctx.dev('StampRing', { at: p.at ?? 0, hold: p.hold ?? 1e9, zoom: p.zoom ?? 1.3, zin: p.zin ?? 40 })} style="transform-origin:${F(RX + RW * sx)}px ${F(RY + RH * sy)}px">${ctx.kids(node)}`
+    return `<div class="${AF}" ${ctx.dev('StampRing', { at: p.at ?? 0, hold: p.hold ?? 1e9, zoom: p.zoom ?? 1.3, zin: p.zin ?? 40, lift: F(lift) })} style="transform-origin:${F(RX + RW * sx)}px ${F(edge ? sc0 : RY + RH * sy)}px">${ctx.kids(node)}`
       + `<div data-d class="${AF}" style="pointer-events:none;opacity:0;background:radial-gradient(ellipse ${F(a * 1.9)}px ${F(b * 2.6)}px at ${F(cx)}px ${F(cy)}px,rgba(0,0,0,0) 0%,rgba(0,0,0,0) 52%,rgba(0,0,0,${p.dim ?? 0.55}) 100%)"></div>`
       + `<svg class="${AF}" viewBox="0 0 1920 1080" style="pointer-events:none;overflow:hidden"><defs><filter id="${id}R" filterUnits="userSpaceOnUse" x="${F(bx - 4)}" y="${F(by - 4)}" width="${F(bw + 8)}" height="${F(bh + 8)}"><feTurbulence type="fractalNoise" baseFrequency="0.06" numOctaves="2" seed="${hash(id) % 90}"/><feDisplacementMap in="SourceGraphic" scale="5" xChannelSelector="R" yChannelSelector="G"/></filter></defs>`
       + `<g filter="url(#${id}R)" fill="none" stroke="${C.red}" stroke-linecap="round" stroke-linejoin="round" style="filter:url(#${id}R) drop-shadow(0 0 5px rgba(0,0,0,.8))"><path data-r d="${ring(0, 1.12)}" stroke-width="7" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/><path data-r d="${ring(1, 0.8)}" stroke-width="3" opacity=".75" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/></g></svg></div>`;
   },
   render: new Function('el', 'f', 'p', 'G', 'S', E + `
     var g=f-p.at, out=c((g-p.hold)/14), on=g>=0?1-out:0, z=bk(c(g/p.zin))*(1-io(out));
-    el.style.transform=g<0?'none':'scale('+(1+(p.zoom-1)*z+0.03*c(g/Math.max(1,S.len-p.at))).toFixed(5)+')';
+    el.style.transform=g<0?'none':'translateY('+(-(+p.lift||0)*z).toFixed(2)+'px) scale('+(1+(p.zoom-1)*z+0.03*c(g/Math.max(1,S.len-p.at))).toFixed(5)+')';
     el.querySelector('[data-d]').style.opacity=(io(c(g/24))*(1-out)).toFixed(4);
     var R=el.querySelectorAll('[data-r]'); R[0].setAttribute('stroke-dashoffset',(1-io(c((g-10)/26))).toFixed(4)); R[1].setAttribute('stroke-dashoffset',(1-io(c((g-30)/20))).toFixed(4));
     R[0].parentNode.style.opacity=on.toFixed(3);`),
