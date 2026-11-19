@@ -3,7 +3,7 @@
 // from lm_c01a). Fonts: VCROSDMono, IBMPlexMono-500. Every move eased (sine/cubic/back), never linear. Pair each text pop with a
 // click SFX, camera moves with a whoosh, counters with ticks (case side; helper counterTicks below).
 // Devices that hold their own picture take g = {sat=.55, bri=.9, con=1.1} (grade on the picture only, overlays stay clean); add an
-// empty n('Grade', {...}) AFTER them for vignette + grain. Backdrop devices (Timeline, Counter, DocStack) take the backdrop as kids
+// empty n('Grade', {...}) AFTER them for vignette + grain. Backdrop devices (Timeline, Counter) take the backdrop as kids
 // (e.g. a blurred graded photo Cam) - never flat black.
 // API
 //  Parallax {src, pos, fit='cover', mos:[[x,y,w,h]], s:[1.04,1.12], ry:[-3,3], rx:[1,-1], tx:[a,b], z=140, a=0, b=len}
@@ -21,9 +21,10 @@
 //      (origin clamped so the picture always fills the frame), corner brackets lock on (+ tag), VCR data readout, faint scan lines
 //      and one slow scan sweep (not VHS static). box in stage px of the unzoomed contain picture.
 //      tagAt='b' puts the tag under the box (box near the frame top).
-//  DocStack {docs:[{img,iw,ih,bands:[[x,y,w,h]],src,date,at}], W=1380, dx=780, dy=-36, dz=-950}  kids = backdrop. Real article
-//      crops as paper cards stacked in depth; the camera flies from one card to the next (arrives at doc.at, move 42 f), passed
-//      cards fade, far cards dim + blur; amber marker draws over each card's bands (12 f after arrival, 26 f apart).
+//  DocStack {docs:[{img,iw,ih,bands:[[x,y,w,h]],src,date,at,focus?,key?,tilt?}]}  (W/dx/dy/dz + kids accepted, unused/never shown)
+//      v6 FULL-FRAME: each doc = full-bleed Article3D page; the next page slides in over the previous (arrives at doc.at, move
+//      42 f), amber marker on each doc's bands (12 f after arrival, 26 f apart), source/date bottom strip. Needs 'lm_pro' loaded.
+import { Article3D } from './lm_pro.mjs';
 const AF = 'af';
 const C = { tx: '#ECE8DF', dim: '#A29E95', red: '#B3231F', red2: '#D2392F', amb: 'rgba(242,185,10,.42)' };
 const MONO = "'IBM Plex Mono',monospace", VCR = "'VCR OSD Mono','VT323','Share Tech Mono',monospace";
@@ -196,25 +197,31 @@ export const CCTVAnalyse = {
 
 export const DocStack = {
   name: 'DocStack',
-  html: (p, ctx, node) => {
-    const W = p.W ?? 1380, dx = p.dx ?? 780, dy = p.dy ?? -36, dz = p.dz ?? -950, D = p.docs || [];
-    const cards = D.map((d, j) => { const k = W / d.iw, H = Math.round(d.ih * k);
-      const bands = (d.bands || []).slice(0, 2).map(([x, y, w, h], b) => `<i data-b="${b}" style="position:absolute;left:${(x * k - 6).toFixed(1)}px;top:${(y * k + h * k * 0.08).toFixed(1)}px;width:${(w * k + 12).toFixed(1)}px;height:${(h * k * 0.84).toFixed(1)}px;background:${C.amb};mix-blend-mode:multiply;border-radius:7px 16px 9px 13px;clip-path:inset(0 100% 0 0)"></i>`).join('');
-      return `<div data-c="${j}" style="position:absolute;left:${960 - W / 2 + j * dx}px;top:${540 - H / 2 + j * dy}px;width:${W}px;height:${H}px;transform:translateZ(${j * dz}px) rotateY(${j % 2 ? 7 : -5}deg) rotateZ(${j % 2 ? 1.1 : -0.9}deg);box-shadow:0 30px 70px rgba(0,0,0,.75),0 4px 14px rgba(0,0,0,.6)">`
-        + `<img src="${M(d.img)}" alt="" style="position:absolute;left:0;top:0;width:100%;height:100%;filter:sepia(.12) contrast(1.05) brightness(.96)">${bands}`
-        + `<div style="position:absolute;left:0;bottom:-46px;font:400 26px/1 ${VCR};letter-spacing:.08em;color:${C.tx};${SH}">${ctx.esc(`${d.src || ''}${d.date ? ' · ' + d.date : ''}`.toUpperCase())}</div></div>`; }).join('');
-    return `<div class="${AF}">${ctx.kids(node)}</div>`
-      + `<div class="${AF}" ${ctx.dev('DocStack', { at: D.map((d) => d.at ?? 0), dx, dy, dz })} style="perspective:1800px;overflow:hidden">`
-      + `<div data-w class="${AF}" style="transform-style:preserve-3d">${cards}</div></div>`;
+  // v6 FULL-FRAME (owner 2026-11-19, twice: "articles should cover the entire video"): every doc = an lm_pro Article3D page (cover
+  // x1.15, tilt <= 3.5 deg, clamped push, so no page edge ever shows) in its own full-frame slot. Doc j+1 slides in from the right
+  // OVER doc j (move 42 f, cubic in-out, ends at doc.at), doc j drifts left 30 % + darkens, soft shadow on the seam: both slots are
+  // full-frame and overlap, so no gap/backdrop at any frame. Doc 0 is on from frame 0 (no fade from the backdrop, no fade out).
+  // Each page runs Article3D's render on its own local clock (start = 0 for doc 0, at-42 for the others; push spans until the next
+  // page has covered it). Markers: band b at at+12+26*b (same times as v5, SFX unchanged). Kids and W/dx/dy/dz are accepted but
+  // never rendered/used (backdrop never visible).
+  html: (p, ctx) => {
+    const D = p.docs || [], N = D.length, A = D.map((d) => d.at ?? 0);
+    const st = A.map((a, j) => (j ? a - 42 : 0)), en = A.map((a, j) => (j < N - 1 ? A[j + 1] : 1e9));
+    const sub = { ...ctx, dev: (name, q) => `data-a3="${ctx.esc(JSON.stringify(q))}"` };
+    const slots = D.map((d, j) => { const bands = (d.bands || []).slice(0, 2).map((b, k) => [...b.slice(0, 4), A[j] + 12 + 26 * k - st[j]]);
+      return `<div data-s="${j}" class="${AF}" style="overflow:hidden;${j ? 'visibility:hidden;' : ''}box-shadow:-34px 0 60px rgba(0,0,0,.72),-6px 0 14px rgba(0,0,0,.55)">`
+        + Article3D.html({ img: d.img, iw: d.iw, ih: d.ih, src: d.src, date: d.date, focus: d.focus, key: d.key, tilt: d.tilt, bands }, sub)
+        + `<div data-dk class="${AF}" style="pointer-events:none;background:#000;opacity:0"></div></div>`; }).join('');
+    return `<div class="${AF}" ${ctx.dev('DocStack', { at: A, st, en })} style="overflow:hidden;background:#cfc8b8">${slots}</div>`;
   },
-  render: R(`var A=p.at,cam=0;for(var i=1;i<A.length;i++)cam+=io(c((f-(A[i]-42))/42));
-    var g0=f-A[0],ent=o3(c(g0/36)),orb=io(c(f/Math.max(1,S.len)));
-    el.querySelector('[data-w]').style.transform='translate3d('+(-cam*p.dx).toFixed(2)+'px,'+(-cam*p.dy+60*(1-ent)).toFixed(2)+'px,'+(-cam*p.dz+(-200*(1-ent))+40*orb).toFixed(2)+'px) rotateY('+(2-3*orb).toFixed(3)+'deg)';
-    el.style.opacity=(io(c(g0/20))*(1-io(c((f-(S.len-16))/16)))).toFixed(4);
-    var Cs=el.querySelectorAll('[data-c]');
-    for(var j=0;j<Cs.length;j++){var d=j-cam;Cs[j].style.opacity=(d<0?c(1+d*2.6):1).toFixed(3);
-      Cs[j].style.filter='brightness('+(1-0.38*Math.min(Math.max(d,0),2)).toFixed(3)+') blur('+(2.2*Math.min(Math.max(d,0),2)).toFixed(2)+'px)';
-      var B=Cs[j].querySelectorAll('[data-b]');for(var b=0;b<B.length;b++){var u=q3(c((f-(A[j]+12+26*b))/32));B[b].style.clipPath='inset(0 '+(100*(1-u)).toFixed(2)+'% 0 0)';}}`),
+  render: R(`var A3=el.__a3||(el.__a3=${Article3D.render.toString()});
+    var Sl=el.querySelectorAll('[data-s]'),n=Sl.length,e=[];for(var j=0;j<n;j++)e.push(j?q3(c((f-p.st[j])/42)):1);
+    for(var j=0;j<n;j++){var s=Sl[j],nx=j+1<n?e[j+1]:0;
+      if(e[j]<=0||nx>=1){s.style.visibility='hidden';continue;}
+      s.style.visibility='visible';s.style.transform='translate3d('+(1920*(1-e[j])-576*nx).toFixed(2)+'px,0,0)';
+      s.querySelector('[data-dk]').style.opacity=(0.45*nx).toFixed(3);
+      var a=s.querySelector('[data-a3]'),q=JSON.parse(a.dataset.a3),len=Math.max(60,Math.min(S.len,p.en[j])-p.st[j]);
+      A3(a,f-p.st[j],q,G,{len:len});}`),
 };
 
 export default [Parallax, RouteMap, Timeline, Counter, CCTVAnalyse, DocStack];
