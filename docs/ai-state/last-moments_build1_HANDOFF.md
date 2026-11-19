@@ -13,6 +13,7 @@ next agent does NOT need to re-read SUMMARY/rule book in full (read SUMMARY sect
   `productions/last-moments/edit/qa/scan1.jpg` (HPK, HCR, LIP x3 windows, CGF).
 
 ## Clean VO word onsets (s in c00_p01.wav; part time = 2.70 + t if VO starts at 2.70)
+(v3 2026-11-19: VO re-cut, every time below +0.025 s, VO now starts at part 2.90; see last-moments_intro_v2_HANDOFF.md "v3")
 final 0.16 | In 2.88 | A 5.82 dive 5.98 | a 6.76 stream | a 8.06 vlog | a 8.96 walk..doorway 10.10 | Nobody 11.00 | anything 13.28 |
 But 14.22 | because 17.64 | it's 20.24 .. them 21.86 | Some 22.64 | Some 24.60 | and 26.08 some .. security 27.16 .. time 29.26 |
 a 29.93 dive..Blue Hole | a 31.73 fan line Orlando | a 33.43 cabin..plane | a 36.11 hotel lobby Michigan | a 37.87 fuel station Kent |

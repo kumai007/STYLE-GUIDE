@@ -1,6 +1,6 @@
-// lm_intro - intro of "Most Disturbing Last Moment Footage Ever Recorded" (new channel; devices/lm.mjs). 60 fps, 61.11 s.
+// lm_intro - intro of "Most Disturbing Last Moment Footage Ever Recorded" (new channel; devices/lm.mjs). 60 fps, 59.04 s (v3 2026-11-19).
 // Timeline = docs/ai-state/last-moments_build1_HANDOFF.md "Timeline for lm_intro" (agent 3 conveyor retime: P0 full frame first).
-// VO c00.wav (cleaned, 47.45 s) at 2.70: part t = 2.70 + clean-VO word onset. Hard cuts; dips 16 down / 14 up; glitch only on the warning.
+// VO c00.wav (cleaned v3, 47.475 s, first word ramped) at 2.90: part t = 2.90 + clean-VO word onset. Hard cuts; dips 16 down / 14 up; glitch only on the warning.
 // Faces (owner rule 16, victims + private people): CGF both women tracked (keys in source s, src px 720x720), RAD clerk + woman.
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
@@ -31,8 +31,8 @@ function musLane(file, trim, len, tgt, fin, fout, extra = []) {
   for (let u = 0; u < len; u += 0.5) ts.add(+u.toFixed(3));
   return [...ts].sort((a, b) => a - b).map((u) => [u, +(Math.max(0, env(u)) * Math.pow(10, Math.max(-24, Math.min(12, tgt(u) - lvl(trim + u))) / 20)).toFixed(4)]);
 }
-// dips (part s): ledger out 53.04-53.31 / return in 53.31-53.54; return out 55.54-55.81 / card in 55.81-56.04. Music -12 dB, 0.1 s ramps.
-const DIPS = [[53.04, 53.54], [55.54, 56.04]];
+// dip (part s): ledger out 53.265-53.535 / title in 53.535-53.765. Music -12 dB, 0.1 s ramps.
+const DIPS = [[53.265, 53.765]];
 const dipT = (base, off) => (u) => { const t = u + off; let d = 0; for (const [a, b] of DIPS) d = Math.max(d, Math.min(1, (t - a + 0.1) / 0.1, (b + 0.1 - t) / 0.1)); return base - 12 * Math.max(0, d); };
 const dipPts = (off) => DIPS.flatMap(([a, b]) => [a - 0.1, a, b, b + 0.1]).map((t) => t - off);
 
@@ -51,54 +51,73 @@ const MET = 'FOOTAGE: METROPOLITAN POLICE', WEDC = 'FOOTAGE: POLICE RELEASE (VIA
 // QA 1 (agent 3): footage YAVG was 68-118 -> per-shot brightness so footage sits ~55-65 (intro target 52-58 overall, cards darker)
 const G = (bri, ...k) => n('Grade', { bri }, ...k);
 const clip = (p, bri, credit, place) => G(bri, n('LClip', p), ...(credit ? [n('Credit', { text: credit, place })] : []));
-// conveyor (split shot starts 32.63; frame = round((t - 32.63) * 60)): entries 34.43=108, 36.13=210, 38.81=371, 40.57=476, 42.09=568; moves 36 f
+// conveyors (frame = round((t - shot start) * 60); moves 36 f; every panel on screen >= 3 s). v3 (2026-11-19): word-precise picture.
 const panel = (keys, c) => n('Panel', { keys, clip: c });
+// A 8.105-17.145: dive 8.93 (full) | "a stream sign-off" 9.685=95 | "a vlog" 10.985=173 | "shop doorway" 12.80=282 | HCR full 14.30=372
+const convA = () => G(0.62, n('Split2', {},
+  panel([[0, 0, 1920], [95, 0, 1920], [131, 0, 960], [173, 0, 960], [209, -960, 960]], { src: 'LIP', t: 60, sw: 1620, sh: 1080 }),
+  panel([[95, 1920, 960], [131, 960, 960], [173, 960, 960], [209, 0, 960], [282, 0, 960], [318, -960, 960]], { src: 'CGF', t: 19.5, speed: 0.9, sw: 720, sh: 720, mos: CG_A }),
+  panel([[173, 1920, 960], [209, 960, 960], [282, 960, 960], [318, 0, 960], [372, 0, 960], [408, -960, 960]], { src: 'CRV', t: 195.5, speed: 0.85, sw: 1920, sh: 1080, scale: 1.35, origin: '55% 100%' }), // crop the head (no face) + CRAVE LIFE mark
+  panel([[282, 1920, 960], [318, 960, 960], [372, 960, 960], [408, 0, 1920], [542, 0, 1920]], { src: 'HCR', t: 0, speed: 0.8, sw: 640, sh: 480 }),
+), n('Credit', { text: MET, at: 414, hold: 62 }));
+// (CRV 236 @0.4 = source 236-237.6 only: from ~238 the vlogger faces the lens = no-face rule)
+// B 25.565-32.855: "filmed themselves" 0 (full) | "a friend's phone" 27.40=110 | "and some .. security camera" 29.005=206 | WED full 30.90=320
+const convB = () => G(0.62, n('Split2', {},
+  panel([[0, 0, 1920], [110, 0, 1920], [146, 0, 960], [206, 0, 960], [242, -960, 960]], { src: 'CRV', t: 236, speed: 0.4, sw: 1920, sh: 1080, scale: 1.08, origin: '80% 10%' }),
+  panel([[110, 1920, 960], [146, 960, 960], [206, 960, 960], [242, 0, 960], [320, 0, 960], [356, -960, 960]], { src: 'CGF', t: 9.0, sw: 720, sh: 720, mos: CG_B }),
+  panel([[206, 1920, 960], [242, 960, 960], [320, 960, 960], [356, 0, 1920], [437, 0, 1920]], { src: 'WED', t: 121.8, speed: 0.95, sw: 1920, sh: 1080, scale: 1.22, origin: '0% 0%' }),
+), n('Credit', { text: WEDC, place: 'br', at: 246, hold: 125 }));
+// C 32.855-46.535 (frame = round((t - 32.855) * 60)): entries 34.655=108, 36.355=210, 39.035=371, 40.795=476, 42.315=568
 const split = () => G(0.62, n('Split2', {},
   panel([[0, 0, 1920], [108, 0, 1920], [144, 0, 960], [210, 0, 960], [246, -960, 960]], { src: 'LIP', t: 140, sw: 1620, sh: 1080 }),
-  panel([[108, 1920, 960], [144, 960, 960], [210, 960, 960], [246, 0, 960], [371, 0, 960], [407, -960, 960]], { src: 'CGF', t: 9.0, sw: 720, sh: 720, mos: CG_B }),
+  panel([[108, 1920, 960], [144, 960, 960], [210, 960, 960], [246, 0, 960], [371, 0, 960], [407, -960, 960]], { src: 'CGF', t: 19.5, speed: 0.68, sw: 720, sh: 720, mos: CG_A }), // CG_B is in conveyor B now
   panel([[210, 1920, 960], [246, 960, 960], [371, 960, 960], [407, 0, 960], [476, 0, 960], [512, -960, 960]], { src: 'CRV', t: 351, sw: 1920, sh: 1080, pos: '40% 50%' }),
   panel([[371, 1920, 960], [407, 960, 960], [476, 960, 960], [512, 0, 960], [568, 0, 960], [604, -960, 960]], { src: 'RAD', t: 75, sw: 486, sh: 360, scale: 1.1, origin: '50% 100%', mos: RAD_F }),
   panel([[476, 1920, 960], [512, 960, 960], [568, 960, 960], [604, 0, 1920], [821, 0, 1920]], { src: 'WED', t: 84.02, speed: 0.67, sw: 1920, sh: 1080, scale: 1.22, origin: '50% 0%' }),
 ));
+// ---- title typing (TitleType): shot starts T0; char k of the title lands at frame fb + ceil((k + 1) / rate); a quiet key tick every 2nd char
+const T0 = 53.535, END = 59.04, TY = { a: 'CASE 1', b: 'THE CODEBREAKER WHO WALKED OUT OF FRAME', fa: 24, fb: 62, rate: 0.3 };
+const ticks = [];
+for (const [txt, f0] of [[TY.a, TY.fa], [TY.b, TY.fb]]) for (let k = 0; k < txt.length; k += 2) {
+  if (txt[k] === ' ' && k + 1 < txt.length) k += 1;
+  const at = +(T0 + (f0 + Math.ceil((k + 1) / TY.rate)) / 60).toFixed(3), g = db(VO_PK - 20 - SFX.tick_soft[3]);
+  ticks.push({ src: 'tick_soft', id: `tk_${Math.round(at * 1000)}`, file: 'sfx/tick_soft.wav', at, to: +(at + 0.3).toFixed(3), lane: [[0, g], [0.2, g], [0.28, 0]] });
+}
 
 export default {
   id: 'lm_intro',
   media: 'last-moments',
-  end: 61.11,
+  end: END,
   plain: true,
-  vo: { starts: [2.70], lens: [47.45], file: () => 'vo/c00.wav', tail: 0 },
+  vo: { starts: [2.90], lens: [47.475], file: () => 'vo/c00.wav', tail: 0 },
   devices: ['shared', 'lm', 'lm_v2'],
-  fonts: ['Anton-latin.woff2', 'Oswald-var-latin.woff2', 'BebasNeue-latin.woff2', 'IBMPlexMono-500-latin.woff2', 'IBMPlexMono-600-latin.woff2', 'IBMPlexMono-700-latin.woff2'],
+  fonts: ['Anton-latin.woff2', 'Oswald-var-latin.woff2', 'BebasNeue-latin.woff2', 'IBMPlexMono-500-latin.woff2', 'IBMPlexMono-600-latin.woff2', 'IBMPlexMono-700-latin.woff2', 'VCROSDMono-latin.woff2'],
   shots: [
-    { name: 'L00 warning', c: 0, to: 2.60, k: 'hard', n: 0, el: () => n('GlitchCut', { n: 8, seed: 'lmw' }, n('Warning2')) },
-    // "Final footage .. ordinary video there is"
-    { name: 'L01 HPK', c: 2.60, to: 8.52, k: 'hard', n: 0, el: () => clip({ src: 'HPK', t: 0, speed: 0.85, sw: 640, sh: 480, fit: 'contain', fill: true, scale: 1.04, origin: '50% 100%' }, 0.85, MET, 'tl') }, // credit top-left: CAM 1 stamp is top-right
-    // "A dive, a stream sign-off, a vlog"
-    { name: 'L02 LIP fins', c: 8.52, to: 11.66, k: 'hard', n: 0, el: () => clip({ src: 'LIP', t: 60, sw: 1620, sh: 1080 }, 0.60) },
-    // "a walk past a shop doorway. Nobody filming .."
-    { name: 'L03 HCR', c: 11.66, to: 16.92, k: 'hard', n: 0, el: () => clip({ src: 'HCR', t: 0, speed: 0.70, sw: 640, sh: 480, fit: 'contain', fill: true, scale: 1.04, origin: '50% 100%' }, 0.65, MET) },
-    // "But in other ways .. internet"
-    { name: 'L04 CGF', c: 16.92, to: 20.34, k: 'hard', n: 0, el: () => G(1.4, n('Vertical', { src: 'CGF', t: 19.5, sw: 720, sh: 720, mos: CG_A })) },
-    // "because for every person .. last time anyone saw them"
-    { name: 'L05 LIP blue', c: 20.34, to: 25.34, k: 'hard', n: 0, el: () => clip({ src: 'LIP', t: 174, sw: 1620, sh: 1080 }, 0.72) },
-    // "Some .. filmed themselves. Some .. friend's phone caught"
-    { name: 'L06 CRV', c: 25.34, to: 28.78, k: 'hard', n: 0, el: () => clip({ src: 'CRV', t: 195.5, sw: 1920, sh: 1080, scale: 1.08, origin: '80% 10%' }, 0.55) },
-    // "and some .. security camera nobody was watching"
-    { name: 'L07 WED gate', c: 28.78, to: 32.63, k: 'hard', n: 0, el: () => clip({ src: 'WED', t: 121.8, sw: 1920, sh: 1080, scale: 1.22, origin: '0% 0%' }, 0.75, WEDC, 'br') }, // origin top-left keeps the burned timestamp whole; credit bottom-right
+    { name: 'L00 warning', c: 0, to: 2.60, k: 'hard', n: 0, el: () => n('GlitchOut2', { n: 10, seed: 'lmw' }, n('Warning2')) },
+    // "Final 3.085 footage .. In many ways it's the most ordinary video" (there 7.915)
+    { name: 'L01 HPK', c: 2.60, to: 8.105, k: 'hard', n: 0, el: () => clip({ src: 'HPK', t: 0, speed: 0.9, sw: 640, sh: 480, fit: 'contain', fill: true, scale: 1.04, origin: '50% 100%' }, 0.85, MET, 'tl') }, // credit top-left: CAM 1 stamp is top-right
+    // "there is: A dive 8.93, a stream sign-off 9.71, a vlog 11.02, a walk past a shop doorway 11.91-13.5. Nobody filming .. anything"
+    { name: 'L02 conveyor A', c: 8.105, to: 17.145, k: 'hard', n: 0, el: () => convA() },
+    // "But 17.17 in other ways .. every other clip on the internet"
+    { name: 'L03 RAD', c: 17.145, to: 20.565, k: 'hard', n: 0, el: () => clip({ src: 'RAD', t: 75, sw: 486, sh: 360, fit: 'contain', fill: true, scale: 1.1, origin: '50% 100%', mos: RAD_F }, 0.62, 'FOOTAGE: KALAMAZOO COUNTY RELEASE', 'br') },
+    // "because 20.59 for every person in this video, it's the last time anyone saw them"
+    { name: 'L04 LIP blue', c: 20.565, to: 25.565, k: 'hard', n: 0, el: () => clip({ src: 'LIP', t: 174, sw: 1620, sh: 1080 }, 0.72) },
+    // "Some 25.59 .. filmed themselves. Some 27.55 .. a friend's phone caught, and 29.03 some .. security camera 30.11 nobody was watching at the time"
+    { name: 'L05 conveyor B', c: 25.565, to: 32.855, k: 'hard', n: 0, el: () => convB() },
     // "a dive into the Blue Hole, a fan line in Orlando, a cabin porch .., a hotel lobby .., a fuel station in Kent. Every clip stops .. next."
-    { name: 'L08 split', c: 32.63, to: 46.31, k: 'hard', n: 0, el: () => split() },
-    // "today" -> 21 cases
-    { name: 'L09 ledger', c: 46.31, to: 53.31, k: 'hard', n: 0, el: () => [n('Descent'), n('Dip', { outN: 16 })] },
-    { name: 'L10 ledger return', c: 53.31, to: 55.81, k: 'hard', n: 0, el: () => [n('DescentReturn'), n('Dip', { inN: 14, outN: 16 })] },
-    { name: 'L11 CASE 01', c: 55.81, to: 61.11, k: 'hard', n: 0, el: () => [n('CaseCard2', { no: '01', name: ['THE CODEBREAKER WHO', 'WALKED OUT OF FRAME'], plate: { src: 'HCR', t: 1.5, speed: 0.25 } }), n('Dip', { inN: 14 })] },
+    { name: 'L06 conveyor C', c: 32.855, to: 46.535, k: 'hard', n: 0, el: () => split() },
+    // "today 46.56" -> 21 cases (VO ends ~50.2); dip; ONE title screen (owner 2026-11-19: no zoom onto case 01, no second card)
+    { name: 'L07 ledger', c: 46.535, to: T0, k: 'hard', n: 0, el: () => [n('Descent'), n('Dip', { outN: 16 })] },
+    { name: 'L08 CASE 1 title', c: T0, to: END, k: 'hard', n: 0, el: () => [n('TitleType', { ...TY, plate: { src: 'HCR', t: 1.5, speed: 0.25 } }), n('Dip', { inN: 14 })] },
   ],
   audio: [
-    { src: 'static', id: 'bed_static', file: 'sfx/static_lp.wav', at: 0, to: 2.60, lane: [[0, 0], [1.5, db(-25.5 + 32.4)], [2.5, db(-25.5 + 32.4)], [2.6, 0]] },
-    sfx('glitch_click', 2.47, VO_PK - 14 - SFX.glitch_click[3]),
-    { src: 'mus_a', id: 'mus_intro', file: 'music/es_tarmac_radiation.mp3', at: 0, to: 61.11, lane: musLane('music/es_tarmac_radiation.mp3', 0, 61.11, dipT(MUS_T, 0), 1.5, 5.3, dipPts(0)) },
-    { src: 'mus_b', id: 'mus_title', file: 'music/es_dark_days.mp3', at: 56.04, to: 61.11, lane: musLane('music/es_dark_days.mp3', 0, 5.07, () => MUS_T, 2, 0) },
-    sfx('riser_dark', 40.40),
-    sfx('tick_soft', 54.34, VO_PK - 22 - SFX.tick_soft[3]),
-    sfx('boom_low', 56.04, SFX_T - SFX.boom_low[1]),
+    // static bed: drops 9 dB as the glitch hits (2.43), then tails out to 2.87 (0.44 s crossfade into music + VO at 2.90)
+    { src: 'static', id: 'bed_static', file: 'sfx/static_lp.wav', at: 0, to: 2.90, lane: [[0, 0], [1.5, db(-25.5 + 32.4)], [2.40, db(-25.5 + 32.4)], [2.50, db(-34.5 + 32.4)], [2.87, 0]] },
+    sfx('glitch_click', 2.42, VO_PK - 9 - SFX.glitch_click[3]), // v3: peak 9 dB under the VO peak (was -14 and masked by the bed)
+    { src: 'mus_a', id: 'mus_intro', file: 'music/es_tarmac_radiation.mp3', at: 0, to: END, lane: musLane('music/es_tarmac_radiation.mp3', 0, END, dipT(MUS_T, 0), 1.5, 5.3, dipPts(0)) },
+    { src: 'mus_b', id: 'mus_title', file: 'music/es_dark_days.mp3', at: T0 + 0.23, to: END, lane: musLane('music/es_dark_days.mp3', 0, +(END - T0 - 0.23).toFixed(3), () => MUS_T, 2, 0) },
+    sfx('riser_dark', 40.625),
+    sfx('boom_low', T0 + 0.23, SFX_T - SFX.boom_low[1]),
+    ...ticks,
   ],
 };

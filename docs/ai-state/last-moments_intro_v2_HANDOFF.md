@@ -54,3 +54,22 @@ Task: owner rejected intro graphics as "AI slop". Rebuild warning, 21-case list,
 ## v3 owner-notes pass (2026-11-19, in progress)
 - FONT DONE: `hf-engine/fonts/VCROSDMono-latin.woff2` (VCR OSD Mono 1.001, dafont free; woff2 from the ttf). build.mjs
   fontFace(): file prefix `VCROSDMono` -> family `'VCR OSD Mono'` weight 400. Use: add 'VCROSDMono-latin.woff2' to the case `fonts`.
+- v3 DONE (2026-11-19). Part = 59.04 s (was 61.11). `node build.mjs lm_intro` exit 0; check ok, 0 errors (6 lint + 2 craft
+  warnings). Sheet `productions/last-moments/edit/qa/lm_intro_v3_sheet.jpg` (25 frames, VO word on each). Backups (scratch
+  `v3/`): lm_intro.v2.bak.mjs, lm_v2.v2.bak.mjs, old cut wav + words + vo_intro_clean.py.
+- VO re-cut: `build/vo_intro_clean.py` CUTS[0] (0,0.16)->(0,0.135) + 30 ms ramp on the first segment (/f/ of "Final" starts at
+  raw 0.16 and was cut hard there). New `vo/cut/c00_p01.wav` 47.475 s (media `vo/c00.wav` hardlink = same bytes; RE-UPLOAD to
+  Drive for the farm). All clean word times = old + 0.025. Other 4 cuts checked by 10 ms RMS: all in silence, no hard onsets;
+  gating removed nothing above -52 dB. Not Whisper-re-verified on the new file (words.json = remapped raw Whisper).
+- Timeline (VO at 2.90; part t = 2.90 + clean t = old part t + 0.225): warning 0-2.60 (GlitchOut2 last 10 f) | HPK 2.60-8.105 |
+  conveyor A 8.105-17.145 (LIP 60 dive full; CGF 19.5 @0.9 "stream sign-off" 9.685; CRV 195.5 @0.85 head cropped "vlog" 10.985;
+  HCR "shop doorway" 12.80, full 14.30 + Met credit) | RAD 75 17.145-20.565 (masks, credit "FOOTAGE: KALAMAZOO COUNTY RELEASE"
+  = my wording, confirm) | LIP 174 20.565-25.565 | conveyor B 25.565-32.855 (CRV 236 @0.4 "filmed themselves"; CGF 9.0 CG_B
+  "friend's phone" 27.40; WED gate "security camera" 29.005, full 30.90 + credit) | conveyor C 32.855-46.535 (as before, P1 now
+  CGF 19.5 @0.68 CG_A) | Descent 46.535-53.535 (dip out) | TitleType 53.535-59.04 (dip in). DescentReturn/CaseCard2 unused (kept).
+- Audio: static bed drops 9 dB at 2.40-2.50 then fades to 0 at 2.87 (0.44 s); glitch_click at 2.42 peak = VO peak -9 dB;
+  music from 0 (1.5 s fade-in, unchanged); riser 40.625; boom + title music at 53.765; 23 key ticks (tick_soft, VO peak -20) on
+  every 2nd typed char; old ledger tick removed. Audio was checked by numbers only, NOT listened to in a render/preview.
+- Open: CRV 236 beyond source 237.6 shows the vlogger's face (do not raise the speed); HCR in the 2-up panel shows the doorway
+  only (man enters when it goes full); CGF selfie now appears twice (conveyor A + C); intro is 2.07 s shorter (any part that
+  assumed 61.11 s must use 59.04).

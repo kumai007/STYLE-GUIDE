@@ -136,3 +136,11 @@ Check: all shots >= 3 s; no same text device back to back; one big text device a
   - `TitleType {kick, lines:[..], at=8, size=78, cps=22, align='c'|'l'}` VCR typed card, same props as TCard; put over a backdrop.
 - Ref look studied (latest5 f1): name tag = black brush blob + white distressed condensed caps bottom-centre; article = white crop,
   serif, yellow marker phrase by phrase on a posterized/dark backdrop; date = VCR type top-left with block cursor.
+
+## Articles agent (2026-11-19)
+- BLOCKED: no page captured. `prep_assets.py --only c01b2,c01b3,c01b4` fails at step 3/6: `gh workflow run task.yml` -> "HTTP 500: Failed to run workflow dispatch" (6 tries over ~8 min, also 1-case run; githubstatus all OK, workflow file unchanged since 11-16, API answers 422 for bad input, so GitHub-side 500). Not a page problem.
+- Added to `productions/last-moments/edit/assets.json` (backup `assets.json.bak_20261119`), case ids c01b2/c01b3/c01b4, page id `art` (asset names `c01b2_art` ...), all Guardian (live pages load, no wall, sentences verified exact in page HTML):
+  - c01b2 https://www.theguardian.com/world/2010/aug/25/british-spy-mi6-gareth-williams : "The body of Gareth Williams was stuffed in a holdall and dumped in his bath." (headline says "murdered"; 2010 claim)
+  - c01b3 https://www.theguardian.com/uk-news/2013/nov/13/mi6-spy-dead-bag-locked-himself-gareth-williams : "Outlining the results of a three-year investigation on Wednesday, the Metropolitan police said Gareth Williams most likely died alone in his flat."
+  - c01b4 https://www.theguardian.com/uk-news/2024/feb/05/no-new-dna-evidence-gareth-williams-likely-died-alone-forensic-review-finds : "No new DNA evidence was found and no further lines of inquiry were identified."
+- Next: rerun the same prep command when GitHub dispatch works, then crop (steps c-e) -> pages/c01b_art_<id>.jpg + c01b_articles.json. Not done: crops, c01b_articles.json, MEDIA_LOG rows.

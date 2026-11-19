@@ -9,6 +9,9 @@
 //        down (sine, whole shot), focus follows the camera (each band sharp as it passes), deeper bands dimmer; dust + grain.
 //  DescentReturn {rows}  camera rises to band 1 (f0-72, quint) and pushes into case 01 (f50-120); red hairline f60-96 (tick
 //        at f62), light sweep f68-116, other rows fall into blur. Use with Dip {inN:14,outN:16}.
+//  GlitchOut2 {n=10, seed}  v3 wrapper: visible glitch-out on the last n frames (see the device). Use instead of lm GlitchCut.
+//  TitleType {a, b, plate, fa, fb, rate}  v3: the ONE title screen (CASE 1 + typed case title, VCR OSD Mono). Replaces
+//        DescentReturn + CaseCard2 in lm_intro (both kept below, unused).
 //  CaseCard2 {no, name:[l1,l2], plate:{src,t,speed}}  c4/c5 v2: graded plate + stairwell texture, CASE NN in f14-62,
 //        zoom-through f150-178, name f170-216, red hairline f186-228.
 import { LEDGER } from './lm.mjs';
@@ -235,4 +238,84 @@ export const CaseCard2 = {
   },
 };
 
-export default [Warning2, Descent, DescentReturn, CaseCard2];
+// ---------------------------------------------------------------- GlitchOut2 (v3, owner 2026-11-19: old glitch-out was invisible)
+// Wrap a card: the last n frames (10 @60) = 12 uneven slices thrown sideways (up to +-320 px, some dropped = dark gaps, some
+// stretched), brightness pop on glitch f0-1 and f5, vertical jump, 3 white luma tear bars, near-black last frame. Mono-ish, no
+// colour split, no snow.
+const GCUT = [0, 7, 16, 22, 33, 41, 48, 56, 67, 74, 85, 92, 100];
+export const GlitchOut2 = {
+  name: 'GlitchOut2',
+  html: (p, ctx, node) => {
+    const kids = ctx.kids(node), sl = [];
+    const uq = (i) => kids.replace(/id="([^"]+)"/g, `id="$1_h${i}"`).replace(/url\(#([^)]+)\)/g, `url(#$1_h${i})`);
+    for (let i = 0; i < 12; i++) sl.push(`<div class="${AF}" style="display:none;clip-path:inset(${GCUT[i]}% 0 ${100 - GCUT[i + 1]}% 0)">${uq(i)}</div>`);
+    const bars = [0, 1, 2].map(() => `<i style="position:absolute;left:-200px;width:2320px;top:0;height:10px;background:rgb(236,234,228);mix-blend-mode:screen;display:none"></i>`).join('');
+    return `<div class="${AF}" style="background:#000"></div><div class="${AF}" ${ctx.dev('GlitchOut2', { n: p.n ?? 10, seed: p.seed || 'lmg2' })}><div class="${AF}">${kids}</div>${sl.join('')}${bars}<div class="${AF}" style="background:#000;opacity:0;pointer-events:none"></div></div>`;
+  },
+  render: function (el, f, p, G, S) {
+    var g = f - (S.len - p.n), on = g >= 0, c = el.children, N = c.length - 5, st = Math.floor(g / 2);
+    c[0].style.display = on ? 'none' : '';
+    var pop = g < 2 ? 2.7 : g === 5 ? 2.1 : g >= p.n - 2 ? 0.7 : 1.35;
+    el.style.filter = on ? 'saturate(.35) contrast(1.25) brightness(' + pop + ')' : '';
+    el.style.transform = on ? 'translateY(' + ((G.random(p.seed + 'y' + st) - 0.5) * 44).toFixed(1) + 'px)' : '';
+    var amp = 0.45 + 0.55 * Math.sin(Math.PI * (g + 1) / (p.n + 1));
+    for (var i = 1; i <= N; i++) {
+      var s = c[i];
+      if (!on) { s.style.display = 'none'; continue; }
+      var r = G.random(p.seed + i + '_' + st), r2 = G.random(p.seed + 'k' + i + '_' + st);
+      s.style.display = r2 < 0.13 ? 'none' : '';
+      var d = (r - 0.5) * 640 * amp * (r2 > 0.8 ? 0.12 : 1);
+      s.style.transform = 'translateX(' + d.toFixed(1) + 'px)' + (r2 > 0.62 && r2 < 0.8 ? ' scaleX(1.3)' : '');
+    }
+    for (var b = 0; b < 3; b++) {
+      var t = c[N + 1 + b], q = G.random(p.seed + 'b' + b + '_' + g);
+      t.style.display = on && q < 0.75 ? '' : 'none';
+      if (on) { t.style.top = (G.random(p.seed + 't' + b + '_' + g) * 1050).toFixed(0) + 'px'; t.style.height = (3 + 38 * G.random(p.seed + 'h' + b + '_' + g)).toFixed(0) + 'px'; t.style.opacity = (0.22 + 0.5 * q).toFixed(2); }
+    }
+    c[c.length - 1].style.opacity = !on ? 0 : g === p.n - 1 ? 0.72 : g === 3 ? 0.4 : 0;
+  },
+};
+
+// ---------------------------------------------------------------- TitleType (v3, owner 2026-11-19: ONE title screen)
+// {a:'CASE 1', b:'THE ...', plate:{src,t,speed}, fa=24, fb=62, rate=0.3}  photographic plate (as CaseCard2) + "CASE 1" and BELOW it
+// the case title, both typed on in steps (rate chars/frame @60 = 0.6 char/frame @30) in VCR OSD Mono with a block cursor; red
+// hairline after the last char. No fly-through. Char k of b lands at frame fb + ceil((k+1)/rate) (key ticks in the case file).
+export const TitleType = {
+  name: 'TitleType',
+  html: (p, ctx) => {
+    const pl = p.plate, VCR = "'VCR OSD Mono',monospace", a = p.a || 'CASE 1', b = p.b || '';
+    const vid = ctx.node({ d: '_V', p: { src: pl.src, trim: pl.t, speed: pl.speed ?? 0.25, fit: 'cover' } }, ctx.win);
+    const line = (top, fs, ls) => `<div class="tl" style="position:absolute;left:0;right:0;top:${top}px;text-align:center;white-space:pre;font:400 ${fs}px/1 ${VCR};letter-spacing:${ls}em;color:#ECE8E0;text-shadow:0 0 20px rgba(232,228,220,.3),0 2px 4px rgba(0,0,0,.9)"><span class="ty"></span><span style="position:relative;display:inline-block;width:0;height:1em"><i class="cu" style="position:absolute;left:.03em;bottom:.06em;width:.5em;height:.78em;background:#ECE8E0;box-shadow:0 0 16px rgba(232,228,220,.5);display:none"></i></span><span class="re" style="visibility:hidden"></span></div>`;
+    return `<div class="${AF}" style="background:#040404"></div>`
+      + `<div class="${AF}" ${ctx.dev('TitleType', { part: 'plate' })} style="overflow:hidden"><div class="${AF}" style="filter:blur(2.5px) brightness(.4) contrast(1.15) saturate(.12)">${vid}</div>`
+      + `<img src="${STAIR}" style="position:absolute;left:-120px;top:-80px;width:2160px;height:1240px;object-fit:cover;mix-blend-mode:screen;opacity:.2;filter:brightness(.55) contrast(1.3) blur(1px)"></div>`
+      + `<div class="${AF}" style="pointer-events:none;background:linear-gradient(180deg,rgba(0,0,0,.15) 0%,rgba(0,0,0,0) 35%,rgba(0,0,0,.45) 100%)"></div>`
+      + topLight(0.12, 8) + vig(0.84, 30)
+      + `<div class="${AF}" style="pointer-events:none;background:radial-gradient(ellipse 52% 26% at 50% 49%, rgba(0,0,0,.5), rgba(0,0,0,0) 78%)"></div>`
+      + `<div class="${AF}" ${ctx.dev('TitleType', { part: 'tx', a, b, fa: p.fa ?? 24, fb: p.fb ?? 62, rate: p.rate ?? 0.3 })}>`
+      + line(360, 156, 0.08) + line(562, 64, 0.05)
+      + `<i class="hr" style="position:absolute;left:660px;width:600px;top:668px;height:2px;background:#9E1F1C;box-shadow:0 0 12px rgba(158,31,28,.9);transform:scaleX(0)"></i></div>`
+      + grain(ctx, 0.07);
+  },
+  render: function (el, f, p, G, S) {
+    var c = function (x) { return x < 0 ? 0 : x > 1 ? 1 : x; };
+    if (p.part === 'plate') {
+      var k = -(Math.cos(Math.PI * c(f / S.len)) - 1) / 2;
+      el.style.transform = 'translate(' + (3 * Math.sin(f / 95)).toFixed(2) + 'px,' + (2 * Math.cos(f / 120)).toFixed(2) + 'px) scale(' + (1.03 + 0.07 * k).toFixed(5) + ')';
+      var t = el.parentNode.querySelector('.gr2 feTurbulence'); if (t) t.setAttribute('seed', 1 + (Math.floor(f / 3) % 40));
+      return;
+    }
+    var L = el.querySelectorAll('.tl'), T = [p.a, p.b], F0 = [p.fa, p.fb], blink = Math.floor(f / 18) % 2 === 0, done = 0;
+    for (var i = 0; i < 2; i++) {
+      var n = Math.max(0, Math.min(T[i].length, Math.floor((f - F0[i]) * p.rate)));
+      L[i].querySelector('.ty').textContent = T[i].slice(0, n); L[i].querySelector('.re').textContent = T[i].slice(n);
+      var typing = n > 0 && n < T[i].length, mine = i === 0 ? f >= 6 && f < p.fb - 6 : f >= p.fb - 6;
+      L[i].querySelector('.cu').style.display = mine && (typing || blink) ? '' : 'none';
+      if (i === 1 && n >= T[i].length) done = F0[i] + Math.ceil(T[i].length / p.rate);
+    }
+    var h = done ? c((f - done - 6) / 40) : 0;
+    el.querySelector('.hr').style.transform = 'scaleX(' + (h < 0.5 ? 4 * h * h * h : 1 - Math.pow(-2 * h + 2, 3) / 2).toFixed(4) + ')';
+  },
+};
+
+export default [Warning2, Descent, DescentReturn, CaseCard2, GlitchOut2, TitleType];

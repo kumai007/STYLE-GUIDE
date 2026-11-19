@@ -98,3 +98,28 @@ Photo device (new, devices/lm_c01a.mjs): img cover, keyed drift scale 1.04->1.12
   S39 entry 41, map 43-44, S23 card 52.
 - Open: mosaic boxes only checked at thumbnail size (check brompton/geograph at full size in the preview); p01a 35.82:36.18
   filler cut needs a listen; S19 rain window still dark; Tag on S26 lifted 150 px to clear the burned "Entrance Holland Park".
+
+## Agent 3 (v2 pro rework, 2026-11-19) progress
+- Articles: assets.json cases c01a1 (thejournal.ie 27 Aug 2010 profile), c01a2 (Guardian 6 Sep 2010 CCTV appeal), c01a3 (Channel 4
+  26 Aug 2010 secondment). GitHub dispatch gave HTTP 500 twice (task.sh step 3/6), so the 3 pages were captured on the PC with the
+  same script (`gh_assets.py "page|..."`, then `prep_assets.py --post`): all highlights found. Crops: `build/c01a_articles.py` ->
+  media pages/c01a_{profile,cctv,secondment}.jpg + c01a_articles.json (bands in crop px).
+- Stamp boxes (640x480 source px): HCR "2010-08-15 14:27:28.659" x2-215 y458-474; HPK "14:59:14 14/08/10" x380-558 y409-424.
+  Screen (contain x2.25, +240): HCR 243,1029,484x40; HPK 1093,918,406x40; picture rect [240,0,1440,1080].
+- Case v2 edits done (v1 backup $TEMP/c01a/lm_case01a.v1.mjs): tag->LowerThird, td/TCard->TitleType, S04/S28 StampRing, S09/S15/S36
+  Article3D, S25 blurred HPK backdrop, S32 harrods_night, S33 sloane_street. Next: build, check, sheet.
+- v2 DONE: build exit 0; check ok, 0 errors, 8 warnings. Sheet `productions/last-moments/edit/qa/lm_case01a_v2_sheet.jpg` (40 shots).
+  Round 1 found: HCR ring pushed up through the digits (kit clamps 12 px inside rect; stamp is 6 src px from the bottom) -> fixed in
+  the case with STAMP.HCR h 24 + rect bottom 1095 (ring ends y 1077, inside the picture). Article source strip overlapped the
+  ILLUSTRATIVE label -> label 'tl'. Old thin RingC01 ellipses on S08/S21 removed. Full-size checks seen: lower third S01 (ink bar,
+  distressed caps: matches ref look), both StampRings on the stamps inside the picture (HCR ring touches the first "2" at the
+  picture's left edge).
+- Shot changes vs table: S04/S28 StampRing (no typed date on S04), S09 Article3D profile over blurred snowdonia, S15 Article3D
+  secondment over blurred sis_b, S25 TitleType on blurred HPK freeze f150, S32 harrods_night, S33 sloane_street, S36 Article3D
+  cctv 167.80-172.00 over blurred brompton, S37 172.00-175.20 (date at 172.3). Ticks: TD_AT updated.
+- Repeats left: prestbury_village x3 (S12 blurred card backdrop, S13, S22 other crop); sis_building_vauxhall x2 (S16, S21 tight),
+  sis_b x2 (S15 blurred, S17); wet_pavement x2 (S23 blurred, S34). No new Pexels/Commons downloads (not attempted).
+- Open: GitHub farm dispatch HTTP 500 (2 tries) -> pages captured on the PC; S19 rain window still dark with black sides; article
+  source strip (kit) sits on the page's bottom-left text; articles are text-only crops (no headline in the crop); S32/S33
+  Knightsbridge photos come ~10 s before the "back to Knightsbridge" line; mosaic boxes S37 only seen at thumbnail size; audio not
+  re-listened; lm_pro exit timings of LowerThird not checked at each shot end.

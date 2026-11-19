@@ -2,6 +2,7 @@
 // Shot table = docs/ai-state/last-moments_case01a_HANDOFF.md (S01-S40). VO p01a 0.50, p01b 43.80, p01c 95.57, p02 139.30.
 // Raws: HPK 133.95-138.98 (src 0-5.03) and HCR 182.10-185.85 (src 0-3.75), VO paused, own room tone, music -6 dB.
 // Owner bar: every graphic on real footage/photo (grain, falloff, eased 3-D Cam), lit type; one text device at a time.
+import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
@@ -50,6 +51,7 @@ const PH = {
   prestbury_village: 'MICHAEL DIBB / CC BY-SA 2.0', sis_building_vauxhall: 'COLIN SMITH / CC BY-SA 2.0',
   sis_building_vauxhall_b: 'RICHARD COOKE / CC BY-SA 2.0', brompton_road_knightsbridge: 'LEWIS CLARKE / CC BY-SA 2.0',
   hans_crescent_geograph: 'LEWIS CLARKE / CC BY-SA 2.0', hans_crescent_sign: 'ELL BROWN / CC BY-SA 2.0',
+  harrods_night: 'EDITOR5807 / CC BY 3.0', sloane_street: 'LEWIS CLARKE / CC BY-SA 2.0',
 };
 // faces of private people in photos (1920x1080 cover-box px, before the camera)
 const MOS = {
@@ -97,8 +99,18 @@ const live = (i, src, t, speed, o, extra = []) => [
 ];
 const met = (place = 'tr') => n('Credit', { text: MET, place });
 // Tag hold so its 24 f out ends 6 f before the cut
-const tag = (L, at, name, role, pin = true) => n('Tag', { at, name, role, pin, hold: Math.max(60, L - at - 48 - 24 - 6) });
-const td = (at, text) => n('TypedDate', { at, text });
+// v2 (owner 2026-11-19, lm_pro kit): name/place tags = LowerThird (ink brush bar), dates/cards = TitleType (VCR typed),
+// camera stamps = StampRing (ring on the burned-in stamp, clamped to the picture, punch-in), articles = Article3D.
+const tag = (L, at, name, role, pin = true, o = {}) => n('LowerThird', { at, name, role, pin, hold: Math.max(60, L - at - 48 - 24 - 6), ...o });
+const td = (at, text) => n('TitleType', { at, lines: [text], size: 66, align: 'l' });
+// real article crops (build/c01a_articles.py): {img, iw, ih, bands, src, date}; marker starts at f0, 2nd line 26 f later
+const ART = JSON.parse(fs.readFileSync(path.join(MED, 'pages', 'c01a_articles.json'), 'utf8'));
+const art = (k, f0, bg, o = {}) => n('Article3D', { ...ART[k], bands: ART[k].bands.map((b, j) => [...b, f0 + 26 * j]), ...o }, bg);
+// contain picture area of a 640x480 raw on the 1920x1080 stage, and its burned-in stamp boxes (source px x 2.25, +240 x)
+const PIC = [240, 0, 1440, 1080];
+// HCR stamp sits 6 src px above the picture bottom: h 24 (ring radius 28 around the stamp centre y 1048.5) + rect bottom +15 so the
+// kit's 12 px clamp margin does not push the ring up through the digits; the ring stroke still ends at y 1077 (< 1080, in picture).
+const STAMP = { HCR: { x: 243, y: 1037, w: 484, h: 24, rect: [240, 0, 1440, 1095] }, HPK: { x: 1093, y: 918, w: 406, h: 40, rect: PIC } };
 const MAP = { z12: 'c01a/map_z12.jpg', z14: 'c01a/map_z14.jpg', off: [-5376, -3072, 4] };
 
 // shot table: [start, end, name, (i, L = len f, A = part s -> local f) => nodes]
@@ -107,20 +119,19 @@ const T = [
   [0, 4.16, 'S01 HCR freeze man', (i, L, A) => frz('HCR', 114, { bri: 0.78 }, { s: [1.0, 1.08], o: '42% 30%' }, [met('tr'), tag(L, A(1.54), 'GARETH WILLIAMS', 'CODEBREAKER', false)])],
   [4.16, 10.40, 'S02 hans crescent harrods', (i, L, A) => photo(i, 'hans_crescent_harrods_side', { bri: 0.75, over: [tag(L, A(6.24), 'HANS CRESCENT', 'KNIGHTSBRIDGE, LONDON')] })],
   [10.40, 17.96, 'S03 HCR walk', (i) => live(i, 'HCR', 0, 0.5, { bri: 0.75 }, [met('tr')])],
-  [17.96, 24.64, 'S04 HCR stamp zoom', (i, L, A) => frz('HCR', 224, { bri: 0.68 }, { s: [1, 2], tx: [0, 556], ty: [0, -562], a: 0, b: 84 },
-    [n('RingC01', { cx: 560, cy: 992, rx: 520, ry: 58, rot: -2, at: A(19.56) }), td(A(21.54), '15 AUGUST 2010')])],
+  [17.96, 24.64, 'S04 HCR stamp zoom', (i, L, A) => [n('StampRing', { ...STAMP.HCR, at: A(19.56), zoom: 1.7, zin: 50 }, ...frz('HCR', 224, { bri: 0.78 }, { s: [1, 1] }))]],
   [24.64, 28.10, 'S05 HCR empty doorway', (i, L) => frz('HCR', 222, { bri: 0.74, mono: true }, { s: [1.0, 1.05], o: '50% 40%' }, [n('Dip', { outN: 16 })])],
   [28.10, 32.62, 'S06 valley station', (i, L, A) => [...photo(i, 'valley_anglesey_station', { bri: 0.65, over: [tag(L, A(28.2) + 14, 'VALLEY', 'ANGLESEY, WALES')] }), n('Dip', { inN: 14 })]],
   [32.62, 37.34, 'S07 valley church', (i, L, A) => photo(i, 'valley_anglesey_church', { bri: 0.55, over: [td(A(32.62) + 10, '26 SEPTEMBER 1978')] })],
-  [37.34, 43.80, 'S08 bangor', (i, L, A) => photo(i, 'bangor_university', { bri: 0.55, inCam: [n('RingC01', { cx: 960, cy: 470, rx: 380, ry: 250, at: A(42.6) - 60 })] })],
+  [37.34, 43.80, 'S08 bangor', (i, L, A) => photo(i, 'bangor_university', { bri: 0.6 })],
   // p01b (43.80-95.56)
-  [43.80, 49.78, 'S09 snowdonia', (i) => foot(i, 'snowdonia_a', 1, { bri: 0.78 })],
+  [43.80, 49.78, 'S09 article profile', (i) => [art('profile', 70, bgV(i, 'snowdonia_a', 1, 0.6)), n('Lbl', { text: 'BACKDROP: ILLUSTRATIVE', at: 'tl' })]],
   [49.78, 54.22, 'S10 manchester', (i, L, A) => photo(i, 'manchester_university', { bri: 0.72, over: [tag(L, A(49.9) + 6, 'UNIVERSITY OF MANCHESTER', 'MANCHESTER')] })],
   [54.22, 57.94, 'S11 st catharines', (i) => photo(i, 'st_catharines_cambridge', { over: [n('SpotC01', { cx: 960, cy: 500, r: 460, at: 20, hold: 150 })] })],
-  [57.94, 63.80, 'S12 card 2001 GCHQ', (i) => [bgP(i, 'prestbury_village', 0.72), n('TCard', { kick: '2001', lines: ['GCHQ', 'CHELTENHAM'] })]],
+  [57.94, 63.80, 'S12 card 2001 GCHQ', (i) => [bgP(i, 'prestbury_village', 0.72), n('TitleType', { kick: '2001', lines: ['GCHQ', 'CHELTENHAM'] })]],
   [63.80, 68.74, 'S13 prestbury', (i, L, A) => photo(i, 'prestbury_village', { bri: 0.75, s: [1.15, 1.22], pos: '30% 60%', over: [tag(L, A(66.26), 'PRESTBURY', 'CHELTENHAM')] })],
   [68.74, 73.54, 'S14 cyclist road', (i) => foot(i, 'cyclist_drone_road', 2, { bri: 0.9 })],
-  [73.54, 77.40, 'S15 rain street b', (i, L, A) => foot(i, 'london_rain_street_b', 34, { over: [td(A(74.22), 'SPRING 2009')] })],
+  [73.54, 77.40, 'S15 article secondment', (i) => [art('secondment', 50, bgP(i, 'sis_building_vauxhall_b', 0.6), { ry: [10, 2] })]],
   [77.40, 80.52, 'S16 SIS', (i, L, A) => photo(i, 'sis_building_vauxhall', { bri: 0.62, over: [tag(L, A(77.62), 'SIS BUILDING', 'VAUXHALL, LONDON')] })],
   [80.52, 84.42, 'S17 SIS b', (i) => photo(i, 'sis_building_vauxhall_b', { over: [n('SpotC01', { cx: 960, cy: 520, r: 420, at: 20, hold: 150 })] })],
   [84.42, 90.78, 'S18 rain street a', (i) => foot(i, 'london_rain_street_a', 0.5)],
@@ -128,33 +139,33 @@ const T = [
     n('Lbl', { text: 'ILLUSTRATIVE', at: 'bl' }), td(A(90.98), 'SUMMER 2010')]],
   // p01c (95.57-133.77)
   [95.57, 101.93, 'S20 rain street b', (i) => foot(i, 'london_rain_street_b', 42)],
-  [101.93, 105.47, 'S21 SIS tight', (i, L, A) => photo(i, 'sis_building_vauxhall', { bri: 0.68, s: [1.32, 1.4], inCam: [n('RingC01', { cx: 960, cy: 500, rx: 330, ry: 220, at: 40 })] })],
+  [101.93, 105.47, 'S21 SIS tight', (i, L, A) => photo(i, 'sis_building_vauxhall', { bri: 0.68, s: [1.32, 1.4], pos: '30% 40%' })],
   [105.47, 108.93, 'S22 prestbury b', (i, L, A) => photo(i, 'prestbury_village', { bri: 0.65, s: [1.2, 1.26], pos: '70% 40%', over: [td(A(106.40), '3 SEPTEMBER 2010')] })],
-  [108.93, 113.65, 'S23 card home from US', (i) => [bgV(i, 'wet_pavement_night', 20, 0.95), n('Lbl', { text: 'ILLUSTRATIVE', at: 'bl' }), n('TCard', { kick: '11 AUGUST 2010', lines: ['HOME FROM THE US'] })]],
+  [108.93, 113.65, 'S23 card home from US', (i) => [bgV(i, 'wet_pavement_night', 20, 0.95), n('Lbl', { text: 'ILLUSTRATIVE', at: 'bl' }), n('TitleType', { kick: '11 AUGUST 2010', lines: ['HOME FROM THE US'] })]],
   [113.65, 119.21, 'S24 regent street', (i, L, A) => foot(i, 'regent_street_rain_night', 4, { bri: 1.2, lbl: 'tl', over: [tag(L, A(115.67), 'WEST END', 'LONDON')] })],
-  [119.21, 122.31, 'S25 rain street a', (i, L, A) => foot(i, 'london_rain_street_a', 3.9, { over: [td(A(120.21) - 30, 'SATURDAY 14 AUGUST 2010')] })],
-  [122.31, 127.60, 'S26 HPK freeze', (i, L, A) => frz('HPK', 0, { bri: 1.05 }, { s: [1.04, 1.1], o: '50% 100%' }, [met('tl'), n('Cam', { ty: [-150, -150] }, tag(L, A(124.81), 'HOLLAND PARK STATION', 'CENTRAL LINE, LONDON'))])],
+  [119.21, 122.31, 'S25 date on HPK backdrop', (i, L, A) => [n('Grade', { mono: true, bri: 0.8, con: 1.08 }, cam(i, [1.12, 1.2], 'filter:blur(10px)', n('Frz', { src: 'HPK', n: 150, fit: 'cover' }))), met('tl'), td(A(120.21) - 30, 'SATURDAY 14 AUGUST 2010')]],
+  [122.31, 127.60, 'S26 HPK freeze', (i, L, A) => frz('HPK', 0, { bri: 1.05 }, { s: [1.04, 1.1], o: '50% 100%' }, [met('tl'), tag(L, A(124.81), 'HOLLAND PARK STATION', 'CENTRAL LINE, LONDON', true, { y: 268 })])],
   [127.60, 130.87, 'S27 HPK cone', (i) => frz('HPK', 0, { bri: 1.05 }, { s: [1.0, 1.04], o: '38% 85%' }, [n('SpotC01', { cx: 724, cy: 922, r: 240, at: 18, hold: 120 })])],
-  [130.87, 133.95, 'S28 HPK stamp zoom', (i) => frz('HPK', 0, { bri: 1.12 }, { s: [1, 2], tx: [0, -524], ty: [0, -428], a: 0, b: 54 }, [n('RingC01', { cx: 1111, cy: 900, rx: 450, ry: 58, rot: -2, at: 60 })])],
+  [130.87, 133.95, 'S28 HPK stamp zoom', (i) => [n('StampRing', { ...STAMP.HPK, at: 30, zoom: 1.7, zin: 50 }, ...frz('HPK', 0, { bri: 1.1 }, { s: [1, 1] }))]],
   [133.95, 138.98, 'S29 HPK raw', (i) => live(i, 'HPK', 0, 1, { bri: 1.05 }, [met('tl')])],
   // p02 (139.30-182.08)
   [138.98, 144.60, 'S30 HPK replay', (i) => live(i, 'HPK', 1.5, 0.45, { bri: 1.05, mono: true }, [met('tl'), n('SpotC01', { cx: 1005, cy: 540, r: 300, at: 30, hold: 200 })])],
   [144.60, 150.02, 'S31 HPK freeze end', (i) => frz('HPK', 270, { bri: 1.05, mono: true }, { s: [1.0, 1.08], o: '60% 50%' })],
-  [150.02, 154.40, 'S32 regent street', (i) => foot(i, 'regent_street_rain_night', 20)],
-  [154.40, 158.50, 'S33 rain street b', (i) => foot(i, 'london_rain_street_b', 58)],
+  [150.02, 154.40, 'S32 harrods night', (i) => photo(i, 'harrods_night', { bri: 0.8 })],
+  [154.40, 158.50, 'S33 sloane street', (i) => photo(i, 'sloane_street', { bri: 0.6 })],
   [158.50, 163.06, 'S34 wet pavement', (i) => foot(i, 'wet_pavement_night', 30)],
   [163.06, 167.80, 'S35 map', (i) => [n('Grade', { sat: 1, con: 1.05, bri: 1, vig: 0.55, grain: 0.07 }, n('MapC01', {
     ...MAP,
     keys: [[0, 1695, 1130, 0.18, 16], [120, 1440, 1047, 1.15, 10], [145, 1455, 1055, 1.17, 10], [215, 1950, 1212, 1.25, 8], [284, 1965, 1216, 1.32, 7]],
     pins: [{ x: 1439.9, y: 1047.3, at: 90, lat: 104, label: 'HOLLAND PARK \u00b7 14 AUG' }, { x: 1950.2, y: 1212.0, at: 196, lat: 206, label: 'KNIGHTSBRIDGE \u00b7 15 AUG' }],
   })), n('Credit', { text: 'MAP: SENTINEL-2 CLOUDLESS BY EOX (CC BY 4.0)', place: 'br', hold: 200 })]],
-  [167.80, 171.10, 'S36 brompton road', (i, L, A) => photo(i, 'brompton_road_knightsbridge', { bri: 0.82, over: [tag(L, A(168.32), 'BROMPTON ROAD', 'KNIGHTSBRIDGE')] })],
-  [171.10, 175.20, 'S37 hans crescent', (i, L, A) => photo(i, 'hans_crescent_geograph', { bri: 0.6, over: [td(A(172.06), '15 AUGUST, 14:27')] })],
+  [167.80, 172.00, 'S36 article cctv', (i) => [art('cctv', 40, bgP(i, 'brompton_road_knightsbridge', 0.6), { ry: [-10, -2] }), n('Credit', { text: `BACKDROP: ${PH.brompton_road_knightsbridge}`, place: 'tr' })]],
+  [172.00, 175.20, 'S37 hans crescent', (i, L, A) => photo(i, 'hans_crescent_geograph', { bri: 0.6, over: [td(A(172.3), '15 AUGUST, 14:27')] })],
   [175.20, 178.42, 'S38 hans crescent sign', (i) => photo(i, 'hans_crescent_sign', { bri: 0.6 })],
   [178.42, 182.10, 'S39 HCR entry', (i) => frz('HCR', 0, { bri: 0.85 }, { s: [1.0, 1.06], o: '70% 20%' }, [met('tr'), n('SpotC01', { cx: 1150, cy: 170, r: 330, at: 24, hold: 120 })])],
   [182.10, 185.85, 'S40 HCR raw', (i) => live(i, 'HCR', 0, 1, { bri: 0.75 }, [met('tr')])],
 ];
-const TD_AT = [21.54, 32.62 + 10 / 60, 74.22, 90.98, 106.40, 120.21 - 0.5, 172.06];
+const TD_AT = [32.62 + 10 / 60, 90.98, 106.40, 120.21 - 0.5, 172.3];
 
 export default {
   id: 'lm_case01a',
@@ -162,8 +173,8 @@ export default {
   end: 185.85,
   plain: true,
   vo: { starts: [0.50, 43.80, 95.57, 139.30], lens: [43.38, 51.76, 38.20, 42.78], file: (i) => ['vo/c01a_p01a.wav', 'vo/c01a_p01b.wav', 'vo/c01a_p01c.wav', 'vo/c01a_p02.wav'][i], tail: 0 },
-  devices: ['shared', 'lm', 'lm_c01b', 'lm_c01a'],
-  fonts: ['Oswald-var-latin.woff2', 'BebasNeue-latin.woff2', 'IBMPlexMono-500-latin.woff2', 'IBMPlexMono-600-latin.woff2'],
+  devices: ['shared', 'lm', 'lm_c01b', 'lm_c01a', 'lm_pro'],
+  fonts: ['Oswald-var-latin.woff2', 'BebasNeue-latin.woff2', 'IBMPlexMono-500-latin.woff2', 'IBMPlexMono-600-latin.woff2', 'VCROSDMono-latin.woff2'],
   shots: T.map(([c, to, name, fn], i) => {
     const L = Math.round((to - c) * 60), A = (t) => Math.round((t - c) * 60);
     return { name, c, to, k: 'hard', n: 0, el: () => fn(i, L, A) };
