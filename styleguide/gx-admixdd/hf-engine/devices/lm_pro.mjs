@@ -146,11 +146,11 @@ export const StampRing = {
     if (edge) { py = Math.max(16, p.h * 0.4); bh = p.h + 2 * py; }
     const lift = edge ? (sc0 + (bh / 2 + 8) * Z > RY + RH - m ? sc0 + (bh / 2 + 8) * Z - (RY + RH - m) : -Math.max(0, RY + m - (sc0 - (bh / 2 + 8) * Z))) : 0;
     const bx = Math.max(RX + m, Math.min(RX + RW - m - bw, p.x + p.w / 2 - bw / 2)), by = edge ? sc0 - bh / 2 : Math.max(RY + m, Math.min(RY + RH - m - bh, p.y + p.h / 2 - bh / 2));
-    const cx = bx + bw / 2, cy = by + bh / 2, a = bw / 2 - 6, b = bh / 2 - 6, ph = r() * 6.28;
-    // v6 (owner 2026-11-19 "the oval is rough, asymmetrical, unprofessional"): one clean, even ellipse (exact closed path, no noise,
-    // no double stroke), drawn on from the upper left in 30 f, thin dark under-stroke for contrast on bright footage.
-    const t0 = -2.2, P = []; for (let i = 0; i <= 96; i++) { const t = t0 + (i / 96) * 6.2832; P.push(`${F(cx + a * Math.cos(t))} ${F(cy + b * Math.sin(t))}`); }
-    const ring = 'M' + P.join('L') + 'Z';
+    // v6c: clean pill (capsule) hugging the stamp text, 12 px air left/right, 9 px top/bottom, radius = half its height: symmetric,
+    // never crosses neighbouring characters (an ellipse round a text line always does), kept inside the picture rect.
+    const x0 = Math.max(RX + 3, p.x - 12), x1 = Math.min(RX + RW - 3, p.x + p.w + 12), y0 = p.y - 9, y1 = p.y + p.h + 9, rr = (y1 - y0) / 2;
+    const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2, a = (x1 - x0) / 2, b = rr;
+    const ring = `M${F(x0 + rr)} ${F(y0)}L${F(x1 - rr)} ${F(y0)}A${F(rr)} ${F(rr)} 0 0 1 ${F(x1 - rr)} ${F(y1)}L${F(x0 + rr)} ${F(y1)}A${F(rr)} ${F(rr)} 0 0 1 ${F(x0 + rr)} ${F(y0)}Z`;
     const u = (cx - RX) / RW, v = (cy - RY) / RH, sx = u < 0.3 ? 0 : u > 0.7 ? 1 : u, sy = v < 0.3 ? 0 : v > 0.7 ? 1 : v;
     return `<div class="${AF}" ${ctx.dev('StampRing', { at: p.at ?? 0, hold: p.hold ?? 1e9, zoom: p.zoom ?? 1.3, zin: p.zin ?? 40, lift: F(lift) })} style="transform-origin:${F(RX + RW * sx)}px ${F(edge ? sc0 : RY + RH * sy)}px">${ctx.kids(node)}`
       + `<div data-d class="${AF}" style="pointer-events:none;opacity:0;background:radial-gradient(ellipse ${F(a * 1.9)}px ${F(b * 2.6)}px at ${F(cx)}px ${F(cy)}px,rgba(0,0,0,0) 0%,rgba(0,0,0,0) 52%,rgba(0,0,0,${p.dim ?? 0.55}) 100%)"></div>`

@@ -162,7 +162,8 @@ const T = [
   [128.40, 132.70, 'B29 hans crescent', (i) => [...photo(i, 'hans_crescent_sign'), n('Dip', { outN: 16 })]],
   // replay (VO paused): StampRing on the burned-in HCR stamp (screen box 243,1029 484x40; picture rect 240..1680), ring outside the mono grade
   [132.70, 139.20, 'B30 REPLAY', () => [
-    n('StampRing', { x: 222, y: 1029, w: 526, h: 40, rect: [150, 0, 1620, 1080], at: 70, zoom: 1.32, zin: 46 },
+    n('StampRing', { x: 476, y: 1037, w: 250, h: 24, rect: [240, 0, 1440, 1095], // v6: pill on the time only, inside the picture
+      at: 70, zoom: 1.32, zin: 46 },
       n('Grade', { mono: true, bri: 0.78, con: 1.12 },
         n('LClip', { src: 'HCR', t: 0, speed: 0.5, sw: 640, sh: 480, fit: 'contain', fill: true, until: 390, push: [1, 1] }))),
     n('Lbl', { text: 'REPLAY', at: 'tl' }), n('Credit', { text: MET, hold: 360 }), n('Dip', { inN: 14 }),

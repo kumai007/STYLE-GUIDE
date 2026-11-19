@@ -145,7 +145,8 @@ const art = (k, f0, bg, o = {}) => n('Article3D', { ...ART[k], bands: ART[k].ban
 const PIC = [240, 0, 1440, 1080];
 // HCR stamp sits 6 src px above the picture bottom: h 24 (ring radius 28 around the stamp centre y 1048.5) + rect bottom +15 so the
 // kit's 12 px clamp margin does not push the ring up through the digits; the ring stroke still ends at y 1077 (< 1080, in picture).
-const STAMP = { HCR: { x: 243, y: 1037, w: 484, h: 24, rect: [240, 0, 1440, 1095] }, HPK: { x: 1093, y: 918, w: 406, h: 40, rect: PIC } };
+// v6: HCR ring on the TIME only (the date starts at the picture edge, so a ring round the whole stamp would leave the picture)
+const STAMP = { HCR: { x: 476, y: 1037, w: 250, h: 24, rect: [240, 0, 1440, 1095] }, HPK: { x: 1093, y: 918, w: 406, h: 40, rect: PIC } };
 const MAP = { z12: 'c01a/map_z12.jpg', z14: 'c01a/map_z14.jpg', off: [-5376, -3072, 4] };
 const TL = (a, b, c) => [{ date: '11 AUG 2010', label: 'HOME FROM THE US', at: a }, { date: '14 AUG', label: b ? 'SATURDAY - A WET AFTERNOON' : 'HOLLAND PARK', at: b ?? 9999 }, { date: '15 AUG', label: 'HANS CRESCENT', at: c ?? 9999 }];
 const DOCS = () => [{ ...ART.cctv, at: 10 }, { ...ART.profile, at: 150 }];
@@ -176,8 +177,8 @@ const T = [
   // v6 (owner 2026-11-19 "according to the journalist Duncan Campbell .. you put a random stock footage"): his real article, The Register
   // 3 May 2012 (byline Duncan Campbell), as a scroll: S18 headline + "one of a team .. hacking networks in the US and the UK" (marker on
   // "he worked on a team" 87.42), S19 the Black Hat / Defcon line (marker 92.2, "Black Hat" 92.63). Was rain street + rain window stock.
-  [84.42, 91.10, 'S18 article register', () => [art('reg1', 180)]],
-  [91.10, 95.57, 'S19 article register b', () => [art('reg2', 66)]],
+  [84.42, 91.10, 'S18 article register', () => [art('reg1', 180, null, { key: 1000 })]],
+  [91.10, 95.57, 'S19 article register b', () => [art('reg2', 66, null, { key: 1000 })]],
   // p01c (95.57-133.77)
   [95.57, 101.93, 'S20 rain street b', (i) => foot(i, 'london_rain_street_b', 42)],
   [101.93, 105.47, 'S21 GCHQ', (i, L, A) => par(i, 'gchq_aerial', { bri: 0.72, over: [place(A(103.3), 'GCHQ', 'CHELTENHAM')] })], // v5: VO "back to GCHQ"
