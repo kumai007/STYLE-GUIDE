@@ -36,10 +36,10 @@ const typing = (at, lines, cps = 22) => { const ts = []; let tot = 0;
 // device events (part s). LowerThird ink wipe -> brush (S06 28.43 skipped: dip boom 28.30); Article3D in -> paper slide at the cut + settle
 // +0.45 (S36 settle skipped: marker 0.22 s later); marker wipe (f0, f0+26) -> marker, start -0.03; StampRing punch-in + map pushes -> whoosh,
 // peak (0.469) on the move; booms: dip end + raw cuts (peak 0.176 on the cut); risers land on the raw cuts.
-const BRUSH = [1.54];
-const ARTS = [[43.80, 70, true], [73.54, 50, true]]; // v5: S36 article -> Parallax photo
+const BRUSH = []; // v6: no LowerThird brush (S01 name label is plain text + click)
+const ARTS = [[43.80, 70, true], [73.54, 50, true], [84.42, 180, true], [91.10, 66, true]]; // v6: S18/S19 Register (Duncan Campbell) // v5: S36 article -> Parallax photo
 // v4 click SFX at each text fade-in (part s): places, dates, cards (TYPED key stream removed: typing only on title screens)
-const CLICKS = [6.24, 28.2 + 44 / 60, 32.62 + 10 / 60, 50.0, 57.94 + 8 / 60, 66.26, 77.62, 90.98, 103.3, 106.40, 109.9, 116.5, 120.5, 124.81,
+const CLICKS = [1.54, 6.24, 28.2 + 44 / 60, 32.62 + 10 / 60, 50.0, 57.94 + 8 / 60, 66.26, 77.62, 103.3, 106.40, 109.9, 116.5, 120.5, 124.81,
   138.98 + 84 / 60, 163.06 + 30 / 60, 163.06 + 143 / 60, 163.06 + 192 / 60, 168.3, 172.3, 178.42 + 84 / 60]; // v5: S30/S39 data pop, S35 pins
 const WHOOSH = [19.56 + 0.33 - 0.469, 130.87 + 0.5 + 0.33 - 0.469, 138.98 + 46 / 60 - 0.469, 158.50 + (150 - 21) / 60 - 0.469, 163.06 + 30 / 60 - 0.469, 178.42 + 46 / 60 - 0.469];
 const stS = (f) => {
@@ -128,7 +128,7 @@ const live = (i, src, t, speed, o, extra = []) => [
   n('Grade', { mono: !!o.mono, bri: o.bri, con: 1.1 }, cam(i, [1.0, 1.04], '', n('LClip', { src, t, speed, sw: 640, sh: 480, fit: 'contain', fill: true, push: [1, 1.03] }))),
   ...extra,
 ];
-const met = (place = 'tr') => n('Credit', { text: MET, place });
+const met = (place = 'tr') => n('Credit', { text: MET, place, inset: 296 }); // v6: inside the 4:3 picture (owner: nothing off the clip)
 // Tag hold so its 24 f out ends 6 f before the cut
 // v2 (owner 2026-11-19, lm_pro kit): name/place tags = LowerThird (ink brush bar), dates/cards = TitleType (VCR typed),
 // camera stamps = StampRing (ring on the burned-in stamp, clamped to the picture, punch-in), articles = Article3D.
@@ -136,10 +136,11 @@ const tag = (L, at, name, role, pin = true, o = {}) => n('LowerThird', { at, nam
 const td = (at, text, o = {}) => n('TextFade', { at, lines: [text], pos: 'tl', ...o });
 // v4 (owner 2026-11-19): LowerThird only for Gareth Williams; places = PlaceText (VCR caps on the footage, no box); dates = TextFade
 // top-left (Abyssal ref spot), cards = TitleType mode 'fade'; every text in gets one click SFX (lm_click), no typing keys in this part.
-const place = (at, text, sub, o = {}) => n('PlaceText', { at, text, sub, ...o });
+// v6 (owner 2026-11-19): places = centred text (pos 'c'); the only name label = Gareth Williams, plain text inside the picture
+const place = (at, text, sub, o = {}) => n('PlaceText', { at, text, sub, pos: 'c', ...o });
 // real article crops (build/c01a_articles.py): {img, iw, ih, bands, src, date}; marker starts at f0, 2nd line 26 f later
 const ART = JSON.parse(fs.readFileSync(path.join(MED, 'pages', 'c01a_articles.json'), 'utf8'));
-const art = (k, f0, bg, o = {}) => n('Article3D', { ...ART[k], bands: ART[k].bands.map((b, j) => [...b, f0 + 26 * j]), ...o }, bg);
+const art = (k, f0, bg, o = {}) => n('Article3D', { ...ART[k], bands: ART[k].bands.map((b, j) => [...b, f0 + 26 * j]), ...o }, ...(bg ? [bg] : []));
 // contain picture area of a 640x480 raw on the 1920x1080 stage, and its burned-in stamp boxes (source px x 2.25, +240 x)
 const PIC = [240, 0, 1440, 1080];
 // HCR stamp sits 6 src px above the picture bottom: h 24 (ring radius 28 around the stamp centre y 1048.5) + rect bottom +15 so the
@@ -154,7 +155,7 @@ const cctvData = (k) => Object.entries(CCTV[k]);
 // shot table: [start, end, name, (i, L = len f, A = part s -> local f) => nodes]
 const T = [
   // p01a (0.50-43.88)
-  [0, 4.16, 'S01 HCR freeze man', (i, L, A) => frz('HCR', 114, { bri: 0.78 }, { s: [1.0, 1.08], o: '42% 30%' }, [met('tr'), tag(L, A(1.54), 'GARETH WILLIAMS', 'CODEBREAKER', false, { pos: 'c' })])],
+  [0, 4.16, 'S01 HCR freeze man', (i, L, A) => frz('HCR', 114, { bri: 0.78 }, { s: [1.0, 1.08], o: '42% 30%' }, [met('tr'), n('PlaceText', { at: A(1.54), text: 'GARETH WILLIAMS', sub: 'GCHQ CODEBREAKER', pos: 'bl', left: 296 })])],
   [4.16, 10.40, 'S02 hans crescent harrods', (i, L, A) => par(i, 'hans_crescent_harrods_side', { bri: 0.78, over: [place(A(6.24), 'HANS CRESCENT', 'KNIGHTSBRIDGE, LONDON')] })],
   [10.40, 17.96, 'S03 HCR walk', (i) => live(i, 'HCR', 0, 0.5, { bri: 0.75 }, [met('tr')])],
   [17.96, 24.64, 'S04 HCR stamp zoom', (i, L, A) => [n('StampRing', { ...STAMP.HCR, at: A(19.56), zoom: 1.7, zin: 50 }, ...frz('HCR', 224, { bri: 0.78 }, { s: [1, 1] }))]],
@@ -172,8 +173,11 @@ const T = [
   [73.54, 77.40, 'S15 article secondment', (i) => [art('secondment', 50, bgP(i, 'sis_building_vauxhall_b', 0.6), { ry: [10, 2] })]],
   [77.40, 80.52, 'S16 SIS', (i, L, A) => par(i, 'sis_building_vauxhall', { bri: 0.66, over: [place(A(77.62), 'SIS BUILDING', 'VAUXHALL, LONDON')] })],
   [80.52, 84.42, 'S17 SIS b', (i) => photo(i, 'sis_building_vauxhall_b', { over: [n('SpotC01', { cx: 960, cy: 520, r: 420, at: 20, hold: 150 })] })],
-  [84.42, 90.78, 'S18 rain street a', (i) => foot(i, 'london_rain_street_a', 0.5)],
-  [90.78, 95.57, 'S19 rain window', (i, L, A) => foot(i, 'rain_window_night', 12, { bri: 2.6, s: [1.04, 1.1], over: [td(A(90.98), 'SUMMER 2010')] })], // v4: cover full frame (was narrow vertical strip)
+  // v6 (owner 2026-11-19 "according to the journalist Duncan Campbell .. you put a random stock footage"): his real article, The Register
+  // 3 May 2012 (byline Duncan Campbell), as a scroll: S18 headline + "one of a team .. hacking networks in the US and the UK" (marker on
+  // "he worked on a team" 87.42), S19 the Black Hat / Defcon line (marker 92.2, "Black Hat" 92.63). Was rain street + rain window stock.
+  [84.42, 91.10, 'S18 article register', () => [art('reg1', 180)]],
+  [91.10, 95.57, 'S19 article register b', () => [art('reg2', 66)]],
   // p01c (95.57-133.77)
   [95.57, 101.93, 'S20 rain street b', (i) => foot(i, 'london_rain_street_b', 42)],
   [101.93, 105.47, 'S21 GCHQ', (i, L, A) => par(i, 'gchq_aerial', { bri: 0.72, over: [place(A(103.3), 'GCHQ', 'CHELTENHAM')] })], // v5: VO "back to GCHQ"
@@ -181,7 +185,7 @@ const T = [
   [108.93, 113.65, 'S23 timeline home from US', (i, L, A) => [n('Timeline', { nodes: TL(A(109.9)) }, bgP(i, 'holland_park_station', 0.45))]], // v5: was stock card
   [113.65, 119.21, 'S24 brompton road', (i, L, A) => par(i, 'harrods_brompton_road', { bri: 0.7, over: [place(A(116.5), 'KNIGHTSBRIDGE', 'LONDON')] })], // v5: was regent st stock
   [119.21, 122.31, 'S25 timeline 14 aug', (i, L, A) => [n('Timeline', { nodes: TL(-60, A(120.5)) }, n('Grade', { mono: true, bri: 0.8, con: 1.08 }, cam(i, [1.12, 1.2], 'filter:blur(10px)', n('Frz', { src: 'HPK', n: 150, fit: 'cover' })))), met('tl')]],
-  [122.31, 127.60, 'S26 HPK freeze', (i, L, A) => frz('HPK', 0, { bri: 1.05 }, { s: [1.04, 1.1], o: '50% 100%' }, [met('tr'), place(A(124.81), 'HOLLAND PARK STATION', 'CENTRAL LINE, LONDON', { x: 284, y: 64 })])],
+  [122.31, 127.60, 'S26 HPK freeze', (i, L, A) => frz('HPK', 0, { bri: 1.05 }, { s: [1.04, 1.1], o: '50% 100%' }, [met('tr'), place(A(124.81), 'HOLLAND PARK STATION', 'CENTRAL LINE, LONDON')])],
   [127.60, 130.87, 'S27 HPK cone', (i) => frz('HPK', 0, { bri: 1.05 }, { s: [1.0, 1.04], o: '38% 85%' }, [n('SpotC01', { cx: 724, cy: 922, r: 240, at: 18, hold: 120 })])],
   [130.87, 133.95, 'S28 HPK stamp zoom', (i) => [n('StampRing', { ...STAMP.HPK, at: 30, zoom: 1.7, zin: 50 }, ...frz('HPK', 0, { bri: 1.1 }, { s: [1, 1] }))]],
   [133.95, 138.98, 'S29 HPK raw', (i) => live(i, 'HPK', 0, 1, { bri: 1.05 }, [met('tl')])],
@@ -204,6 +208,12 @@ const T = [
   [182.10, 185.85, 'S40 HCR raw', (i) => live(i, 'HCR', 0, 1, { bri: 0.75 }, [met('tr')])],
 ];
 
+// v6 mix (owner 2026-11-19 "narration 100 %, music 75 %, SFX 60 %, all the SFX"): gains on top of the levelled mix above
+// (music -2.5 dB, every sfx/ file -4.4 dB; VO and raw footage sound unchanged)
+const MIX = { mus: 0.75, sfx: 0.6 };
+const mixScale = (A) => A.map((a) => { const k = String(a.src).startsWith('mus') ? MIX.mus : String(a.file || '').startsWith('sfx/') ? MIX.sfx : 1;
+  return k === 1 ? a : { ...a, lane: a.lane.map(([t, g]) => [t, +(g * k).toFixed(4)]) }; });
+
 export default {
   id: 'lm_case01a',
   media: 'last-moments',
@@ -216,7 +226,7 @@ export default {
     const L = Math.round((to - c) * 60), A = (t) => Math.round((t - c) * 60);
     return { name, c, to, k: 'hard', n: 0, el: () => fn(i, L, A) };
   }),
-  audio: [
+  audio: mixScale([
     { src: 'mus_a', id: 'mus_a1', file: 'music/es_dark_days.mp3', at: 0, to: 108, trim: 5.07, lane: musLane('music/es_dark_days.mp3', 5.07, 108, tgtAt(0), 0.05, 6, ptsAt(0)) },
     { src: 'mus_b', id: 'mus_b', file: 'music/es_tarmac_radiation.mp3', at: 102, to: 156.5, trim: 61.1, lane: musLane('music/es_tarmac_radiation.mp3', 61.1, 54.5, tgtAt(102), 6, 6, ptsAt(102)) },
     { src: 'mus_a', id: 'mus_a2', file: 'music/es_dark_days.mp3', at: 150.5, to: 185.85, lane: musLane('music/es_dark_days.mp3', 0, 35.35, tgtAt(150.5), 6, 1.5, ptsAt(150.5)) },
@@ -232,5 +242,5 @@ export default {
     sfx('lm_boom', 133.95 - 0.17),
     sfx('riser_dark', 182.10 - 5.91),
     sfx('lm_boom', 182.10 - 0.17, -3, 3.9),
-  ],
+  ]),
 };

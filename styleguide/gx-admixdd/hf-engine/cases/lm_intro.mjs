@@ -95,6 +95,12 @@ for (const [txt, f0] of [[TY.a, TY.fa], [TY.b, TY.fb]]) for (let k = 0; k < txt.
   ticks.push({ src: 'lm_key', id: `tk_${Math.round(at * 1000)}`, file: 'sfx/lm_key.wav', at, to: +(at + 0.105).toFixed(3), lane: [[0, 0], [0.005, g], [0.08, g], [0.1, 0]] });
 }
 
+// v6 mix (owner 2026-11-19 "narration 100 %, music 75 %, SFX 60 %, all the SFX"): gains on top of the levelled mix above
+// (music -2.5 dB, every sfx/ file -4.4 dB; VO and raw footage sound unchanged)
+const MIX = { mus: 0.75, sfx: 0.6 };
+const mixScale = (A) => A.map((a) => { const k = String(a.src).startsWith('mus') ? MIX.mus : String(a.file || '').startsWith('sfx/') ? MIX.sfx : 1;
+  return k === 1 ? a : { ...a, lane: a.lane.map(([t, g]) => [t, +(g * k).toFixed(4)]) }; });
+
 export default {
   id: 'lm_intro',
   media: 'last-moments',
@@ -124,7 +130,7 @@ export default {
     { name: 'L07 ledger', c: 46.535, to: T0, k: 'hard', n: 0, el: () => [n('Descent'), n('Dip', { outN: 16 })] },
     { name: 'L08 CASE 1 title', c: T0, to: END, k: 'hard', n: 0, el: () => [n('TitleType', { ...TY, plate: { img: 'c01a/harrods_night.jpg' } }), n('Dip', { inN: 14 })] },
   ],
-  audio: [
+  audio: mixScale([
     // warning static bed (film/static texture only here): I = music -2 (SFX v2; was VO +3), drops 9 dB as the glitch hits (2.43), tails to 2.87
     { src: 'static', id: 'bed_static', file: 'sfx/static_lp.wav', at: 0, to: 2.90, lane: [[0, 0], [1.5, db(MUS_T - 2 + 32.4)], [2.40, db(MUS_T - 2 + 32.4)], [2.50, db(MUS_T - 11 + 32.4)], [2.87, 0]] },
     // warning exit hit (owner 2026-11-19 "glitch SFX in the warning transition"): lm_glitch = ES "Processed Impact Distortion" (onset at
@@ -142,5 +148,5 @@ export default {
     sfx('lm_boom', 46.535 - 0.17), // boom peak on the ledger reveal
     sfx('lm_boom', T0 + 0.23), // title card hit (peak 53.94, music back from the dip)
     ...ticks.filter((t) => t.at >= T0 + 0.23 + 0.3), // no key inside 0.3 s of the title boom
-  ],
+  ]),
 };

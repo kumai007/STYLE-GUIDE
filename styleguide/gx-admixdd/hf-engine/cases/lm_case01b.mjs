@@ -88,7 +88,7 @@ const hcrStill = (bri, s, extra = []) => [
 ];
 const raw = (src, t, bri, place) => [
   n('Grade', { bri, con: 1.1 }, cam(1, [1.0, 1.04], '', n('LClip', { src, t, sw: 640, sh: 480, fit: 'contain', fill: true, push: [1, 1.03] }))),
-  n('Credit', { text: MET, place }),
+  n('Credit', { text: MET, place, inset: 296 }), // v6: inside the 4:3 picture
 ];
 // ---- v2 (owner 2026-11-19): pro kit (lm_pro), real articles full-bleed, no stock file more than 2x (new nb_* clips), SFX as part A.
 const rj = (f) => { try { return JSON.parse(fs.readFileSync(path.join(MED, f), 'utf8')); } catch { return {}; } };
@@ -101,7 +101,9 @@ const tcard = (bg, kick, lines, c, to) => {
   return [bg, n('TitleType', { mode: 'fade', kick, lines, cps })];
 };
 // v4 plain text on the footage (owner 2026-11-19): place / name = PlaceText, date = TextFade top-left; each with a click; ~3 s hold
-const place = (L, at, text, c, o = {}) => { EV.click.push(c + at / 60); return n('PlaceText', { text, at, hold: Math.min(170, L - at - 30), ...o }); };
+// v6 (owner 2026-11-19 "less lower thirds; write the place in the centre"): places + minor names centred (pos 'c'); the one corner
+// name label in this part = DCI Jacqueline Sebire (case 1 total: Gareth Williams + Sebire)
+const place = (L, at, text, c, o = {}) => { EV.click.push(c + at / 60); return n('PlaceText', { text, at, hold: Math.min(170, L - at - 30), pos: 'c', ...o }); };
 const dateT = (L, at, text, c) => { EV.click.push(c + at / 60); return n('TextFade', { lines: [text], pos: 'tl', at, hold: Math.min(150, L - at - 26) }); };
 const tag = (L, at, name, role, pin, c, pos) => { EV.brush.push(c + at / 60); return n('LowerThird', { at, name, role, pin, pos, hold: Math.max(60, L - at - 48 - 16 - 6) }); };
 // real article (pages/c01b_articles.json, written by productions/last-moments/build/c01b_articles.py); fb = stock fallback if the page is missing
@@ -177,7 +179,7 @@ const T = [
   [170.40, 174.00, 'B37 empty hallway', (i) => foot(i, 'empty_hallway', 4)],
   [174.00, 177.40, 'B38 counter minutes', (i) => counter(i, 174.0, { to: 3, unit: 'MIN', label: 'CO2: TWO OR THREE MINUTES', at: 96, dur: 60 }, 'westminster_coroners_court')],
   [177.40, 180.40, 'B39 timeline verdict', (i) => tline(i, 3, 38, 177.4, 'geo_coroners_engraving')],
-  [180.40, 183.60, 'B40 court wilcox', (i, L, A) => photo(i, 'geo_coroners_court', { pos: '50% 40%', s: [1.12, 1.2], over: [tag(L, A(180.6), 'FIONA WILCOX', 'CORONER', false, 180.4)] })],
+  [180.40, 183.60, 'B40 court wilcox', (i, L, A) => photo(i, 'geo_coroners_court', { pos: '50% 40%', s: [1.12, 1.2], over: [place(L, A(180.6), 'DR FIONA WILCOX', 180.4, { sub: 'CORONER' })] })],
   [183.60, 189.80, 'B41 inquest page', () => { EV.art.push([183.6, 34, 2]); return [n('Article3D', { img: 'pages/c01b_inquest_crop.jpg', iw: 1250, ih: 730, src: 'RTE NEWS', date: '2 MAY 2012', bands: [[99, 388, 968, 52, 34], [87, 448, 314, 52, 78]] })]; }],
   [189.80, 194.00, 'B42 padlock gate', (i) => foot(i, 'pad_gate', 7, { s: [1.16, 1.22] })],
   [194.00, 201.60, 'B43 article verdict', () => art5('c01b6', 194.0, 40)],
@@ -222,6 +224,12 @@ const FX = [
   sfx('lm_whoosh', 132.70 - 0.47), sfx('riser_dark', 178.25), sfx('lm_boom', 184.16 - 0.17),
 ].sort((a, b) => a.at - b.at).filter(((last) => (e) => { if (e.src === 'tick_soft') return true; const ok = e.at - last >= 0.3; if (ok) last = e.at; return ok; })(-9));
 
+// v6 mix (owner 2026-11-19 "narration 100 %, music 75 %, SFX 60 %, all the SFX"): gains on top of the levelled mix above
+// (music -2.5 dB, every sfx/ file -4.4 dB; VO and raw footage sound unchanged)
+const MIX = { mus: 0.75, sfx: 0.6 };
+const mixScale = (A) => A.map((a) => { const k = String(a.src).startsWith('mus') ? MIX.mus : String(a.file || '').startsWith('sfx/') ? MIX.sfx : 1;
+  return k === 1 ? a : { ...a, lane: a.lane.map(([t, g]) => [t, +(g * k).toFixed(4)]) }; });
+
 export default {
   id: 'lm_case01b',
   media: 'last-moments',
@@ -231,10 +239,10 @@ export default {
   devices: ['shared', 'lm', 'lm_c01a', 'lm_c01b', 'lm_pro', 'lm_mg'],
   fonts: ['Oswald-var-latin.woff2', 'BebasNeue-latin.woff2', 'IBMPlexMono-500-latin.woff2', 'IBMPlexMono-600-latin.woff2', 'SourceSerif4-var-latin.woff2', 'VCROSDMono-latin.woff2'],
   shots: SHOTS,
-  audio: [
+  audio: mixScale([
     { src: 'mus_a', id: 'mus_a1', file: 'music/es_dark_days.mp3', at: 0, to: 115.9, lane: musLane('music/es_dark_days.mp3', 0, 115.9, tgtAt(0), 1.5, 5.9, ptsAt(0)) },
     { src: 'mus_b', id: 'mus_b', file: 'music/es_tarmac_radiation.mp3', at: 110, to: 225.6, lane: musLane('music/es_tarmac_radiation.mp3', 0, 115.6, tgtAt(110), 6, 5.6, ptsAt(110)) },
     { src: 'mus_a', id: 'mus_a2', file: 'music/es_dark_days.mp3', at: 220, to: 309, trim: 10, lane: musLane('music/es_dark_days.mp3', 10, 89, tgtAt(220), 5.6, 1.5) },
     ...FX, // v4: no lm_key ticks (no title screens in part B)
-  ],
+  ]),
 };

@@ -10,13 +10,13 @@
 //      key line, key line ~key px wide where the crop allows), paper grain, far-edge focus blur, hand-drawn amber marker (uneven ink,
 //      L->R from frame f0, max 2 bands), source + date ink strip in the corner away from the key line. Kids are ignored.
 //  StampRing {x, y, w, h, at=0, hold=1e9, rect=[0,0,1920,1080], zoom=1.3, dim=.55, zin=40}
-//      wrapper (kids = the footage). x,y,w,h = burned-in timestamp box in screen px; rect = visible picture area. Hand-drawn red
-//      ring (1.1 turns, doubled stroke) draws ON the stamp, surround dims, punch-in toward the stamp. Ring box is clamped into rect
+//      wrapper (kids = the footage). x,y,w,h = burned-in timestamp box in screen px; rect = visible picture area. v6: clean even red
+//      ellipse (one closed stroke + dark under-stroke) draws ON the stamp in 30 f, surround dims, punch-in toward the stamp. Ring box is clamped into rect
 //      and the zoom origin snaps to the nearest picture edge, so nothing ever leaves the picture.
 //  TextFade {kick, lines:[..], at=8, pos='c'|'l'|'tl', size=78 (tl 56), hold=f|null (null = to shot end -20), font='vcr'|'mono', x,y (tl)}
 //      v4 non-title text: lines fade in 30 f eased + 8 px rise (6 f stagger), out 18 f; 'c'/'l' = card over a soft scrim, 'tl' = date
 //      top-left x100 y62 like the Abyssal refs (no scrim). Pair with a click SFX (case side). TitleType {mode:'fade'} = TextFade.
-//  PlaceText {text, sub, at=0, hold=f|null, pos='bl'|'br'|'tl'|'tr' or x,y (top-left px), size=50, font='vcr'|'mono'}
+//  PlaceText {text, sub, at=0, hold=f|null, pos='c'|'bl'|'br'|'tl'|'tr' or x,y (top-left px), left/right (corner inset px), size=50 (c 64), font}
 //      v4 plain place name on the footage: VCR caps 50 px, soft shadow, no bar/box, optional Plex sub line; fade 30 f + 8 px rise, out 18 f.
 //  TitleType {kick, lines:[..], at=8, size=78, cps=22, align='c'|'l'}  (title screens only)
 //      text card typed in 'VCR OSD Mono' (fallback VT323 / Share Tech Mono): type-on with block cursor, slight tape fringe, soft
@@ -147,18 +147,22 @@ export const StampRing = {
     const lift = edge ? (sc0 + (bh / 2 + 8) * Z > RY + RH - m ? sc0 + (bh / 2 + 8) * Z - (RY + RH - m) : -Math.max(0, RY + m - (sc0 - (bh / 2 + 8) * Z))) : 0;
     const bx = Math.max(RX + m, Math.min(RX + RW - m - bw, p.x + p.w / 2 - bw / 2)), by = edge ? sc0 - bh / 2 : Math.max(RY + m, Math.min(RY + RH - m - bh, p.y + p.h / 2 - bh / 2));
     const cx = bx + bw / 2, cy = by + bh / 2, a = bw / 2 - 6, b = bh / 2 - 6, ph = r() * 6.28;
-    const ring = (k, turns) => { const P = []; for (let i = 0; i <= 72; i++) { const u = i / 72, t = -2.5 + u * 6.283 * turns, w = 1 - 0.07 * k + 0.035 * Math.sin(3 * t + ph + k) + 0.06 * u * (1 - k); P.push(`${F(cx + a * w * Math.cos(t))} ${F(cy + b * w * Math.sin(t) * (1 - 0.05 * k))}`); } return 'M' + P.join('L'); };
+    // v6 (owner 2026-11-19 "the oval is rough, asymmetrical, unprofessional"): one clean, even ellipse (exact closed path, no noise,
+    // no double stroke), drawn on from the upper left in 30 f, thin dark under-stroke for contrast on bright footage.
+    const t0 = -2.2, P = []; for (let i = 0; i <= 96; i++) { const t = t0 + (i / 96) * 6.2832; P.push(`${F(cx + a * Math.cos(t))} ${F(cy + b * Math.sin(t))}`); }
+    const ring = 'M' + P.join('L') + 'Z';
     const u = (cx - RX) / RW, v = (cy - RY) / RH, sx = u < 0.3 ? 0 : u > 0.7 ? 1 : u, sy = v < 0.3 ? 0 : v > 0.7 ? 1 : v;
     return `<div class="${AF}" ${ctx.dev('StampRing', { at: p.at ?? 0, hold: p.hold ?? 1e9, zoom: p.zoom ?? 1.3, zin: p.zin ?? 40, lift: F(lift) })} style="transform-origin:${F(RX + RW * sx)}px ${F(edge ? sc0 : RY + RH * sy)}px">${ctx.kids(node)}`
       + `<div data-d class="${AF}" style="pointer-events:none;opacity:0;background:radial-gradient(ellipse ${F(a * 1.9)}px ${F(b * 2.6)}px at ${F(cx)}px ${F(cy)}px,rgba(0,0,0,0) 0%,rgba(0,0,0,0) 52%,rgba(0,0,0,${p.dim ?? 0.55}) 100%)"></div>`
-      + `<svg class="${AF}" viewBox="0 0 1920 1080" style="pointer-events:none;overflow:hidden"><defs><filter id="${id}R" filterUnits="userSpaceOnUse" x="${F(bx - 4)}" y="${F(by - 4)}" width="${F(bw + 8)}" height="${F(bh + 8)}"><feTurbulence type="fractalNoise" baseFrequency="0.06" numOctaves="2" seed="${hash(id) % 90}"/><feDisplacementMap in="SourceGraphic" scale="5" xChannelSelector="R" yChannelSelector="G"/></filter></defs>`
-      + `<g filter="url(#${id}R)" fill="none" stroke="${C.red}" stroke-linecap="round" stroke-linejoin="round" style="filter:url(#${id}R) drop-shadow(0 0 5px rgba(0,0,0,.8))"><path data-r d="${ring(0, 1.12)}" stroke-width="7" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/><path data-r d="${ring(1, 0.8)}" stroke-width="3" opacity=".75" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/></g></svg></div>`;
+      + `<svg class="${AF}" viewBox="0 0 1920 1080" style="pointer-events:none;overflow:hidden"><g fill="none" stroke-linecap="round" stroke-linejoin="round">`
+      + `<path data-r d="${ring}" stroke="rgba(0,0,0,.45)" stroke-width="7.5" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/>`
+      + `<path data-r d="${ring}" stroke="${C.red}" stroke-width="4.2" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/></g></svg></div>`;
   },
   render: new Function('el', 'f', 'p', 'G', 'S', E + `
     var g=f-p.at, out=c((g-p.hold)/14), on=g>=0?1-out:0, z=bk(c(g/p.zin))*(1-io(out));
     el.style.transform=g<0?'none':'translateY('+(-(+p.lift||0)*z).toFixed(2)+'px) scale('+(1+(p.zoom-1)*z+0.03*c(g/Math.max(1,S.len-p.at))).toFixed(5)+')';
     el.querySelector('[data-d]').style.opacity=(io(c(g/24))*(1-out)).toFixed(4);
-    var R=el.querySelectorAll('[data-r]'); R[0].setAttribute('stroke-dashoffset',(1-io(c((g-10)/26))).toFixed(4)); R[1].setAttribute('stroke-dashoffset',(1-io(c((g-30)/20))).toFixed(4));
+    var R=el.querySelectorAll('[data-r]'); var dr=(1-io(c((g-10)/30))).toFixed(4); R[0].setAttribute('stroke-dashoffset',dr); R[1].setAttribute('stroke-dashoffset',dr);
     R[0].parentNode.style.opacity=on.toFixed(3);`),
 };
 
@@ -207,7 +211,12 @@ export const PlaceText = {
   name: 'PlaceText',
   html: (p, ctx) => {
     const size = p.size ?? 50, ff = p.font === 'mono' ? MONO : VCR, pos = p.pos || 'bl', t = String(p.text || '').toUpperCase(), sub = String(p.sub || '').toUpperCase();
-    const xy = p.x != null ? `left:${p.x}px;top:${p.y}px` : `${pos[1] === 'r' ? 'right:96px' : 'left:96px'};${pos[0] === 't' ? 'top:70px' : `bottom:${p.y ?? 84}px`}`;
+    // v6 (owner 2026-11-19 "less lower thirds; just write the place in the centre"): pos 'c' = centred text over a soft scrim (places,
+    // minor names); corner positions = the 1-2 name labels per case. left = x of a corner label inside a 4:3 picture.
+    if (pos === 'c') return `<div class="${AF}" ${ctx.dev('PlaceText', { at: p.at ?? 0, hold: p.hold ?? null })} style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;font-family:${ff};color:${C.tx};opacity:0;pointer-events:none;background:radial-gradient(ellipse 42% 26% at 50% 50%,rgba(0,0,0,.5) 0%,rgba(0,0,0,.26) 55%,rgba(0,0,0,0) 100%)">`
+      + `<div data-l style="font-size:${p.size ?? 64}px;line-height:1;letter-spacing:0.08em;white-space:nowrap;text-align:center;text-shadow:0 0 3px rgba(0,0,0,.75),0 2px 4px rgba(0,0,0,.85),0 0 22px rgba(0,0,0,.6)">${ctx.esc(t)}</div>`
+      + (sub ? `<div data-l style="font:500 ${F((p.size ?? 64) * 0.42)}px/1 ${MONO};letter-spacing:0.16em;color:#CFC9BC;white-space:nowrap;text-shadow:0 0 3px rgba(0,0,0,.8),0 2px 4px rgba(0,0,0,.85),0 0 14px rgba(0,0,0,.55)">${ctx.esc(sub)}</div>` : '') + `</div>`;
+    const xy = p.x != null ? `left:${p.x}px;top:${p.y}px` : `${pos[1] === 'r' ? `right:${p.right ?? 96}px` : `left:${p.left ?? 96}px`};${pos[0] === 't' ? 'top:70px' : `bottom:${p.y ?? 84}px`}`;
     return `<div ${ctx.dev('PlaceText', { at: p.at ?? 0, hold: p.hold ?? null })} style="position:absolute;${xy};display:flex;flex-direction:column;align-items:${pos[1] === 'r' ? 'flex-end' : 'flex-start'};gap:8px;font-family:${ff};color:${C.tx};opacity:0">`
       + `<div data-l style="font-size:${size}px;line-height:1;letter-spacing:0.06em;white-space:nowrap;text-shadow:0 0 3px rgba(0,0,0,.75),0 2px 4px rgba(0,0,0,.85),0 0 18px rgba(0,0,0,.6)">${ctx.esc(t)}</div>`
       + (sub ? `<div data-l style="font:500 ${F(size * 0.52)}px/1 ${MONO};letter-spacing:0.14em;color:#CFC9BC;white-space:nowrap;text-shadow:0 0 3px rgba(0,0,0,.8),0 2px 4px rgba(0,0,0,.85),0 0 14px rgba(0,0,0,.55)">${ctx.esc(sub)}</div>` : '') + `</div>`;

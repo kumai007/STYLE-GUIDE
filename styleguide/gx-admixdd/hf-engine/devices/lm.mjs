@@ -16,7 +16,7 @@
 //  Ledger {rows=LEDGER, ret}  c3 3x7 case grid, zoom 1.00->1.08, rows stagger 6 f; ret: 14 f in, 48 f zoom to row 01 (1.6),
 //        amber band 36 f, other rows dim.
 //  CaseCard {no:'01', name:[l1,l2], plate:{src,t,speed,sw,sh}}  c4+c5: blurred plate, CASE NN f14-62, hairline f62-98, name f98-134.
-//  Credit {text, at=12, hold=240, place='tr'|'br'|'bl'|'tl'}  c11 28 px "FOOTAGE: ...".  TypedDate {text, at=0} c8.  PlaceTag {text, at=0} c9.
+//  Credit {text, at=12, hold=240, place='tr'|'br'|'bl'|'tl', inset=96 (296 = inside a 4:3 contain picture)}  c11 28 px "FOOTAGE: ...".  TypedDate {text, at=0} c8.  PlaceTag {text, at=0} c9.
 //  NameTag {text, at=0, x=960} c10.  Page {img, iw, ih, bands:[[x,y,w,h,f0]]} c13 flat page, amber marker bands.
 //  RedCircle {cx,cy,rx,ry,at=0} c18.  Spotlight {cx,cy,r=260,at=0,hold=165} c16.  Subs {lines:[[f0,f1,text,spk]]} c2 (raw speech).
 const AF = 'af';
@@ -225,7 +225,7 @@ const ioRender = function (el, f, p) {
 export const Credit = {
   name: 'Credit',
   // place: 'tr' (default, right 96 / top 50) | 'br' (bottom-right, clear of burned-in top CCTV stamps) | 'bl' | 'tl'
-  html: (p, ctx) => `<div ${ctx.dev('Credit', { at: p.at ?? 12, i: 36, h: p.hold ?? 240, o: 30 })} style="position:absolute;${({ tr: 'right:96px;top:50px', br: 'right:96px;bottom:52px', bl: 'left:96px;bottom:52px', tl: 'left:96px;top:50px' })[p.place || 'tr']};font:500 28px/1 ${MONO};letter-spacing:0.12em;text-transform:uppercase;color:${C.tx};opacity:0;padding:7px 12px 6px;background:rgba(11,11,12,.55);text-shadow:0 1px 4px rgba(0,0,0,.8)">${ctx.esc(p.text)}</div>`,
+  html: (p, ctx) => `<div ${ctx.dev('Credit', { at: p.at ?? 12, i: 36, h: p.hold ?? 240, o: 30 })} style="position:absolute;${(({ tr: 'right:I;top:50px', br: 'right:I;bottom:52px', bl: 'left:I;bottom:52px', tl: 'left:I;top:50px' })[p.place || 'tr']).replace('I', (p.inset ?? 96) + 'px')};font:500 28px/1 ${MONO};letter-spacing:0.12em;text-transform:uppercase;color:${C.tx};opacity:0;padding:7px 12px 6px;background:rgba(11,11,12,.55);text-shadow:0 1px 4px rgba(0,0,0,.8)">${ctx.esc(p.text)}</div>`,
   render: ioRender,
 };
 export const PlaceTag = {
