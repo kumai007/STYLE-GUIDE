@@ -146,7 +146,7 @@ const T = [
   [32.62, 37.34, 'S07 valley church', (i, L, A) => photo(i, 'valley_anglesey_church', { bri: 0.55, over: [td(A(32.62) + 10, '26 SEPTEMBER 1978')] })],
   [37.34, 43.80, 'S08 bangor', (i, L, A) => photo(i, 'bangor_university', { bri: 0.6 })],
   // p01b (43.80-95.56)
-  [43.80, 49.78, 'S09 article profile', (i) => [art('profile', 70, bgV(i, 'snowdonia_a', 1, 0.6)), n('Lbl', { text: 'BACKDROP: ILLUSTRATIVE', at: 'tl' })]],
+  [43.80, 49.78, 'S09 article profile', (i) => [art('profile', 70, bgV(i, 'snowdonia_a', 1, 0.6))]], // full-bleed page: no backdrop label (QA 2026-11-19)
   [49.78, 54.22, 'S10 manchester', (i, L, A) => photo(i, 'manchester_university', { bri: 0.72, over: [tag(L, A(49.9) + 6, 'UNIVERSITY OF MANCHESTER', 'MANCHESTER')] })],
   [54.22, 57.94, 'S11 st catharines', (i) => photo(i, 'st_catharines_cambridge', { over: [n('SpotC01', { cx: 960, cy: 500, r: 460, at: 20, hold: 150 })] })],
   [57.94, 63.80, 'S12 card 2001 GCHQ', (i) => [bgP(i, 'prestbury_village', 0.72), n('TitleType', { kick: '2001', lines: ['GCHQ', 'CHELTENHAM'] })]],
@@ -180,7 +180,7 @@ const T = [
     keys: [[0, 1695, 1130, 0.18, 16], [120, 1440, 1047, 1.15, 10], [145, 1455, 1055, 1.17, 10], [215, 1950, 1212, 1.25, 8], [284, 1965, 1216, 1.32, 7]],
     pins: [{ x: 1439.9, y: 1047.3, at: 90, lat: 104, label: 'HOLLAND PARK \u00b7 14 AUG' }, { x: 1950.2, y: 1212.0, at: 196, lat: 206, label: 'KNIGHTSBRIDGE \u00b7 15 AUG' }],
   })), n('Credit', { text: 'MAP: SENTINEL-2 CLOUDLESS BY EOX (CC BY 4.0)', place: 'br', hold: 200 })]],
-  [167.80, 172.00, 'S36 article cctv', (i) => [art('cctv', 40, bgP(i, 'brompton_road_knightsbridge', 0.6), { ry: [-10, -2] }), n('Credit', { text: `BACKDROP: ${PH.brompton_road_knightsbridge}`, place: 'tr' })]],
+  [167.80, 172.00, 'S36 article cctv', (i) => [art('cctv', 40, bgP(i, 'brompton_road_knightsbridge', 0.6), { ry: [-10, -2] })]], // full-bleed page: backdrop not shown, no credit
   [172.00, 175.20, 'S37 hans crescent', (i, L, A) => photo(i, 'hans_crescent_geograph', { bri: 0.6, over: [td(A(172.3), '15 AUGUST, 14:27')] })],
   [175.20, 178.42, 'S38 hans crescent sign', (i) => photo(i, 'hans_crescent_sign', { bri: 0.6 })],
   [178.42, 182.10, 'S39 HCR entry', (i) => frz('HCR', 0, { bri: 0.85 }, { s: [1.0, 1.06], o: '70% 20%' }, [met('tr'), n('SpotC01', { cx: 1150, cy: 170, r: 330, at: 24, hold: 120 })])],
