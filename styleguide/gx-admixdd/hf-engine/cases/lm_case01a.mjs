@@ -149,7 +149,7 @@ const PIC = [240, 0, 1440, 1080];
 const STAMP = { HCR: { x: 476, y: 1037, w: 250, h: 24, rect: [240, 0, 1440, 1095] }, HPK: { x: 1093, y: 918, w: 406, h: 40, rect: PIC } };
 const MAP = { z12: 'c01a/map_z12.jpg', z14: 'c01a/map_z14.jpg', off: [-5376, -3072, 4] };
 const TL = (a, b, c) => [{ date: '11 AUG 2010', label: 'HOME FROM THE US', at: a }, { date: '14 AUG', label: b ? 'SATURDAY - A WET AFTERNOON' : 'HOLLAND PARK', at: b ?? 9999 }, { date: '15 AUG', label: 'HANS CRESCENT', at: c ?? 9999 }];
-const DOCS = () => [{ ...ART.cctv, at: 10 }, { ...ART.profile, at: 150 }];
+const DOCS = () => [{ ...ART.cctv, at: 10 }]; // v6: profile page dropped here (it already fills S09: no repeated article)
 const CCTV = { HPK: { CAM: 'HOLLAND PARK', DATE: '14 AUG 2010', TIME: '14:59' }, HCR: { CAM: 'HANS CRESCENT', DATE: '15 AUG 2010', TIME: '14:27:26' } };
 const cctvData = (k) => Object.entries(CCTV[k]);
 
@@ -236,7 +236,7 @@ export default {
     ...ARTS.flatMap(([c, f0, st]) => [sfx('lm_paper', c), ...(st ? [sfx('lm_settle', c + 0.45)] : []), sfx('lm_marker', c + f0 / 60 - 0.03), sfx('lm_marker', c + (f0 + 26) / 60 - 0.03)]),
     ...CLICKS.map((t) => sfx('lm_click', t - 0.15)), // peak 0.223 s in the file -> lands ~0.07 s into the 0.5 s fade
     ...WHOOSH.map((t) => sfx('lm_whoosh', t)),
-    sfx('lm_paper', 158.50), ...[10, 150].flatMap((a) => [0, 26].map((d) => sfx('lm_marker', 158.50 + (a + 12 + d) / 60 - 0.03))), // S34 DocStack
+    sfx('lm_paper', 158.50), ...[10].flatMap((a) => [0, 26].map((d) => sfx('lm_marker', 158.50 + (a + 12 + d) / 60 - 0.03))), // S34 DocStack
     ...counterTicks(154.40 + Math.round((155.2 - 154.40) * 60) / 60, 0, 20, 80).map((t) => sfx('tick_soft', t, -8)), // S33 Counter
     sfx('lm_boom', 28.30), // dip into S06 (peak 28.48, music back)
     sfx('riser_dark', 133.95 - 5.91),
