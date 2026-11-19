@@ -6,6 +6,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
+import { counterTicks } from '../devices/lm_mg.mjs';
 
 const MED = path.resolve(process.env.GX_ENGINE_PUBLIC || path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'media'), 'last-moments');
 const n = (d, p = {}, ...k) => ({ d, p, k });
@@ -17,7 +18,7 @@ const n = (d, p = {}, ...k) => ({ d, p, k });
 const VO_PK = -1.9, MUS_T = -39.2;
 const SFX = { lm_boom: [4.183, -21.7, -17.7, -11.6, 0.176], lm_whoosh: [1.549, -19.3, -16.3, -2.4, 0.469], lm_brush: [0.775, -19.8, -17.5, -3.1, 0.03],
   lm_paper: [0.785, -19.9, -19.6, -2.9, 0.039], lm_settle: [0.396, -70, -23.2, -0.5, 0.033], lm_marker: [0.525, -14.4, -14.2, -3.0, 0.139],
-  lm_key: [0.11, -70, -25.6, -4.6, 0.016], lm_click: [0.365, -70, -22.2, -1.0, 0.223], riser_dark: [5.91, -23.0, -16.7, -10.6, -1], lm_hum: [12, -32.7, -31.4, -19.0, 0] };
+  lm_key: [0.11, -70, -25.6, -4.6, 0.016], lm_click: [0.365, -70, -22.2, -1.0, 0.223], riser_dark: [5.91, -23.0, -16.7, -10.6, -1], tick_soft: [0.321, -29.9, -29.9, -10.5, 0.01], lm_hum: [12, -32.7, -31.4, -19.0, 0] };
 const db = (x) => +Math.pow(10, x / 20).toFixed(4);
 const sfx = (name, at, off = -3, len) => {
   const [d0, , M, , pk] = SFX[name], d = len ?? d0, a0 = pk < 0 ? at + d - 1.5 : at + Math.max(0, pk - 0.05);
@@ -36,10 +37,11 @@ const typing = (at, lines, cps = 22) => { const ts = []; let tot = 0;
 // +0.45 (S36 settle skipped: marker 0.22 s later); marker wipe (f0, f0+26) -> marker, start -0.03; StampRing punch-in + map pushes -> whoosh,
 // peak (0.469) on the move; booms: dip end + raw cuts (peak 0.176 on the cut); risers land on the raw cuts.
 const BRUSH = [1.54];
-const ARTS = [[43.80, 70, true], [73.54, 50, true], [167.80, 40, false]];
+const ARTS = [[43.80, 70, true], [73.54, 50, true]]; // v5: S36 article -> Parallax photo
 // v4 click SFX at each text fade-in (part s): places, dates, cards (TYPED key stream removed: typing only on title screens)
-const CLICKS = [6.24, 28.2 + 44 / 60, 32.62 + 10 / 60, 50.0, 57.94 + 8 / 60, 66.26, 77.62, 90.98, 106.40, 108.93 + 8 / 60, 115.67, 120.21 - 0.5, 124.81, 172.3];
-const WHOOSH = [19.56 + 0.33 - 0.469, 130.87 + 0.5 + 0.33 - 0.469, 163.06 + 50 / 60 - 0.469, 163.06 + 175 / 60 - 0.469];
+const CLICKS = [6.24, 28.2 + 44 / 60, 32.62 + 10 / 60, 50.0, 57.94 + 8 / 60, 66.26, 77.62, 90.98, 103.3, 106.40, 109.9, 116.5, 120.5, 124.81,
+  138.98 + 84 / 60, 163.06 + 30 / 60, 163.06 + 143 / 60, 163.06 + 202 / 60, 168.3, 172.3, 178.42 + 84 / 60]; // v5: S30/S39 data pop, S35 pins
+const WHOOSH = [19.56 + 0.33 - 0.469, 130.87 + 0.5 + 0.33 - 0.469, 138.98 + 46 / 60 - 0.469, 158.50 + (150 - 21) / 60 - 0.469, 163.06 + 30 / 60 - 0.469, 178.42 + 46 / 60 - 0.469];
 const stS = (f) => {
   const e = spawnSync('ffmpeg', ['-hide_banner', '-nostats', '-i', path.join(MED, f), '-af', 'ebur128', '-f', 'null', '-'], { encoding: 'utf8', maxBuffer: 1 << 28 }).stderr;
   return [...e.matchAll(/t:\s*([\d.]+)\s+TARGET.*?S:\s*(-?(?:[\d.]+|inf|nan))/g)].map((m) => (Number.isFinite(+m[2]) ? +m[2] : -70));
@@ -73,6 +75,8 @@ const PH = {
   sis_building_vauxhall_b: 'RICHARD COOKE / CC BY-SA 2.0', brompton_road_knightsbridge: 'LEWIS CLARKE / CC BY-SA 2.0',
   hans_crescent_geograph: 'LEWIS CLARKE / CC BY-SA 2.0', hans_crescent_sign: 'ELL BROWN / CC BY-SA 2.0',
   harrods_night: 'EDITOR5807 / CC BY 3.0', sloane_street: 'LEWIS CLARKE / CC BY-SA 2.0',
+  gchq_aerial: 'ADRIAN PINGSTONE / PUBLIC DOMAIN', cheltenham_promenade: 'STEVE DANIELS / CC BY-SA 2.0', harrods_brompton_road: 'EDWARDX / CC BY-SA 3.0',
+  holland_park_station: 'RC1959 / CC0', alderney_street: 'CHRIS WHIPPET / CC BY-SA 2.0',
 };
 // faces of private people in photos (1920x1080 cover-box px, before the camera)
 const MOS = {
@@ -103,6 +107,12 @@ const photo = (i, file, o = {}) => {
     n('Credit', { text: `PHOTO: ${PH[file]}`, place: o.cp || 'tr' }), ...(o.over || []),
   ];
 };
+// v5 (owner 2026-11-19 "less stock, more MG"): 2.5-D Parallax photo (lm_mg), alternates with plain photo()
+const PAR = [{ ry: [-3, 3], rx: [1, -1] }, { ry: [2.5, -2.5], rx: [-1, 1], tx: [14, -14] }, { ry: [-2, 3], rx: [-0.8, 0.8] }];
+const par = (i, file, o = {}) => [
+  n('Grade', { sat: o.sat ?? 0.48, bri: o.bri ?? 0.9, con: 1.08 }, n('Parallax', { src: `c01a/${file}.jpg`, pos: o.pos, mos: o.mos ?? MOS[file], ...PAR[i % PAR.length], ...(o.s ? { s: o.s } : {}) })),
+  n('Credit', { text: `PHOTO: ${PH[file]}`, place: o.cp || 'tr' }), ...(o.over || []),
+];
 // blurred backdrops for title cards
 const bgV = (i, name, t, bri = 0.7) => n('Grade', { sat: 0.55, bri, con: 1.08 }, cam(i, [1.1, 1.18], 'filter:blur(12px)', vid(name, t)));
 const bgP = (i, file, bri = 0.62, pos) => n('Grade', { sat: 0.3, bri, con: 1.05 }, cam(i, [1.1, 1.18], 'filter:blur(12px)', n('Img', { src: `c01a/${file}.jpg`, pos })));
@@ -136,56 +146,61 @@ const PIC = [240, 0, 1440, 1080];
 // kit's 12 px clamp margin does not push the ring up through the digits; the ring stroke still ends at y 1077 (< 1080, in picture).
 const STAMP = { HCR: { x: 243, y: 1037, w: 484, h: 24, rect: [240, 0, 1440, 1095] }, HPK: { x: 1093, y: 918, w: 406, h: 40, rect: PIC } };
 const MAP = { z12: 'c01a/map_z12.jpg', z14: 'c01a/map_z14.jpg', off: [-5376, -3072, 4] };
+const TL = (a, b, c) => [{ date: '11 AUG 2010', label: 'HOME FROM THE US', at: a }, { date: '14 AUG', label: b ? 'SATURDAY - A WET AFTERNOON' : 'HOLLAND PARK', at: b ?? 9999 }, { date: '15 AUG', label: 'HANS CRESCENT', at: c ?? 9999 }];
+const DOCS = () => [{ ...ART.cctv, at: 10 }, { ...ART.profile, at: 150 }];
+const CCTV = { HPK: { CAM: 'HOLLAND PARK', DATE: '14 AUG 2010', TIME: '14:59' }, HCR: { CAM: 'HANS CRESCENT', DATE: '15 AUG 2010', TIME: '14:27:28' } };
+const cctvData = (k) => Object.entries(CCTV[k]);
 
 // shot table: [start, end, name, (i, L = len f, A = part s -> local f) => nodes]
 const T = [
   // p01a (0.50-43.88)
   [0, 4.16, 'S01 HCR freeze man', (i, L, A) => frz('HCR', 114, { bri: 0.78 }, { s: [1.0, 1.08], o: '42% 30%' }, [met('tr'), tag(L, A(1.54), 'GARETH WILLIAMS', 'CODEBREAKER', false, { pos: 'c' })])],
-  [4.16, 10.40, 'S02 hans crescent harrods', (i, L, A) => photo(i, 'hans_crescent_harrods_side', { bri: 0.75, over: [place(A(6.24), 'HANS CRESCENT', 'KNIGHTSBRIDGE, LONDON')] })],
+  [4.16, 10.40, 'S02 hans crescent harrods', (i, L, A) => par(i, 'hans_crescent_harrods_side', { bri: 0.78, over: [place(A(6.24), 'HANS CRESCENT', 'KNIGHTSBRIDGE, LONDON')] })],
   [10.40, 17.96, 'S03 HCR walk', (i) => live(i, 'HCR', 0, 0.5, { bri: 0.75 }, [met('tr')])],
   [17.96, 24.64, 'S04 HCR stamp zoom', (i, L, A) => [n('StampRing', { ...STAMP.HCR, at: A(19.56), zoom: 1.7, zin: 50 }, ...frz('HCR', 224, { bri: 0.78 }, { s: [1, 1] }))]],
   [24.64, 28.10, 'S05 HCR empty doorway', (i, L) => frz('HCR', 222, { bri: 0.74, mono: true }, { s: [1.0, 1.05], o: '50% 40%' }, [n('Dip', { outN: 16 })])],
   [28.10, 32.62, 'S06 valley station', (i, L, A) => [...photo(i, 'valley_anglesey_station', { bri: 0.65, over: [place(A(28.2) + 44, 'VALLEY', 'ANGLESEY, WALES')] }), n('Dip', { inN: 14 })]],
-  [32.62, 37.34, 'S07 valley church', (i, L, A) => photo(i, 'valley_anglesey_church', { bri: 0.55, over: [td(A(32.62) + 10, '26 SEPTEMBER 1978')] })],
+  [32.62, 37.34, 'S07 valley church', (i, L, A) => par(i, 'valley_anglesey_church', { bri: 0.6, over: [td(A(32.62) + 10, '26 SEPTEMBER 1978')] })],
   [37.34, 43.80, 'S08 bangor', (i, L, A) => photo(i, 'bangor_university', { bri: 0.6 })],
   // p01b (43.80-95.56)
   [43.80, 49.78, 'S09 article profile', (i) => [art('profile', 70, bgV(i, 'snowdonia_a', 1, 0.6))]], // full-bleed page: no backdrop label (QA 2026-11-19)
-  [49.78, 54.22, 'S10 manchester', (i, L, A) => photo(i, 'manchester_university', { bri: 0.72, over: [place(A(50.0), 'UNIVERSITY OF MANCHESTER')] })],
+  [49.78, 54.22, 'S10 manchester', (i, L, A) => par(i, 'manchester_university', { bri: 0.75, over: [place(A(50.0), 'UNIVERSITY OF MANCHESTER')] })],
   [54.22, 57.94, 'S11 st catharines', (i) => photo(i, 'st_catharines_cambridge', { over: [n('SpotC01', { cx: 960, cy: 500, r: 460, at: 20, hold: 150 })] })],
-  [57.94, 63.80, 'S12 card 2001 GCHQ', (i) => [n('Grade', { sat: 0.55, bri: 0.3, con: 1.15, vig: 0.8 }, cam(i, [1.1, 1.18], 'filter:blur(10px)', n('_V', { src: 'broll/nb_cctv_camera', trim: 0, speed: 1, fit: 'cover' }))), n('Lbl', { text: 'ILLUSTRATIVE', at: 'bl' }), n('TitleType', { mode: 'fade', kick: '2001', lines: ['GCHQ', 'CHELTENHAM'] })]],
-  [63.80, 68.74, 'S13 prestbury', (i, L, A) => photo(i, 'prestbury_village', { bri: 0.75, s: [1.15, 1.22], pos: '30% 60%', over: [place(A(66.26), 'PRESTBURY', 'CHELTENHAM')] })],
+  [57.94, 63.80, 'S12 card 2001 GCHQ', (i) => [bgP(i, 'gchq_aerial', 0.42), n('TitleType', { mode: 'fade', kick: '2001', lines: ['GCHQ', 'CHELTENHAM'] })]], // v5: real GCHQ photo backdrop (was stock CCTV camera)
+  [63.80, 68.74, 'S13 prestbury', (i, L, A) => par(i, 'prestbury_village', { bri: 0.78, pos: '30% 60%', over: [place(A(66.26), 'PRESTBURY', 'CHELTENHAM')] })],
   [68.74, 73.54, 'S14 cyclist road', (i) => foot(i, 'cyclist_drone_road', 2, { bri: 0.9 })],
   [73.54, 77.40, 'S15 article secondment', (i) => [art('secondment', 50, bgP(i, 'sis_building_vauxhall_b', 0.6), { ry: [10, 2] })]],
-  [77.40, 80.52, 'S16 SIS', (i, L, A) => photo(i, 'sis_building_vauxhall', { bri: 0.62, over: [place(A(77.62), 'SIS BUILDING', 'VAUXHALL, LONDON')] })],
+  [77.40, 80.52, 'S16 SIS', (i, L, A) => par(i, 'sis_building_vauxhall', { bri: 0.66, over: [place(A(77.62), 'SIS BUILDING', 'VAUXHALL, LONDON')] })],
   [80.52, 84.42, 'S17 SIS b', (i) => photo(i, 'sis_building_vauxhall_b', { over: [n('SpotC01', { cx: 960, cy: 520, r: 420, at: 20, hold: 150 })] })],
   [84.42, 90.78, 'S18 rain street a', (i) => foot(i, 'london_rain_street_a', 0.5)],
   [90.78, 95.57, 'S19 rain window', (i, L, A) => foot(i, 'rain_window_night', 12, { bri: 2.6, s: [1.04, 1.1], over: [td(A(90.98), 'SUMMER 2010')] })], // v4: cover full frame (was narrow vertical strip)
   // p01c (95.57-133.77)
   [95.57, 101.93, 'S20 rain street b', (i) => foot(i, 'london_rain_street_b', 42)],
-  [101.93, 105.47, 'S21 SIS tight', (i, L, A) => photo(i, 'sis_building_vauxhall', { bri: 0.68, s: [1.32, 1.4], pos: '30% 40%' })],
-  [105.47, 108.93, 'S22 drone road', (i, L, A) => foot(i, 'cyclist_drone_road', 6.4, { bri: 0.7, s: [1.2, 1.28], over: [td(A(106.40), '3 SEPTEMBER 2010')] })],
-  [108.93, 113.65, 'S23 card home from US', (i) => [bgV(i, 'wet_pavement_night', 20, 0.95), n('Lbl', { text: 'ILLUSTRATIVE', at: 'bl' }), n('TitleType', { mode: 'fade', kick: '11 AUGUST 2010', lines: ['HOME FROM THE US'] })]],
-  [113.65, 119.21, 'S24 regent street', (i, L, A) => foot(i, 'regent_street_rain_night', 4, { bri: 1.2, lbl: 'tl', over: [place(A(115.67), 'WEST END', 'LONDON')] })],
-  [119.21, 122.31, 'S25 date on HPK backdrop', (i, L, A) => [n('Grade', { mono: true, bri: 0.8, con: 1.08 }, cam(i, [1.12, 1.2], 'filter:blur(10px)', n('Frz', { src: 'HPK', n: 150, fit: 'cover' }))), met('tl'), td(A(120.21) - 30, 'SATURDAY 14 AUGUST 2010', { pos: 'l', size: 66 })]],
+  [101.93, 105.47, 'S21 GCHQ', (i, L, A) => par(i, 'gchq_aerial', { bri: 0.72, over: [place(A(103.3), 'GCHQ', 'CHELTENHAM')] })], // v5: VO "back to GCHQ"
+  [105.47, 108.93, 'S22 cheltenham', (i, L, A) => photo(i, 'cheltenham_promenade', { bri: 0.62, over: [td(A(106.40), '3 SEPTEMBER 2010')] })], // v5: was drone stock
+  [108.93, 113.65, 'S23 timeline home from US', (i, L, A) => [n('Timeline', { nodes: TL(A(109.9)) }, bgP(i, 'holland_park_station', 0.45))]], // v5: was stock card
+  [113.65, 119.21, 'S24 brompton road', (i, L, A) => par(i, 'harrods_brompton_road', { bri: 0.7, over: [place(A(116.5), 'KNIGHTSBRIDGE', 'LONDON')] })], // v5: was regent st stock
+  [119.21, 122.31, 'S25 timeline 14 aug', (i, L, A) => [n('Timeline', { nodes: TL(-60, A(120.5)) }, n('Grade', { mono: true, bri: 0.8, con: 1.08 }, cam(i, [1.12, 1.2], 'filter:blur(10px)', n('Frz', { src: 'HPK', n: 150, fit: 'cover' })))), met('tl')]],
   [122.31, 127.60, 'S26 HPK freeze', (i, L, A) => frz('HPK', 0, { bri: 1.05 }, { s: [1.04, 1.1], o: '50% 100%' }, [met('tr'), place(A(124.81), 'HOLLAND PARK STATION', 'CENTRAL LINE, LONDON', { x: 284, y: 64 })])],
   [127.60, 130.87, 'S27 HPK cone', (i) => frz('HPK', 0, { bri: 1.05 }, { s: [1.0, 1.04], o: '38% 85%' }, [n('SpotC01', { cx: 724, cy: 922, r: 240, at: 18, hold: 120 })])],
   [130.87, 133.95, 'S28 HPK stamp zoom', (i) => [n('StampRing', { ...STAMP.HPK, at: 30, zoom: 1.7, zin: 50 }, ...frz('HPK', 0, { bri: 1.1 }, { s: [1, 1] }))]],
   [133.95, 138.98, 'S29 HPK raw', (i) => live(i, 'HPK', 0, 1, { bri: 1.05 }, [met('tl')])],
   // p02 (139.30-182.08)
-  [138.98, 144.60, 'S30 HPK replay', (i) => live(i, 'HPK', 1.5, 0.45, { bri: 1.05, mono: true }, [met('tl'), n('SpotC01', { cx: 1005, cy: 540, r: 300, at: 30, hold: 200 })])],
+  [138.98, 144.60, 'S30 HPK analyse', (i) => [n('CCTVAnalyse', { src: 'HPK', n: 104, box: [900, 360, 210, 380], data: cctvData('HPK'), tag: 'GARETH WILLIAMS', dpos: 'tr', g: { sat: 0, bri: 1.0, con: 1.1 } }), n('Grade', { vig: 0.55, grain: 0.07 }), met('tl')]], // v5: was SpotC01 replay
   [144.60, 150.02, 'S31 HPK freeze end', (i) => frz('HPK', 270, { bri: 1.05, mono: true }, { s: [1.0, 1.08], o: '60% 50%' })],
-  [150.02, 154.40, 'S32 harrods night', (i) => photo(i, 'harrods_night', { bri: 0.8 })],
-  [154.40, 158.50, 'S33 sloane street', (i) => photo(i, 'sloane_street', { bri: 0.6 })],
-  [158.50, 163.06, 'S34 wet pavement', (i) => foot(i, 'wet_pavement_night', 30)],
-  [163.06, 167.80, 'S35 map', (i) => [n('Grade', { sat: 1, con: 1.05, bri: 1, vig: 0.55, grain: 0.07 }, n('MapC01', {
+  [150.02, 154.40, 'S32 harrods night', (i) => par(i, 'harrods_night', { bri: 0.82 })],
+  [154.40, 158.50, 'S33 counter 20 days', (i, L, A) => [n('Counter', { to: 20, unit: 'DAYS', label: 'UNTIL HE WAS DUE TO LEAVE LONDON', at: A(155.2), dur: 80 }, bgP(i, 'sloane_street', 0.5))]], // v5: VO "less than three weeks"
+  [158.50, 163.06, 'S34 doc stack', (i) => [n('DocStack', { docs: DOCS() }, bgP(i, 'brompton_road_knightsbridge', 0.5))]], // v5: was wet pavement stock
+  [163.06, 167.80, 'S35 route map', (i) => [n('Grade', { sat: 1, con: 1.05, bri: 1, vig: 0.55, grain: 0.07 }, n('RouteMap', {
     ...MAP,
-    keys: [[0, 1695, 1130, 0.18, 16], [120, 1440, 1047, 1.15, 10], [145, 1455, 1055, 1.17, 10], [215, 1950, 1212, 1.25, 8], [284, 1965, 1216, 1.32, 7]],
-    pins: [{ x: 1439.9, y: 1047.3, at: 90, lat: 104, label: 'HOLLAND PARK \u00b7 14 AUG' }, { x: 1950.2, y: 1212.0, at: 196, lat: 206, label: 'KNIGHTSBRIDGE \u00b7 15 AUG' }],
+    keys: [[0, 1800, 1220, 0.9, 18], [60, 1700, 1180, 1.25, 10], [284, 1830, 1240, 1.4, 8]],
+    pins: [{ x: 1439.9, y: 1047.3, label: 'HOLLAND PARK', time: '14 AUG - 14:59', at: 24 }, { x: 1950.2, y: 1212.0, label: 'HANS CRESCENT', time: '15 AUG - 14:27', at: 137 },
+      { x: 2158, y: 1388, label: 'PIMLICO', time: 'ALDERNEY ST - HIS FLAT', at: 196 }],
   })), n('Credit', { text: 'MAP: SENTINEL-2 CLOUDLESS BY EOX (CC BY 4.0)', place: 'br', hold: 200 })]],
-  [167.80, 172.00, 'S36 article cctv', (i) => [art('cctv', 40, bgP(i, 'brompton_road_knightsbridge', 0.6), { ry: [-10, -2] })]], // full-bleed page: backdrop not shown, no credit
+  [167.80, 172.00, 'S36 brompton road', (i, L, A) => par(i, 'brompton_road_knightsbridge', { bri: 0.66, over: [place(A(168.3), 'BROMPTON ROAD', 'KNIGHTSBRIDGE')] })], // v5: was Article3D
   [172.00, 175.20, 'S37 hans crescent', (i, L, A) => photo(i, 'hans_crescent_geograph', { bri: 0.6, over: [td(A(172.3), '15 AUGUST, 14:27')] })],
-  [175.20, 178.42, 'S38 hans crescent sign', (i) => photo(i, 'hans_crescent_sign', { bri: 0.6 })],
-  [178.42, 182.10, 'S39 HCR entry', (i) => frz('HCR', 0, { bri: 0.85 }, { s: [1.0, 1.06], o: '70% 20%' }, [met('tr'), n('SpotC01', { cx: 1150, cy: 170, r: 330, at: 24, hold: 120 })])],
+  [175.20, 178.42, 'S38 hans crescent sign', (i) => par(i, 'hans_crescent_sign', { bri: 0.62 })],
+  [178.42, 182.10, 'S39 HCR analyse', (i) => [n('CCTVAnalyse', { src: 'HCR', n: 0, box: [1040, 40, 240, 300], o: [1160, 60], zoom: 1.35, data: cctvData('HCR'), tag: 'GARETH WILLIAMS', dpos: 'tl', g: { sat: 0.55, bri: 0.85, con: 1.1 } }), n('Grade', { vig: 0.55, grain: 0.07 }), met('br')]],
   [182.10, 185.85, 'S40 HCR raw', (i) => live(i, 'HCR', 0, 1, { bri: 0.75 }, [met('tr')])],
 ];
 
@@ -195,7 +210,7 @@ export default {
   end: 185.85,
   plain: true,
   vo: { starts: [0.50, 43.80, 95.57, 139.30], lens: [43.38, 51.76, 38.20, 42.78], file: (i) => ['vo/c01a_p01a.wav', 'vo/c01a_p01b.wav', 'vo/c01a_p01c.wav', 'vo/c01a_p02.wav'][i], tail: 0 },
-  devices: ['shared', 'lm', 'lm_c01b', 'lm_c01a', 'lm_pro'],
+  devices: ['shared', 'lm', 'lm_c01b', 'lm_c01a', 'lm_pro', 'lm_mg'],
   fonts: ['Oswald-var-latin.woff2', 'BebasNeue-latin.woff2', 'IBMPlexMono-500-latin.woff2', 'IBMPlexMono-600-latin.woff2', 'VCROSDMono-latin.woff2'],
   shots: T.map(([c, to, name, fn], i) => {
     const L = Math.round((to - c) * 60), A = (t) => Math.round((t - c) * 60);
@@ -210,6 +225,8 @@ export default {
     ...ARTS.flatMap(([c, f0, st]) => [sfx('lm_paper', c), ...(st ? [sfx('lm_settle', c + 0.45)] : []), sfx('lm_marker', c + f0 / 60 - 0.03), sfx('lm_marker', c + (f0 + 26) / 60 - 0.03)]),
     ...CLICKS.map((t) => sfx('lm_click', t - 0.15)), // peak 0.223 s in the file -> lands ~0.07 s into the 0.5 s fade
     ...WHOOSH.map((t) => sfx('lm_whoosh', t)),
+    sfx('lm_paper', 158.50), ...[10, 150].flatMap((a) => [0, 26].map((d) => sfx('lm_marker', 158.50 + (a + 12 + d) / 60 - 0.03))), // S34 DocStack
+    ...counterTicks(154.40 + Math.round((155.2 - 154.40) * 60) / 60, 0, 20, 80).map((t) => sfx('tick_soft', t, -8)), // S33 Counter
     sfx('lm_boom', 28.30), // dip into S06 (peak 28.48, music back)
     sfx('riser_dark', 133.95 - 5.91),
     sfx('lm_boom', 133.95 - 0.17),
