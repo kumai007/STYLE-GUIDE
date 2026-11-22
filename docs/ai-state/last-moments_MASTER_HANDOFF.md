@@ -71,3 +71,10 @@ one full render on GitHub (farm). Then cases 2-21 the same way.
   is NOT in git: it lives on this PC and the private Drive. A different PC needs that media first.
 - Main knowledge base K = `C:\Users\ayush\Downloads\404_Rendrer_KNOWLEDGE\404 Rendrer` (tools, SFX, QA). Read the project
   `CLAUDE.md` rule order before work. Never print `.env` files or keys.
+
+## 8. Render done (2026-11-22, on this PC: GitHub farm account DeZAYU hidden by GitHub, dispatch HTTP 500)
+- Local render: `case-work/renders/lm/render_all.sh` (npx hyperframes render per part; 520 / 1165 / 1729 s), concat -c copy,
+  `tools/case-build/master_loudness.sh` -> -16.1 LUFS, TP -1.8 dBTP. No silence > 2 s, QC sheet OK.
+- Deliverable: `case-work/renders/lm/last_moments_intro_case1_master.mp4` (553.9 s, 1080p60, 644 MB);
+  phone copy `..._phone.mp4` (720p30, 28.7 MiB).
+- Next: cases 2-21 (not built). Farm is down: render locally the same way until GitHub restores DeZAYU.
