@@ -98,3 +98,4 @@ one full render on GitHub (farm). Then cases 2-21 the same way.
 ### Lead QC 2026-11-23 (c09)
 - c09 raw 1 + S32 freeze started at RAD 1.0: web-player play button, cursor and seek bar visible (source 1-3.6). Now RAD 3.8 (`if (j === 0) o.t = 3.8`). Backup `lm_case09.mjs.bak_lead`. Re-render queued; old render `lm_case09.v1.mp4` (delete after the new one passes).
 - c03, c12, c14 passed QC from rendered parts.
+- c15: companion face unblurred at part 95.95 (src 8.15-9.45), plus left man 8.5-9.9, mask woman 30.9-31.7 and 36.9-37.7: 4 new MOS tracks (backup `lm_case15.mjs.bak_lead`), checked with red-outline `check_keys.py`. Re-render queued; old `lm_case15.v1.mp4`.
