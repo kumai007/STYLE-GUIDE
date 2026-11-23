@@ -139,11 +139,11 @@ function titleTicks(a, b, fa, fb, rate) {
 }
 
 export function makeCase(C) {
-  const end = C.end, TY = { a: `CASE ${C.num}`, b: C.title.toUpperCase(), fa: 24, fb: 62, rate: Math.min(0.6, Math.max(0.3, C.title.length / 120)) };
+  const end = C.end, TY = { a: `CASE ${C.num}`, b: String(C.title || '').toUpperCase(), fa: 24, fb: 62, rate: Math.min(0.6, Math.max(0.3, C.title.length / 120)) };
   const RAWS = C.raws.map((r) => ({ ...r, snd: !r.mute && hasAudio(`${r.tag}.mp4`) }));
   EV = [];
   // shot table: title + given shots + raw shots, sorted; must tile [0, end)
-  const rows = [[0, TITLE, 'S00 title', () => [n('CaseTitle', { ...TY, plate: { img: C.plate[0] } }), ...cred(C.plate[1]), n('Dip', { inN: 14 })]],
+  const rows = [...(C.title ? [[0, TITLE, 'S00 title', () => [n('CaseTitle', { ...TY, plate: { img: C.plate[0] } }), ...cred(C.plate[1]), n('Dip', { inN: 14 })]]] : []),
     ...C.shots, ...RAWS.map((r, j) => [r.a, r.b, `R${j + 1} ${r.tag} raw`, (i) => H.clip(i, r.tag, r.t, { bri: r.bri, credit: r.credit, mos: r.mos, speed: r.speed })])]
     .sort((x, y) => x[0] - y[0]);
   const bad = [];
@@ -169,7 +169,7 @@ export function makeCase(C) {
     const g = db(m + off - M), fo = name === 'lm_boom' ? 0.8 : 0.03;
     return { src: name, id: `sfx_${name}_${Math.round(t * 1000)}`, file: `sfx/${name}.wav`, at: +Math.max(0, t).toFixed(3), to: +(Math.max(0, t) + d - 0.02).toFixed(3), lane: [[0, 0], [0.015, g], [+(d - fo - 0.02).toFixed(3), g], [+(d - 0.03).toFixed(3), 0]] };
   };
-  const keys = titleTicks(TY.a, TY.b, TY.fa, TY.fb, TY.rate).filter((t) => t < TITLE - 0.2).map((t) => {
+  const keys = (C.title ? titleTicks(TY.a, TY.b, TY.fa, TY.fb, TY.rate) : []).filter((t) => t < TITLE - 0.2).map((t) => {
     const g = db(MUS_T - 6 - (SFX.lm_key[2] + 10 * Math.log10(0.4 * TY.rate * 30)));
     return { src: 'lm_key', id: `key_${Math.round(t * 1000)}`, file: 'sfx/lm_key.wav', at: t, to: +(t + 0.09).toFixed(3), lane: [[0, 0], [0.005, g], [0.07, g], [0.085, 0]] };
   });

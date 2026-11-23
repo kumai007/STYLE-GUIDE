@@ -78,3 +78,14 @@ one full render on GitHub (farm). Then cases 2-21 the same way.
 - Deliverable: `case-work/renders/lm/last_moments_intro_case1_master.mp4` (553.9 s, 1080p60, 644 MB);
   phone copy `..._phone.mp4` (720p30, 28.7 MiB).
 - Next: cases 2-21 (not built). Farm is down: render locally the same way until GitHub restores DeZAYU.
+
+## 9. Cases 2-21 in progress (2026-11-23, all on this PC; owner: "do all the video")
+- VO: all 98 lines made (`vo/lines_c02_21.csv`, ids cNN_pMM, outro c99_p01) -> `build/vo_prep_rest.py` (faster-whisper + filler cut) -> `vo/cut/`.
+- Sources: `build/conform_local.py` (sources/dl -> media + `sources/_sheets/<TAG>.jpg`). Age-locked on YouTube (need sign-in): NCH (c10),
+  EMH (c13), AGH (c17) - builders look for public copies (AGH: NDTV f1kR-ohxJYY).
+- Template: `hf-engine/cases/lm_lib.mjs` (makeCase + H helpers, auto title screen, mix 100/75/60, raws) + `devices/lm_cases.mjs` (CaseTitle).
+  Music sets: `media/last-moments/music/sets.json` (8 Epidemic tracks). Timeline: `build/case_skeleton.py NN` -> `edit/skel/cNN.json`.
+  Media tools: `build/commons_search.py`, `build/eox_map.py`, `build/art_crop.py`.
+- Builders: one agent per case, brief `docs/ai-state/last-moments_CASE_BUILDER_BRIEF.md`; notes in `productions/last-moments/edit/notes/cNN.md`.
+- Render: `case-work/renders/lm/render_queue.sh` (append part ids to queue.txt; touch queue.done to finish). Then concat all parts +
+  master_loudness + phone copy.
