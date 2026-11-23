@@ -12,10 +12,13 @@ const FAN = JSON.parse(fs.readFileSync(path.join(MED, 'c03', 'mos_fan.json'), 'u
 const BYST = [[35, 0, 0, 230, 220], [36, 60, 0, 200, 200], [37.5, 80, 10, 200, 200], [39.1, 80, 10, 200, 200], [39.3, 0, 0, 1, 1]];
 // lead 2026-11-23: woman at the right edge, raw 3 source 33-37.5 (profile showed unblurred at part 247 s)
 const RW = [[33, 540, 0, 180, 360], [37.5, 540, 0, 180, 360], [37.6, 0, 0, 1, 1]];
+// lead QC 2026-11-23 on true CGF frames (rendered part showed these uncovered): man in grey tee top-left, fan close-up profile
+const MAN3 = [[36.9, 0, 0, 1, 1], [37.0, 130, 0, 170, 160], [37.4, 130, 0, 170, 160], [37.8, 50, 0, 170, 170], [38.3, 0, 40, 150, 190], [38.7, 0, 40, 130, 190], [38.8, 0, 0, 1, 1]];
+const FIX3 = [[50.6, 0, 0, 1, 1], [50.65, 250, 90, 360, 420], [51.0, 180, 90, 450, 520], [51.2, 90, 90, 550, 600], [51.3, 0, 100, 620, 620], [51.4, 0, 150, 560, 570], [51.6, 0, 250, 440, 470], [51.9, 0, 250, 400, 470], [52.0, 0, 0, 1, 1]];
 const END = +(SKEL.end + 1.0).toFixed(3);
 const VO = SKEL.vo.map(([f, s], k) => [f, k === 3 ? +(s + 1.0).toFixed(3) : s]);
 const RAWS = SKEL.raws.map((r, j) => ({ tag: r.tag, a: r.a, b: j === 2 ? +(r.a + 21.5).toFixed(3) : r.b, t: r.t, mute: true,
-  mos: j === 2 ? [{ keys: FAN }, { keys: BYST }, { keys: RW }] : [{ keys: FAN }], credit: j === 0 ? 'FOOTAGE: FAN PHONE VIDEO, THE PLAZA LIVE, 10 JUNE 2016' : undefined }));
+  mos: j === 2 ? [{ keys: FAN }, { keys: BYST }, { keys: RW }, { keys: MAN3 }, { keys: FIX3 }] : [{ keys: FAN }], credit: j === 0 ? 'FOOTAGE: FAN PHONE VIDEO, THE PLAZA LIVE, 10 JUNE 2016' : undefined }));
 const RAWB = RAWS[2].b; // 266.79
 
 const P = (k) => `c03/${k}.jpg`;
