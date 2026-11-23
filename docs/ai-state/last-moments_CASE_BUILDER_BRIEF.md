@@ -76,3 +76,11 @@ engine = `root/styleguide/gx-admixdd/hf-engine`. NN = your case number, two digi
 - Do not render (`npx hyperframes render`) - the lead renders. Snapshots are fine.
 - No `$(...)` inside long command lines; put logic in small .py files under `case-work/lm_scratch/cNN/`.
 - Never print keys or .env files.
+
+## Context budget (builders ran out of context, 2026-11-23)
+- Write `cases/lm_caseNN.mjs` EARLY: first version as soon as the skeleton exists, using source b-roll (H.clip/H.frz), cards,
+  maps and photos you already have; build + check it. Then improve shot by shot. A built file beats a perfect plan.
+- Save `edit/notes/cNN.md` at each milestone (what is done, what is next) so a fresh agent can continue.
+- Look at photos on contact sheets (search sheets, snapshot sheets), not one by one at full size. Max ~12 searches.
+- Keep tool output short (head/tail, grep). Never cat whole json/word files; print only what you need.
+- Face tracking: simple static boxes or 2-4 keyframes are enough; do not build tracking tools.
