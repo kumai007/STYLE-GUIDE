@@ -14,7 +14,7 @@
 //   H.photo(i, 'c02/x.jpg', 'PHOTO: AUTHOR / LICENCE', { bri, pos, mos:[[x,y,w,h]], over:[...] })   still, slow 3-D drift
 //   H.par(i, file, credit, o)            2.5-D parallax still (alternate with photo)
 //   H.foot(i, 'broll/x', t, o)           stock clip (ILLUSTRATIVE label, graded like raws). file without .mp4
-//   H.clip(i, 'TAG', t, o)               raw source footage as b-roll (contain + blurred fill if not 16:9). o: { speed, bri, mono, credit, mos }
+//   H.clip(i, 'TAG', t, o)               raw source footage as b-roll (contain + blurred fill if not 16:9). o: { speed, bri, mono, credit, mos: [{ r: [x, y, w, h] } | { keys: [[srcSec, x, y, w, h], ...] }] in SOURCE px }
 //   H.frz(i, 'TAG', t, o)                freeze frame of a raw at source second t
 //   H.place(t, 'TEXT', 'SUB')            centred place text, fades in at part second t
 //   H.label(t, 'NAME', 'ROLE')           name label, bottom-left inside picture (max 2 per case)
@@ -96,8 +96,7 @@ export const H = {
   clip: (i, tag, t, o = {}) => {
     const [sw, sh] = dims(`${tag}.mp4`), wide = Math.abs(sw / sh - 16 / 9) < 0.08;
     return [n('Grade', { mono: !!o.mono, bri: o.bri ?? 0.95, con: 1.1, sat: o.sat },
-      cam(i, o.s ?? [1.0, 1.04], '', n('LClip', { src: tag, t, speed: o.speed ?? 1, sw, sh, fit: wide ? 'cover' : 'contain', fill: !wide, push: [1, 1.03] })),
-      ...(o.mos ? [n('Mosaic', { boxes: o.mos })] : [])),
+      cam(i, o.s ?? [1.0, 1.04], '', n('LClip', { src: tag, t, speed: o.speed ?? 1, sw, sh, fit: wide ? 'cover' : 'contain', fill: !wide, push: [1, 1.03], mos: o.mos }))),
     ...cred(o.credit, o.cp), ...(o.over || [])];
   },
   frz: (i, tag, t, o = {}) => [
