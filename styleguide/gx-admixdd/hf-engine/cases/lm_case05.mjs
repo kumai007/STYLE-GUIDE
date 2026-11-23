@@ -7,7 +7,7 @@ const WM = [{ r: [20, 1012, 310, 56] }]; // "CRAVE LIFE" watermark, source px
 const R = (s, t, m = false, credit) => ({ tag: 'CRV', a: s[0], b: s[1], t, mute: m, ...(credit ? { credit } : {}), mos: WM });
 // b-roll pools of CRV source seconds (outside the raw windows 120-145, 204-229, 270-295, 348-360, 369-375, 406-430 and the intro moments 195.5 / 236)
 const POOL = {
-  FLY: [297, 346], AFT: [376, 405], LATE: [431, 519], TAKE: [241, 269], SUN: [526, 545], SUN2: [520, 525.8], LAND: [547, 590], LAND2: [591.5, 600], SHOP: [146, 165], OFF: [172, 192],
+  FLY: [297, 346], AFT: [376, 405], LATE: [431, 519], TAKE: [241, 269], SUN: [526, 545], SUN2: [520, 525.8], LAND: [547, 576], LAND2: [580, 589.5], SHOP: [146, 165], OFF: [172, 192],
   HEAD: [49, 60], HEAD2: [62, 73], HEAD3: [93, 101], HANG: [229.3, 235], OUT: [602, 650], GRO: [31.0, 34.6], FLY2: [361, 368.5], BG1: [4, 12.5], BG2: [18.5, 30], BG4: [74, 86], BG5: [100.5, 118],
 };
 const cur = Object.fromEntries(Object.entries(POOL).map(([k, v]) => [k, v[0]]));
@@ -57,7 +57,7 @@ clip(161.3, 165.2, 'HEAD2', {}, () => []);
 clip(165.2, 168.67, 'SHOP');
 
 // ---- B: 193.67 - 216.18 (VO p02)
-clip(193.67, 198.6, 'OFF'); clip(198.6, 202.1, 'GRO');
+clip(193.67, 198.6, 'OFF'); clip(198.6, 202.1, 'OFF');
 clip(202.1, 206.6, 'HANG', {}, () => [H.date(202.6, '3 NOVEMBER 2018')]);
 clip(206.6, 211.4, 'TAKE', {}, () => [H.place(207.0, 'BIRCHWOOD AIRPORT', 'NORTH OF ANCHORAGE')]);
 clip(211.4, 216.18, 'TAKE');

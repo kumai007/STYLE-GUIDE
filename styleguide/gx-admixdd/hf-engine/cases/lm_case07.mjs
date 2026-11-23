@@ -10,7 +10,7 @@ const FOOT = "FOOTAGE: WOODY'S TAVERN SECURITY FOOTAGE";
 // photo shot: ph(a, b, name, key, [text fns], opts)
 const ph = (a, b, name, key, extra = [], o = {}) => [a, b, name, (i) => [...H.photo(i, F(key), CR[key], o), ...extra.map((f) => f())]];
 // text card on a blurred photo backdrop (backdrops cycle through the photo pool)
-const BG = ['dg1', 'dg2', 'dg3', 'dg4', 'dg5', 'dg6', 'uranium', 'crossing', 'doubleo', 'viewpoint', 'hwy191', 'cold', 'dalton', 'hiser1', 'hiser2', 'hiser3', 'desert_dreams', 'sunset'];
+const BG = ['dg1', 'dg2', 'dg5', 'dg6', 'uranium', 'crossing', 'doubleo', 'viewpoint', 'hwy191', 'cold', 'dalton', 'hiser1', 'hiser2', 'hiser3', 'desert_dreams', 'sunset'];
 let bgi = 0;
 const card = (a, b, name, kick, lines, bg) => { const k = bg ?? BG[bgi++ % BG.length]; return [a, b, name, (i) => H.card(a + 0.2, H.bgP(i, F(k)), kick, lines, CR[k])]; };
 const frz = (a, b, name, t, o = {}) => [a, b, name, (i) => H.frz(i, 'WDY', t, { credit: FOOT, ...o })];
@@ -47,7 +47,7 @@ const S = [
   // ---- raw 1 125.75-138.75
   ph(138.75, 143.3, 'S26 nothing wrong', 'hiser1'),
   card(143.3, 147.0, 'S27 Kayla', 'FRIEND KAYLA BORZA', ['TOLD THE DAILY BEAST']),
-  card(147.0, 152.4, 'S28 Kayla quote', 'KAYLA BORZA, THE DAILY BEAST', ['"ALL THEY SAID WAS THERE WAS A CREEP', 'STAYING NEXT TO THEM. AND THAT WAS IT."']),
+  card(147.0, 152.4, 'S28 Kayla quote', 'KAYLA BORZA, THE DAILY BEAST', ['"ALL THEY SAID WAS THERE WAS', 'A CREEP STAYING NEXT TO THEM.', 'AND THAT WAS IT."']),
   ph(152.4, 156.5, 'S29 aunt again', 'hiser2'),
   ph(156.5, 160.2, 'S30 back to camp', 'cold'),
   frz(160.2, 163.135, 'S31 clock ticking', 61),
@@ -74,9 +74,9 @@ const S = [
   card(270.9, 276.4, 'S49 father', "KYLEN'S FATHER, IN MONTANA", ['"A CREEPER DUDE', 'NEAR THEIR CAMP"']),
   ph(276.4, 282.1, 'S50 drove up', 'dg1'),
   ph(282.1, 286.0, 'S51 18 Aug', 'dg2', [() => H.date(282.4, '18 AUGUST 2021')]),
-  ph(286.0, 289.9, 'S52 camp found', 'dg3'),
+  ph(286.0, 289.9, 'S52 camp found', 'sr1'),
   card(289.9, 294.0, 'S53 shot dead', 'LA SAL MOUNTAINS', ['BOTH WOMEN HAD', 'BEEN SHOT DEAD']),
-  ph(294.0, 300.6, 'S54 scene', 'dg4'),
+  ph(294.0, 300.6, 'S54 scene', 'sr2'),
   card(300.6, 305.0, 'S55 camper', '1987 FORD ECONOLINE', ['TOWED FROM A PARKING LOT', 'IN TOWN']),
   ph(305.0, 310.4, 'S56 warrant', 'dg5'),
   card(310.4, 316.5, 'S57 no danger', "19 AUGUST / GRAND COUNTY SHERIFF'S OFFICE", ['"NO CURRENT DANGER', 'TO THE PUBLIC"']),
@@ -87,7 +87,7 @@ const S = [
   card(334.2, 340.1, 'S62 Jan 2022', 'JANUARY 2022', ['PERSON OF INTEREST NAMED', 'A MONTH LATER: CLEARED']),
   ph(340.1, 344.5, 'S63 PI audio', 'uranium'),
   card(344.5, 349.5, 'S64 March', 'MARCH 2022', ['GUNSHOT AUDIO EXISTS', 'AUTHORITIES CONFIRM IT']),
-  ph(349.5, 353.5, 'S65 May briefing', 'dg13'),
+  ph(349.5, 353.5, 'S65 May briefing', 'sl'),
 ];
 // (continued below: late section built from a second list so the file stays readable)
 const S2 = [
@@ -99,10 +99,10 @@ const S2 = [
   ph(378.0, 381.8, 'S71 told partner', 'dg9'),
   card(381.8, 385.9, 'S72 investigators said', 'INVESTIGATORS SAID', ['HE TOLD HIS PARTNER', 'HE COMMITTED THE MURDERS']),
   ph(385.9, 391.3, 'S73 thin evidence', 'dg10'),
-  ph(391.3, 395.4, 'S74 cremated', 'dg11'),
+  ph(391.3, 395.4, 'S74 cremated', 'sr3'),
   card(395.4, 400.5, 'S75 never charged', 'NEVER CHARGED', ['NO COURT EVER', 'HEARD THE CASE']),
   card(400.5, 406.5, 'S76 closed', 'INVESTIGATION CLOSED', ['IT CAN BE REOPENED', 'THE MOTIVE IS STILL UNKNOWN']),
-  ph(406.5, 410.5, 'S77 aunt', 'dg12'),
+  ph(406.5, 410.5, 'S77 aunt', 'sr4'),
   card(410.5, 414.1, 'S78 closure', "KYLEN'S AUNT", ["WITHOUT A CHARGE, IT DIDN'T", 'FEEL LIKE CLOSURE']),
   ph(414.1, 417.56, 'S79 sunflower candle', 'sunflowers'),
 ];

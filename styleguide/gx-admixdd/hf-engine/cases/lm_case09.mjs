@@ -19,7 +19,7 @@ const raws = S.raws.map((r, j) => {
 });
 const STAMP = { x: 245, y: 2, w: 710, h: 44 };
 // stamp over LIVE lobby footage (clerk face blurred; the lib's freeze has no blur): same ring, children swapped for a blurred clip
-const stampLive = (t, srcT, box) => { const r = H.stamp(t, 'RAD', srcT, box); r[0].k = H.clip(0, 'RAD', srcT, { mos: [{ r: [0, 0, 170, 110] }] }); return r; };
+const stampLive = (t, srcT, box) => { const r = H.stamp(t, 'RAD', srcT, box); r[0].k = H.clip(0, 'RAD', srcT, { mos: [{ r: [0, 14, 170, 96] }] }); return r; };
 const bgR = (i, t, bri) => H.bgV(i, 'RAD', t, bri ?? 0.5);
 const cardR = (t, i, bt, kick, lines) => H.card(t, bgR(i, bt), kick, lines);
 // photo key -> real photo if present; else card on a blurred RAD backdrop. fb = [kick, lines, bgSrcT]

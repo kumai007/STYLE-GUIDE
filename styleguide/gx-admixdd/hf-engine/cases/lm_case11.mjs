@@ -4,8 +4,8 @@ import fs from 'node:fs';
 import { makeCase, H } from './lm_lib.mjs';
 const S = JSON.parse(fs.readFileSync(new URL('../../../../productions/last-moments/edit/skel/c11.json', import.meta.url), 'utf8'));
 const CR = { blt: 'FOOTAGE: MOTO NEXUS (BOLT)', map: 'MAP: SENTINEL-2 CLOUDLESS BY EOX (CC BY 4.0)' };
-const PL = { mos: [{ r: [380, 380, 1160, 300] }] }; // plates + riders band for POV b-roll (refine per shot)
-const RAWS = S.raws.map((r, j) => ({ ...r, credit: CR.blt, ...(j >= 2 ? { mos: [{ r: [380, 380, 1160, 300] }] } : {}) }));
+const PL = { mos: [{ r: [0, 400, 1920, 420] }] }; // plates + riders band for POV b-roll (refine per shot)
+const RAWS = S.raws.map((r, j) => ({ ...r, credit: CR.blt, ...(j >= 2 ? { mos: [{ r: [0, 400, 1920, 420] }] } : {}) }));
 const bgv = (i, t, bri) => H.bgV(i, 'BLT', t, bri);
 const card = (t, i, bt, kick, lines, bri) => H.card(t, bgv(i, bt, bri), kick, lines);
 const pov = (t, o = {}) => (i) => H.clip(i, 'BLT', t, { ...PL, ...o });

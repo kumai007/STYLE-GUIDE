@@ -139,7 +139,7 @@ function titleTicks(a, b, fa, fb, rate) {
 }
 
 export function makeCase(C) {
-  const end = C.end, TY = { a: `CASE ${C.num}`, b: String(C.title || '').toUpperCase(), fa: 24, fb: 62, rate: Math.min(0.6, Math.max(0.3, C.title.length / 120)) };
+  const end = C.end, TY = { a: `CASE ${C.num}`, b: String(C.title || '').toUpperCase(), fa: 24, fb: 62, rate: Math.min(0.6, Math.max(0.3, String(C.title || "").length / 120)) };
   const RAWS = C.raws.map((r) => ({ ...r, snd: !r.mute && hasAudio(`${r.tag}.mp4`) }));
   EV = [];
   // shot table: title + given shots + raw shots, sorted; must tile [0, end)
