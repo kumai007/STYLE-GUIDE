@@ -14,8 +14,8 @@ try { Object.assign(PH, JSON.parse(fs.readFileSync(path.join(MED, 'c20', 'credit
 const have = (k) => PH[k][1] && fs.existsSync(path.join(MED, PH[k][0]));
 
 // b-roll pools (TWR source seconds). Raw cue windows 2101-2160 and the end card from 3443 are never used; QR segment near 1200 avoided; no faces.
-const BLUE = [3180, 3300, 2940, 3060, 3120, 2880, 3000, 3360, 1380, 1320, 1260, 540, 660, 1140, 480, 2700];
-const ROCK = [5, 125, 245, 305, 365, 605, 785, 845, 905, 965, 1085, 1445, 2405, 2525, 2585, 2645, 2765, 2825, 1745, 1865, 1925, 1985, 2160 + 5, 1040];
+const BLUE = [3180, 3300, 2940, 3060, 3120, 2880, 3000, 3360, 1380, 1320, 3030, 540, 660, 3090, 480, 2700];
+const ROCK = [5, 125, 305, 365, 605, 785, 845, 905, 965, 1085, 1445, 2405, 2525, 2585, 2645, 2765, 2825, 1745, 1925, 1040, 3400, 2955];
 let bi = 0, ri = 0;
 const nb = () => { const t = (bi < BLUE.length ? BLUE[bi] : BLUE[bi % BLUE.length] + 22) - 1; bi++; return t; };
 const nr = () => { const t = (ri < ROCK.length ? ROCK[ri] : ROCK[ri % ROCK.length] + 22) - 1; ri++; return t; };
@@ -54,7 +54,7 @@ card(81.3, 86.0, 'A18 rust', 'THEIR WORDS', ['"THE 50 YEARS OF RUST HIDING', 'UN
 rock(86.0, 89.8, 'A19 fourth episode', {}, () => [H.date(87.5, '25 JULY 2025')]);
 blue(89.8, 93.6, 'A20 last upload');
 rock(93.6, 97.3, 'A21 west coast', {}, () => [H.place(94.6, 'WEST COAST', 'VANCOUVER ISLAND')]);
-card(97.3, 103.9, 'A22 opening line', 'THE FILM OPENS', ['"WE\'RE OUT HERE ON THE WEST COAST', 'OF VANCOUVER ISLAND, PUTTING OUR TRUCKS', 'THROUGH THE ULTIMATE STRESS TEST"']);
+card(97.3, 103.9, 'A22 opening line', 'THE FILM OPENS', ['"WE\'RE OUT HERE ON THE WEST COAST', 'OF VANCOUVER ISLAND, PUTTING', 'OUR TRUCKS THROUGH THE', 'ULTIMATE STRESS TEST"']);
 clipT(103.9, 109.5, 'A23 nate tacoma', 1864, {}, () => [H.label(104.5, 'DIRT LIFESTYLE NATE', 'FELLOW CREATOR')]);
 rock(109.5, 113.735, 'A24 tip to tip');
 
@@ -65,12 +65,12 @@ clipT(126.6, 131.0, 'B03 beach camps', 2164);
 blue(131.0, 135.145, 'B04 back on the road');
 
 // ---- C: 150.145 - 181.16 (VO p03)
-card(150.145, 157.0, 'C01 twenty seconds', 'MATTHEW, TO NATE ON THE RADIO', ['"WHAT\'S BEEN 20 SECONDS FOR THE VIEWERS', 'HAS BEEN TWO WEEKS FOR US"']);
+card(150.145, 157.0, 'C01 twenty seconds', 'MATTHEW, TO NATE ON THE RADIO', ['"WHAT\'S BEEN 20 SECONDS', 'FOR THE VIEWERS HAS BEEN', 'TWO WEEKS FOR US"']);
 blue(157.0, 161.2, 'C02 chatting');
 blue(161.2, 166.4, 'C03 go matt');
 blue(166.4, 170.9, 'C04 last climb');
 card(170.9, 174.4, 'C05 closing 1', 'THE CLOSING WORDS', ['"IT WASN\'T PERFECT,', 'BUT IT SURE WAS FULFILLING."']);
-card(174.4, 181.16, 'C06 closing 2', 'THE CLOSING WORDS', ['"THIS WON\'T BE THE LAST TIME YOU SEE', 'THESE TWO TRUCKS TOGETHER."']);
+card(174.4, 181.16, 'C06 closing 2', 'THE CLOSING WORDS', ['"THIS WON\'T BE THE LAST TIME YOU', 'SEE THESE TWO TRUCKS TOGETHER."']);
 
 // ---- D: 199.16 - 204.49 (VO p04)
 clipT(199.16, 204.49, 'D01 beach camp', 2224);
@@ -94,20 +94,20 @@ rock(281.4, 287.6, 'E15 teams struggle');
 card(287.6, 291.7, 'E16 wildfires', 'AUGUST 2025', ['WILDFIRES BURNING', 'IN THE REGION']);
 photo(291.7, 296.0, 'E17 nakusp', 'nakusp', {}, () => [H.place(292.4, 'NAKUSP', 'ARROW LAKES')], () => nr());
 clipT(296.0, 300.6, 'E18 daylight', 1564.5);
-card(300.6, 305.2, 'E19 complexity', 'KASLO SEARCH AND RESCUE', ['"THE REMOTE ACCESS, HIGH ALTITUDE,', 'AND LIMITED DAYLIGHT ALL ADDED COMPLEXITY"']);
+card(300.6, 305.2, 'E19 complexity', 'KASLO SEARCH AND RESCUE', ['"THE REMOTE ACCESS, HIGH', 'ALTITUDE, AND LIMITED DAYLIGHT', 'ALL ADDED COMPLEXITY"']);
 rock(305.2, 309.2, 'E20 scene');
 add(309.2, 315.6, 'E21 map region', (i) => H.map(i, 'c20/map_region.jpg', MAPCR, [{ x: 778, y: 460, label: 'NAKUSP', sub: 'ARROW LAKES HOSPITAL', at: 310.2 }, { x: 1102, y: 645, label: 'KASLO', at: 312.6 }]));
 rock(315.6, 319.2, 'E22 counselling');
 card(319.2, 322.9, 'E23 rcmp', 'RCMP', ['ACKNOWLEDGED THE CRASH', 'NEARLY A WEEK LATER']);
 rock(322.9, 329.5, 'E24 story till now');
-card(329.5, 336.0, 'E25 colleen 1', 'STACEY\'S MOTHER, COLLEEN, FOR BOTH FAMILIES', ['"WITH UNIMAGINABLE HEARTACHE, THE FAMILIES', 'OF MATTHEW PETER YEOMANS AND', 'STACEY TOUROUT WOULD LIKE TO ADVISE"']);
-card(336.0, 343.0, 'E26 colleen 2', 'STACEY\'S MOTHER, COLLEEN', ['"...THAT WE LOST THEM BOTH TRAGICALLY."', '"THEY ARE TOGETHER FOREVER."']);
+card(329.5, 336.0, 'E25 colleen 1', 'STACEY\'S MOTHER, COLLEEN, FOR BOTH FAMILIES', ['"WITH UNIMAGINABLE HEARTACHE,', 'THE FAMILIES OF MATTHEW PETER', 'YEOMANS AND STACEY TOUROUT..."']);
+card(336.0, 343.0, 'E26 colleen 2', 'STACEY\'S MOTHER, COLLEEN', ['"...WE LOST THEM BOTH TRAGICALLY."', '"THEY ARE TOGETHER FOREVER."']);
 rock(343.0, 348.2, 'E27 plaque', {}, () => [H.date(343.8, '30 AUGUST 2025')]);
 card(348.2, 352.4, 'E28 mountain took', 'THE PLAQUE', ['"THE MOUNTAIN TOOK THE LIVES', 'OF MATTHEW AND STACEY"']);
 rock(352.4, 356.6, 'E29 video of that day', {}, () => [H.date(352.9, '8 SEPTEMBER 2025')]);
 card(356.6, 361.0, 'E30 title', 'THE VIDEO', ['"WHEN THE MOUNTAIN CALLS"']);
 rock(361.0, 364.8, 'E31 january', {}, () => [H.date(361.4, 'JANUARY 2026')]);
-add(364.8, 370.77, 'E32 coroners', (i) => [...H.card(365.1, H.bgV(i, 'TWR', nr()), 'BC CORONERS SERVICE', ['INVESTIGATING', 'NO FINDINGS PUBLISHED']), H.dip(0, 40)]);
+add(364.8, 370.77, 'E32 coroners', (i) => [...H.card(365.1, H.bgV(i, 'TWR', 304), 'BC CORONERS SERVICE', ['INVESTIGATING', 'NO FINDINGS PUBLISHED']), H.dip(0, 40)]);
 
 // raw 1 blur (source px; keys = source seconds): bystanders + driver at the pump (plates are tiny at this size, covered by the truck boxes)
 const MOS1 = [
