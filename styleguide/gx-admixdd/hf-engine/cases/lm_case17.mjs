@@ -4,8 +4,9 @@ import fs from 'node:fs';
 import { makeCase, H } from './lm_lib.mjs';
 const S = JSON.parse(fs.readFileSync(new URL('../../../../productions/last-moments/edit/skel/c17.json', import.meta.url), 'utf8'));
 const CR = { map: 'MAP: SENTINEL-2 CLOUDLESS BY EOX (CC BY 4.0)', agh: 'FOOTAGE: CCTV VIA AMAR UJALA' };
-const MOS = [{ r: [500, 90, 250, 250] }, { r: [260, 25, 220, 210] }];   // son, man in red (AGH px 1024x768)
-const RAWS = S.raws.map((r) => ({ ...r, credit: CR.agh, mos: MOS }));
+const MOS = [{ r: [490, 80, 250, 320] }, { r: [240, 0, 250, 300] }];   // son, man in red (AGH px 1024x768); lead QC 2026-11-23: widened, the phone-filmed source shifts and zooms (2.3 s, 7.05 s)
+// lead QC 2026-11-23: AGH 2.6-3.8 shows the web player's control bar, so raw 1 plays 3.85-7.0 slowed to fill its 5 s (cue: slow down to fill)
+const RAWS = S.raws.map((r, j) => ({ ...r, credit: CR.agh, mos: MOS, ...(j === 0 ? { t: 3.85, speed: 0.63 } : {}) }));
 // slow footage (near-freeze, still blurred) so the same window can fill a few seconds with mos
 const slow = (i, t, o = {}) => H.clip(i, 'AGH', t, { speed: 0.08, credit: CR.agh, mos: MOS, ...o });
 const bgv = (i, t, bri) => H.bgV(i, 'AGH', t, bri);

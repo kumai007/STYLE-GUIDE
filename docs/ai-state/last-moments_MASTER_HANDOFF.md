@@ -99,3 +99,5 @@ one full render on GitHub (farm). Then cases 2-21 the same way.
 - c09 raw 1 + S32 freeze started at RAD 1.0: web-player play button, cursor and seek bar visible (source 1-3.6). Now RAD 3.8 (`if (j === 0) o.t = 3.8`). Backup `lm_case09.mjs.bak_lead`. Re-render queued; old render `lm_case09.v1.mp4` (delete after the new one passes).
 - c03, c12, c14 passed QC from rendered parts.
 - c15: companion face unblurred at part 95.95 (src 8.15-9.45), plus left man 8.5-9.9, mask woman 30.9-31.7 and 36.9-37.7: 4 new MOS tracks (backup `lm_case15.mjs.bak_lead`), checked with red-outline `check_keys.py`. Re-render queued; old `lm_case15.v1.mp4`.
+- c17: static blur boxes too small for the phone-filmed source (son face clear at part 92.2 / 126.3): widened to son [490,80,250,320], red [240,0,250,300], checked on AGH 0.3-13.5. Raw 1 showed the web player bar (AGH 2.6-3.8): now t 3.85, speed 0.63. Backup `lm_case17.mjs.bak_lead`. Re-render queued; old `lm_case17.v1.mp4`.
+- c09 and c15 re-renders passed (full-size frame check for c15).
