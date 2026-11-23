@@ -4,8 +4,8 @@ import fs from 'node:fs';
 import { makeCase, H } from './lm_lib.mjs';
 const S = JSON.parse(fs.readFileSync(new URL('../../../../productions/last-moments/edit/skel/c11.json', import.meta.url), 'utf8'));
 const CR = { blt: 'FOOTAGE: MOTO NEXUS (BOLT)', map: 'MAP: SENTINEL-2 CLOUDLESS BY EOX (CC BY 4.0)' };
-const PL = { mos: [{ r: [0, 150, 1920, 500] }] }; // plates + riders band for POV b-roll (refine per shot)
-const RAWS = S.raws.map((r, j) => ({ ...r, credit: CR.blt, ...(j >= 2 ? { mos: [{ r: [0, 150, 1920, 500] }] } : {}) }));
+const PL = { mos: [{ r: [0, 120, 1920, 830] }, { r: [0, 950, 560, 130] }, { r: [1360, 950, 560, 130] }] }; // plates + riders band for POV b-roll (refine per shot) // lead QC 2026-11-24: plates were readable below y 650 (scooter in raw 5, cars at the bottom corners): blur all but the gauges (x 560-1360, y 950+)
+const RAWS = S.raws.map((r, j) => ({ ...r, credit: CR.blt, ...(j >= 2 ? { mos: [{ r: [0, 120, 1920, 830] }, { r: [0, 950, 560, 130] }, { r: [1360, 950, 560, 130] }] } : {}) }));
 const bgv = (i, t, bri) => H.bgV(i, 'BLT', t, bri);
 const card = (t, i, bt, kick, lines, bri) => H.card(t, bgv(i, bt, bri), kick, lines);
 const pov = (t, o = {}) => (i) => H.clip(i, 'BLT', t, { ...PL, ...o });
