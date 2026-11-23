@@ -12,6 +12,7 @@ const CL = [{ r: [40, 0, 150, 110] }];
 const CLK = (a) => [{ keys: [[a, -300, -300, 10, 10], [41.6, -300, -300, 10, 10], [42.3, 40, 0, 150, 110], [a + 40, 40, 0, 150, 110]] }];
 const raws = S.raws.map((r, j) => {
   const o = { ...r, credit: j === 0 ? CR.rad : undefined };
+  if (j === 0) o.t = 3.8; // source 1-3.6 shows the web player's play button + seek bar (lead QC 2026-11-23)
   if (j === 1) { o.t = 36; o.mos = CLK(36); } // parking 36-42 then desk
   if (j === 2 || j === 3 || j === 4) o.mos = CL;
   if (j === 5) o.mos = CL; // lobby 555-559 then doors
@@ -59,7 +60,7 @@ const shots = [
   [138.1, 143.5, 'S29 money and ride', (i) => ph(i, 'borg2', 138.3, ['HER PURSE AND PHONE', ['LEFT AT THE HOSPITAL'], 138])],
   [143.5, 147.5, 'S30 dropped off', (i) => ph(i, 'rad2', 143.7, ['DROPPED OFF AT THE RADISSON', ['ABOUT 7:30 PM'], 140])],
   [147.5, 153.0, 'S31 stamps in red', (i) => H.stamp(147.9, 'RAD', 12, STAMP)],
-  [153.0, 157.065, 'S32 first camera', (i) => [...H.frz(i, 'RAD', 1.0, {}), H.place(153.3, '7:34 PM', 'ENTRANCE CANOPY CAMERA')]],
+  [153.0, 157.065, 'S32 first camera', (i) => [...H.frz(i, 'RAD', 3.8, {}), H.place(153.3, '7:34 PM', 'ENTRANCE CANOPY CAMERA')]],
   // ---- p02 (181.6 - 191.2): gap before raw 2
   [181.065, 186.3, 'S33 drive camera', (i) => [...H.clip(i, 'RAD', 25.5, {}), H.place(181.6, 'DRIVE AND PARKING CAMERA', '7:34 PM')]],
   [186.3, 191.575, 'S34 suv and van', (i) => H.clip(i, 'RAD', 30.8, {})],
