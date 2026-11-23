@@ -4,8 +4,8 @@ import fs from 'node:fs';
 import { makeCase, H } from './lm_lib.mjs';
 const S = JSON.parse(fs.readFileSync(new URL('../../../../productions/last-moments/edit/skel/c11.json', import.meta.url), 'utf8'));
 const CR = { blt: 'FOOTAGE: MOTO NEXUS (BOLT)', map: 'MAP: SENTINEL-2 CLOUDLESS BY EOX (CC BY 4.0)' };
-const PL = { mos: [{ r: [0, 400, 1920, 480] }] }; // plates + riders band for POV b-roll (refine per shot)
-const RAWS = S.raws.map((r, j) => ({ ...r, credit: CR.blt, ...(j >= 2 ? { mos: [{ r: [0, 400, 1920, 480] }] } : {}) }));
+const PL = { mos: [{ r: [0, 150, 1920, 500] }] }; // plates + riders band for POV b-roll (refine per shot)
+const RAWS = S.raws.map((r, j) => ({ ...r, credit: CR.blt, ...(j >= 2 ? { mos: [{ r: [0, 150, 1920, 500] }] } : {}) }));
 const bgv = (i, t, bri) => H.bgV(i, 'BLT', t, bri);
 const card = (t, i, bt, kick, lines, bri) => H.card(t, bgv(i, bt, bri), kick, lines);
 const pov = (t, o = {}) => (i) => H.clip(i, 'BLT', t, { ...PL, ...o });
@@ -24,7 +24,7 @@ const shots = [
   [52.5, 58.2, 'S11 makes a show', (i) => card(52.8, i, 1236, 'ANDREY IVANOV', ['REAL LIFE: "KIND AND OPEN"', 'ON CAMERA: "A MAN WHO MAKES A SHOW"'], 0.5)],
   [58.2, 64.86, 'S12 railway bridge', (i) => H.clip(i, 'BLT', 150, {})],
   // ---- g1 74.86 - 121.605
-  [74.86, 78.1, 'S13 chieftain', (i) => H.photo(i, 'c11/chieftain.jpg', 'PHOTO: RETIRED ELECTRICIAN / CC0', { mos: [[40, 1110, 190, 130]] })],
+  [74.86, 78.1, 'S13 chieftain', (i) => H.photo(i, 'c11/chieftain.jpg', 'PHOTO: RETIRED ELECTRICIAN / CC0', { mos: [[215, 790, 160, 220]] })],
   [78.1, 83.6, 'S14 buy this or harley', (i) => card(78.4, i, 572, 'THE WHOLE VIDEO', ['BUY THIS ONE,', 'OR A HARLEY AFTER ALL?'], 0.5)],
   [83.6, 88.7, 'S15 runtime', (i) => H.clip(i, 'BLT', 1232, { over: [H.date(83.9, 'RUNTIME 31 MINUTES')] })],
   [88.7, 94.2, 'S16 nobody owes', (i) => card(89.0, i, 1262, 'IRINA SKATKOVA TO 360', ['"ON THE ROAD NOBODY', 'OWES ANYONE ANYTHING."'], 0.5)],
@@ -55,8 +55,8 @@ const shots = [
   [289.8, 294.065, 'S37 gap to gap', pov(1770)],
   // ---- g6 319.065 - 406.015
   [319.065, 325.1, 'S38 an hour after', (i) => H.map(i, 'c11/map_russia.jpg', CR.map, [{ x: 960, y: 540, label: 'MOSCOW', at: 319.6 }])],
-  [325.1, 330.2, 'S39 federal highway', (i) => H.map(i, 'c11/map_moscow.jpg', CR.map, [{ x: 1011, y: 759, label: 'DOMODEDOVO', sub: 'M-4 "DON" SOUTH', at: 327.6 }])],
-  [330.2, 335.5, 'S40 km 68', (i) => H.map(i, 'c11/map_m4.jpg', CR.map, [{ x: 1004, y: 643, label: 'KM 68-69', sub: 'M-4 "DON"', at: 330.5 }])],
+  [325.1, 330.2, 'S39 federal highway', (i) => H.map(i, 'c11/map_moscow.jpg', CR.map, [{ x: 1011, y: 759, label: 'DOMODEDOVO', sub: "M-4 DON SOUTH", size: 34, at: 327.6 }])],
+  [330.2, 335.5, 'S40 km 68', (i) => H.map(i, 'c11/map_m4.jpg', CR.map, [{ x: 960, y: 540, label: "KM 68-69", sub: "M-4 DON", size: 34, at: 330.5 }])],
   [335.5, 340.7, 'S41 reports disagree', (i) => card(335.8, i, 1660, 'THE REPORTS', ['DO NOT AGREE ON WHAT IT WAS'], 0.5)],
   [340.7, 346.7, 'S42 fiat', (i) => card(341.0, i, 1666, 'THE REPORTS', ['POLICE (STARHIT): "A FIAT CAR"', 'TRAFFIC POLICE (360): "A FIAT TRUCK"'], 0.5)],
   [346.7, 351.9, 'S43 gazelle', (i) => card(347.0, i, 1672, 'REGIONAL TV', ['"A GAZELLE VAN"', 'IVANOV: PARKED OR MOVING, NOT CLEAR'], 0.5)],
