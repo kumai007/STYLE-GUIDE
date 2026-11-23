@@ -14,8 +14,8 @@ const BG = ['dg1', 'dg2', 'dg3', 'dg4', 'dg5', 'dg6', 'uranium', 'crossing', 'do
 let bgi = 0;
 const card = (a, b, name, kick, lines, bg) => { const k = bg ?? BG[bgi++ % BG.length]; return [a, b, name, (i) => H.card(a + 0.2, H.bgP(i, F(k)), kick, lines, CR[k])]; };
 const frz = (a, b, name, t, o = {}) => [a, b, name, (i) => H.frz(i, 'WDY', t, { credit: FOOT, ...o })];
-const BOX62 = { x: 110, y: 905, w: 890, h: 130, rect: [94, 50, 1768, 994] };
-const BOX78 = { x: 110, y: 890, w: 890, h: 105, rect: [94, 50, 1768, 994] };
+const BOX62 = { x: 108, y: 905, w: 900, h: 135, rect: [94, 50, 1768, 994] };
+const BOX78 = { x: 108, y: 882, w: 900, h: 125, rect: [94, 50, 1768, 994] };
 
 const S = [
   // ---- intro: the footage first (freezes of the burned-in picture), then Moab

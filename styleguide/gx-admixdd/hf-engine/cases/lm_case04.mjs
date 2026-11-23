@@ -34,12 +34,13 @@ const FR = {
 };
 // photo: 1920x942 frame -> cover box 1920x1080 (x1.1465, x offset -141)
 const toPhoto = ([x, y, w, h]) => [Math.round(1.1465 * x - 141), Math.round(1.1465 * y), Math.round(1.1465 * w), Math.round(1.1465 * h)];
-const MOS_FR = (t) => [...FIX, ...FR[t], WM].map(toPhoto);
+const pad = ([x, y, w, h]) => [Math.round(x - 0.12 * w), Math.round(y - 0.12 * h), Math.round(1.24 * w), Math.round(1.24 * h)];
+const MOS_FR = (t) => [...FIX, ...FR[t]].map(pad).concat([WM]).map(toPhoto);
 const frame = (i, t, o = {}) => H.photo(i, `c04/mks_f${t}.jpg`, CCTV, { mos: MOS_FR(t), bri: 0.95, ...o });
 // raw video (source 640x314 = /3): moving people as keyframe tracks (source seconds), the rest static unions
-const sr = (b) => b.map((v) => Math.round(v / 3));
+const sr = (b) => pad(b).map((v) => Math.round(v / 3));
 const tr = (list) => ({ keys: list.map(([t, ...b]) => [t, ...sr(b)]) });
-const RAW_FIX = [...FIX, WM].map((b) => ({ r: sr(b) }));
+const RAW_FIX = [...FIX].map((b) => ({ r: sr(b) })).concat([{ r: [263, 0, 115, 14] }]);
 const MOS_RAW1 = [...RAW_FIX, { r: sr([580, 435, 440, 225]) }, { r: sr([1360, 430, 110, 120]) }, { r: sr([1495, 395, 115, 115]) },
   tr([[0, 1355, 170, 85, 75], [1.5, 1425, 165, 85, 80], [3.0, 1580, 160, 100, 90], [4, 1590, 155, 100, 90]]),
   tr([[0, 890, 10, 80, 80], [1.5, 885, 15, 85, 85], [3.0, 880, 45, 90, 90], [4, 900, 60, 95, 95]]),
@@ -69,21 +70,21 @@ const shots = [
   [54.5, 58.64, 'S11 mayor', (i) => [...photo(i, 'c04/pomanto.png', { pos: '50% 18%' }), H.label(54.8, 'DANNY POMANTO', 'MAYOR OF MAKASSAR')]],
   [58.64, 63.6, 'S12 5000', (i) => H.card(58.9, bg(i, 'c04/unhas_lake.jpg', 0.45), 'AROUND', ['5,000 PEOPLE', 'WHITE AND RED SHIRTS'], cr('c04/unhas_lake.jpg'))],
   [63.6, 68.38, 'S13 teams', (i) => H.card(63.8, bg(i, 'c04/unhas_pkm.jpg'), 'TEAM A  |  TEAM B', ['2,500 ON EACH SIDE'], cr('c04/unhas_pkm.jpg'))],
-  [68.38, 72.64, 'S14 age', (i) => [...photo(i, 'c04/losari_pantai.jpg'), H.date(68.6, 'MASYITA, AGE 43')]],
+  [68.38, 72.64, 'S14 age', (i) => [...photo(i, 'c04/fort5.jpg'), H.date(68.6, 'MASYITA, AGE 43')]],
   [72.64, 79.0, 'S15 witness', (i) => H.card(72.9, bg(i, 'c04/unhas_med.jpg', 0.45), 'DETIKSULSEL', ['WITNESS IKRAM SAPUTRA', 'MORNING JOG AT A NEARBY FIELD'], cr('c04/unhas_med.jpg'))],
   [79.0, 83.0, 'S16 map street', (i) => H.map(i, 'c04/map_z14.jpg', MAPC, [{ x: 960, y: 540, label: 'JALAN SUDIRMAN', sub: 'CAMERA: BATU P SELATAN', at: 79.5 }])],
   [83.0, 86.62, 'S17 camera view', (i) => frame(i, '4.5')],
   [86.62, 90.83, 'S18 women left', (i) => frame(i, '1.5', { over: [H.spot(87.0, 400, 600, 330)] })],
   // ---- between raws (94.83 - 114.925)
   [94.83, 99.61, 'S19 up the road', (i) => frame(i, '6.0', { pos: '50% 0%' })],
-  [99.61, 105.05, 'S20 megaphone', (i) => H.card(99.8, bg(i, 'c04/unhas_fib.jpg', 0.45), 'ORGANISER', ['USED A MEGAPHONE', 'NOT TO STAND ON THE RIGHT SIDE OF THE ROPE'], cr('c04/unhas_fib.jpg'))],
+  [99.61, 105.05, 'S20 megaphone', (i) => H.card(99.8, bg(i, 'c04/unhas_fib.jpg', 0.45), 'ORGANISER', ['USED A MEGAPHONE', 'TO KEEP PEOPLE OFF THE RIGHT SIDE'], cr('c04/unhas_fib.jpg'))],
   [105.05, 110.5, 'S21 rope length', (i) => H.card(105.3, bg(i, 'c04/fort2.jpg', 0.45), 'THE ROPE', ['1,540 METRES', 'A LITTLE UNDER A MILE'], cr('c04/fort2.jpg'))],
   [110.5, 114.925, 'S22 man walks', (i) => frame(i, '3.0', { over: [H.spot(111.0, 1130, 640, 330)] })],
   // ---- after raw 2 (117.925 - 220.675); never the whip / fall / aftermath
   [117.925, 123.02, 'S23 recording', (i) => [...frame(i, '7.2'), H.dip(0, 14)]],
   [123.02, 129.5, 'S24 map', (i) => H.map(i, 'c04/map_z14.jpg', MAPC, [{ x: 960, y: 540, label: 'JALAN SUDIRMAN', sub: 'SUNDAY 18 DECEMBER 2022', at: 123.5 }])],
   [129.5, 134.63, 'S25 quiet', (i) => photo(i, 'c04/losari_beach.jpg', { bri: 0.6 })],
-  [134.63, 141.26, 'S26 injury', (i) => H.card(134.9, bg(i, 'c04/unhas_bld.jpg', 0.4), 'MASYITA, 43', ['DIED OF A SERIOUS HEAD INJURY', 'SEVERAL OTHERS HURT'], cr('c04/unhas_bld.jpg'))],
+  [134.63, 141.26, 'S26 injury', (i) => H.card(134.9, bgv(i, 6.2, 0.4), 'MASYITA, 43', ['DIED OF A SERIOUS HEAD INJURY', 'SEVERAL OTHERS HURT'], CCTV)],
   [141.26, 148.75, 'S27 snapped?', (i) => H.card(141.5, bg(i, 'c04/fort3.jpg', 0.4), 'DID THE ROPE BREAK?', ['SOME OUTLETS: IT SNAPPED', 'ORGANISER: IT DID NOT'], cr('c04/fort3.jpg'))],
   [148.75, 156.53, 'S28 Kompas', (i) => H.card(149.0, bg(i, 'c04/fort4.jpg', 0.4), 'KOMPAS TV', ['ORGANISER: THE WOMEN WERE', '"HOLDING THE ROPE WHILE TAKING SELFIES"'], cr('c04/fort4.jpg'))],
   [156.53, 162.16, 'S29 spread online', (i) => frame(i, '4.5', { pos: '50% 50%' })],

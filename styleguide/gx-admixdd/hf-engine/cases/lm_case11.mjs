@@ -14,7 +14,7 @@ const shots = [
   [5.5, 11.4, 'S01 final stretch', pov(1590, { credit: CR.blt })],
   [11.4, 16.5, 'S02 traffic packed', pov(1655)],
   [16.5, 19.7, 'S03 footage stops', (i) => H.frz(i, 'BLT', 1596, { ...PL })],
-  [19.7, 24.9, 'S04 ufa', (i) => H.map(i, 'c11/map_ufa.jpg', CR.map, [{ x: 960, y: 540, label: 'UFA', sub: 'BASHKORTOSTAN · RUSSIA', at: 22.3 }])],
+  [19.7, 24.9, 'S04 ufa', (i) => H.photo(i, 'c11/ufa_belaya.jpg', 'PHOTO: SVETLOV ARTEM / CC BY-SA 4.0', { over: [H.place(22.3, 'UFA', 'BASHKORTOSTAN, RUSSIA')] })],
   [24.9, 28.0, 'S05 moto nexus', (i) => card(25.2, i, 126, 'YOUTUBE CHANNEL', ['MOTO NEXUS', 'STARTED 2010'], 0.5)],
   [28.0, 33.5, 'S06 reviewed bikes', (i) => H.clip(i, 'BLT', 90, {})],
   [33.5, 38.7, 'S07 service centre', (i) => H.clip(i, 'BLT', 1056, {})],
@@ -24,7 +24,7 @@ const shots = [
   [52.5, 58.2, 'S11 makes a show', (i) => card(52.8, i, 1236, 'ANDREY IVANOV', ['REAL LIFE: "KIND AND OPEN"', 'ON CAMERA: "A MAN WHO MAKES A SHOW"'], 0.5)],
   [58.2, 64.86, 'S12 railway bridge', (i) => H.clip(i, 'BLT', 150, {})],
   // ---- g1 74.86 - 121.605
-  [74.86, 78.1, 'S13 chieftain', (i) => H.clip(i, 'BLT', 96, {})],
+  [74.86, 78.1, 'S13 chieftain', (i) => H.photo(i, 'c11/chieftain.jpg', 'PHOTO: RETIRED ELECTRICIAN / CC0', { mos: [[40, 1110, 190, 130]] })],
   [78.1, 83.6, 'S14 buy this or harley', (i) => card(78.4, i, 572, 'THE WHOLE VIDEO', ['BUY THIS ONE,', 'OR A HARLEY AFTER ALL?'], 0.5)],
   [83.6, 88.7, 'S15 runtime', (i) => H.clip(i, 'BLT', 1232, { over: [H.date(83.9, 'RUNTIME 31 MINUTES')] })],
   [88.7, 94.2, 'S16 nobody owes', (i) => card(89.0, i, 1262, 'IRINA SKATKOVA TO 360', ['"ON THE ROAD NOBODY', 'OWES ANYONE ANYTHING."'], 0.5)],
@@ -73,6 +73,6 @@ const shots = [
 ];
 export default makeCase({
   id: 'lm_case11', num: 11, title: "BOLT'S LAST RIDE VIDEO",
-  plate: ['c11/plate.jpg', 'PHOTO: PENDING'],
+  plate: ['c11/ufa_belaya.jpg', 'PHOTO: SVETLOV ARTEM / CC BY-SA 4.0'],
   vo: S.vo, raws: RAWS, shots, end: S.end,
 });

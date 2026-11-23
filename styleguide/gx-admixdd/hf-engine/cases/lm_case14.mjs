@@ -12,7 +12,7 @@ const SH = [];
 const add = (a, b, name, fn) => SH.push([a, b, name, fn]);
 const still = (a, b, name, t, o = {}, extra = () => []) => add(a, b, name, (i) => [...H.clip(i, 'RCMP', t, { speed: 0.02, mos: MAN, ...o }), ...extra()]);
 const photo = (a, b, name, src, credit, o = {}, extra = () => []) => add(a, b, name, (i) => [...H.photo(i, src, credit, o), ...extra()]);
-const map = (a, b, name, src, extra = () => []) => add(a, b, name, (i) => [...H.photo(i, src, EOX, { bri: 0.8 }), ...extra()]);
+const map = (a, b, name, src, extra = () => []) => add(a, b, name, (i) => [...H.photo(i, src, EOX, { bri: 0.8, cp: 'br' }), ...extra()]);
 // blurred backdrop from a (nearly) frozen RCMP frame: the source is only 13.9 s long, so never play it at 1x under a card
 const bgv = (i, t, bri = 0.55) => n('Grade', { sat: 0.5, bri, con: 1.08 }, n('Cam', { s: [1.1, 1.18], ry: [-1, 1], tx: [-14, 14], css: 'filter:blur(14px)' }, n('LClip', { src: 'RCMP', t, speed: 0.02, sw: 478, sh: 360, fit: 'cover' })));
 const cardV = (a, b, name, t, kick, lines) => add(a, b, name, (i) => H.card(a + 0.3, bgv(i, t), kick, lines));
@@ -24,12 +24,12 @@ still(9.9, 15.9, 'A02 tiled floor', 5.2, { credit: RC });
 still(15.9, 19.3, 'A03 hooded jacket', 12.5);
 still(19.3, 22.7, 'A04 phone', 12.9);
 add(22.7, 27.3, 'A05 clock 1346', () => H.stamp(23.2, 'RCMP', 3.6, { x: 255, y: 150, w: 300, h: 50 }));
-map(27.3, 31.8, 'A06 alberta', 'c14/map_alberta.jpg', () => [H.place(28.6, 'PIGEON LAKE', 'ALBERTA')]);
+photo(27.3, 31.8, 'A06 alberta', 'c14/pigeon_lake.jpg', 'PHOTO: WINTERE229 / PUBLIC DOMAIN', { bri: 0.85 }, () => [H.place(28.6, 'PIGEON LAKE', 'ALBERTA')]);
 cardV(31.8, 35.7, 'A07 samson', 6.2, 'SAMSON CREE NATION', ['CAITLIN BRANDY POTTS', 'MOTHER OF A LITTLE BOY']);
 cardP(35.7, 41.1, 'A08 priscilla', 'c14/map_calgary.jpg', 'HER MOTHER, PRISCILLA', ['"GOOFY, LOVING,', 'AND CARING"'], EOX);
-map(41.1, 48.3, 'A09 enderby', 'c14/map_enderby.jpg', () => [H.date(41.6, 'EARLY 2016'), H.place(44.8, 'ENDERBY', 'NORTH OKANAGAN, BC')]);
+photo(41.1, 48.3, 'A09 enderby', 'c14/enderby_aerial1.jpg', 'PHOTO: SHAWN FROM AIRDRIE, CANADA / CC BY-SA 2.0', { bri: 0.85 }, () => [H.date(41.6, 'EARLY 2016'), H.place(44.8, 'ENDERBY', 'NORTH OKANAGAN, BC')]);
 add(48.3, 55.6, 'A10 valley', (i) => H.map(i, 'c14/map_okanagan.jpg', EOX, [
-  { x: 817, y: 985, label: 'KELOWNA', at: 50.2 }, { x: 1036, y: 348, label: 'ARMSTRONG', at: 52.8 }, { x: 980, y: 80, label: 'SALMON ARM', at: 53.9 }, { x: 1077, y: 230, label: 'ENDERBY', at: 54.9 }]));
+  { x: 700, y: 900, label: 'KELOWNA', at: 50.2 }, { x: 1036, y: 348, label: 'ARMSTRONG', at: 52.8 }, { x: 980, y: 80, label: 'SALMON ARM', at: 53.9 }, { x: 1077, y: 230, label: 'ENDERBY', at: 54.9 }]));
 map(55.6, 62.6, 'A11 mall map', 'c14/map_mall.jpg', () => [H.date(55.8, 'SUNDAY 21 FEBRUARY 2016'), H.place(59.5, 'ORCHARD PARK MALL', 'KELOWNA')]);
 cardV(62.6, 68.9, 'A12 clock vs police', 2.0, 'THE RCMP SAY SHE CAME IN AT', ['ABOUT 1:30 PM', 'CAMERA CLOCK: 13:46']);
 map(68.9, 74.0, 'A13 hudsons bay', 'c14/map_mall.jpg', () => [H.place(69.2, 'HUDSON\'S BAY', 'ORCHARD PARK MALL')]);
@@ -48,18 +48,18 @@ still(115.1, 119.1, 'C03 handbag', 12.9, { s: [1.0, 1.08] });
 still(119.1, 122.955, 'C04 pocket', 10.6);
 
 // ---- D: 126.955 - 332.645 (VO p04)
-still(126.955, 131.8, 'D01 last frame', 13.7, {}, () => [H.date(127.7, 'MONDAY 22 FEBRUARY 2016')]);
+still(126.955, 131.8, 'D01 last frame', 13.7, {}, () => [H.date(127.7, 'MONDAY 22 FEBRUARY 2016', { pos: 'l' })]);
 cardP(131.8, 137.7, 'D02 kijiji', 'c14/map_calgary.jpg', 'SHE TOLD HER FAMILY', ['A RIDE TO CALGARY', 'FROM SOMEONE ON KIJIJI'], EOX);
 map(137.7, 141.9, 'D03 reported', 'c14/map_vernon.jpg', () => [H.date(139.9, '1 MARCH 2016')]);
 cardV(141.9, 147.3, 'D04 vernon', 7.0, 'REPORTED MISSING TO THE', ['VERNON NORTH OKANAGAN RCMP']);
 cardV(147.3, 151.8, 'D05 april', 4.5, 'APRIL 2016', ['SOUTHEAST DISTRICT', 'MAJOR CRIME UNIT']);
-map(151.8, 156.6, 'D06 splatsin', 'c14/map_enderby.jpg', () => [H.place(152.6, 'SPLATSIN COMMUNITY CENTRE', 'ENDERBY')]);
+photo(151.8, 156.6, 'D06 splatsin', 'c14/enderby_winter.jpg', 'PHOTO: CLARA L.R.SCHEIL / CC BY-SA 4.0', { bri: 0.85 }, () => [H.place(152.6, 'SPLATSIN COMMUNITY CENTRE', 'ENDERBY')]);
 map(156.6, 161.0, 'D07 bridge', 'c14/map_bridge.jpg');
 cardV(161.0, 164.1, 'D08 chiefs', 6.6, 'FIRST NATIONS CHIEFS CAME', ['SO DID HER MOTHER']);
 cardV(164.1, 169.9, 'D09 belleau', 8.2, 'CHIEF CHARLENE BELLEAU, ESK\'ETEMC', ['"SOMEONE SAW SOMETHING', 'THAT DAY AND CAN HELP US"']);
 cardP(169.9, 174.7, 'D10 phillip', 'c14/map_armstrong.jpg', 'GRAND CHIEF STEWART PHILLIP', ['THREE MONTHS ON', 'THE FAMILY WAS HURTING'], EOX);
 cardV(174.7, 181.1, 'D11 mmiwg', 9.0, 'THE CHIEFS CALLED FOR MORE ON', ['MISSING AND MURDERED', 'INDIGENOUS WOMEN AND GIRLS']);
-add(181.1, 186.9, 'D12 moskaluk', (i) => [...H.photo(i, 'c14/map_enderby.jpg', EOX, { bri: 0.8 }), H.label(181.9, 'CPL. DAN MOSKALUK', 'RCMP')]);
+photo(181.1, 186.9, 'D12 moskaluk', 'c14/enderby_aerial2.jpg', 'PHOTO: SHAWN FROM AIRDRIE, CANADA / CC BY-SA 2.0', { bri: 0.85 }, () => [H.label(181.9, 'CPL. DAN MOSKALUK', 'RCMP')]);
 cardV(186.9, 194.3, 'D13 description', 11.2, 'POLICE DESCRIPTION, 2016', ['5 FT 3, BROWN EYES', 'LONG BLACK HAIR, BLONDE STREAKS']);
 map(194.3, 197.4, 'D14 same area', 'c14/map_okanagan.jpg');
 cardP(197.4, 202.7, 'D15 two more', 'c14/map_salmon.jpg', 'ALSO MISSING IN 2016', ['ASHLEY SIMPSON, APRIL', 'DEANNA WERTZ, 46, JULY'], EOX);

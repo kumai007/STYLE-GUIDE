@@ -18,6 +18,8 @@ const raws = S.raws.map((r, j) => {
   return o;
 });
 const STAMP = { x: 245, y: 2, w: 710, h: 44 };
+// stamp over LIVE lobby footage (clerk face blurred; the lib's freeze has no blur): same ring, children swapped for a blurred clip
+const stampLive = (t, srcT, box) => { const r = H.stamp(t, 'RAD', srcT, box); r[0].k = H.clip(0, 'RAD', srcT, { mos: [{ r: [0, 0, 170, 110] }] }); return r; };
 const bgR = (i, t, bri) => H.bgV(i, 'RAD', t, bri ?? 0.5);
 const cardR = (t, i, bt, kick, lines) => H.card(t, bgR(i, bt), kick, lines);
 // photo key -> real photo if present; else card on a blurred RAD backdrop. fb = [kick, lines, bgSrcT]
@@ -69,9 +71,9 @@ const shots = [
   [258.11, 263.7, 'S38 not enough money', (i) => H.clip(i, 'RAD', 125, { mos: CL })],
   [263.7, 269.505, 'S39 clerks carry on', (i) => H.clip(i, 'RAD', 140, { mos: CL })],
   // ---- p05 (300.0 - 315.8)
-  [299.505, 304.2, 'S40 stamp 7:34', (i) => H.stamp(299.8, 'RAD', 38, STAMP)],
+  [299.505, 304.2, 'S40 stamp 7:34', (i) => H.stamp(299.8, 'RAD', 38, { ...STAMP, w: 590 })],
   [304.2, 309.7, 'S41 fifteen minutes', (i) => cardR(304.4, i, 148, '15 MINUTES AT A HOTEL DESK', ['NO ROOM', 'NO PURSE, NO PHONE'])],
-  [309.7, 316.115, 'S42 stamp 7:49', (i) => H.stamp(310.0, 'RAD', 538, STAMP)],
+  [309.7, 316.115, 'S42 stamp 7:49', (i) => stampLive(310.0, 538, { ...STAMP, w: 680 })],
   // ---- p06 (341.6 - 351.9): glass doors, empty
   [341.115, 346.5, 'S43 glass doors', (i) => H.clip(i, 'RAD', 571, {})],
   [346.5, 352.265, 'S44 doors too small', (i) => H.clip(i, 'RAD', 578, {})],
