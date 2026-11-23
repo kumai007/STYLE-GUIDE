@@ -23,10 +23,10 @@ const nr = () => { const t = (ri < ROCK.length ? ROCK[ri] : ROCK[ri % ROCK.lengt
 const SH = [];
 const add = (a, b, name, fn) => SH.push([a, b, name, fn]);
 let kc = 0;
-const clipT = (a, b, name, t, o = {}, extra = () => []) => { kc++; add(a, b, name, (i) => [...H.clip(i, 'TWR', t, { credit: kc % 7 === 1 ? CR : undefined, ...o }), ...extra()]); };
+const clipT = (a, b, name, t, o = {}, extra = () => []) => { kc++; if (process.env.LM_DEBUG) console.error('SRC', name, t); add(a, b, name, (i) => [...H.clip(i, 'TWR', t, { credit: kc % 7 === 1 ? CR : undefined, ...o }), ...extra()]); };
 const blue = (a, b, name, o, extra) => clipT(a, b, name, nb(), o, extra);
 const rock = (a, b, name, o, extra) => clipT(a, b, name, nr(), o, extra);
-const card = (a, b, name, kick, lines, pool = nr) => { const t = pool(); add(a, b, name, (i) => H.card(a + 0.3, H.bgV(i, 'TWR', t), kick, lines)); };
+const card = (a, b, name, kick, lines, pool = nr) => { const t = pool(); if (process.env.LM_DEBUG) console.error('SRC', name, t); add(a, b, name, (i) => H.card(a + 0.3, H.bgV(i, 'TWR', t), kick, lines)); };
 const photo = (a, b, name, key, o = {}, extra = () => [], fb = nr) => {
   if (have(key)) add(a, b, name, (i) => [...H.photo(i, PH[key][0], PH[key][1], o), ...extra()]);
   else { const t = fb(); add(a, b, name, (i) => [...H.clip(i, 'TWR', t, {}), ...extra()]); }
@@ -104,15 +104,15 @@ card(329.5, 336.0, 'E25 colleen 1', 'STACEY\'S MOTHER, COLLEEN, FOR BOTH FAMILIE
 card(336.0, 343.0, 'E26 colleen 2', 'STACEY\'S MOTHER, COLLEEN', ['"...WE LOST THEM BOTH TRAGICALLY."', '"THEY ARE TOGETHER FOREVER."']);
 rock(343.0, 348.2, 'E27 plaque', {}, () => [H.date(343.8, '30 AUGUST 2025')]);
 card(348.2, 352.4, 'E28 mountain took', 'THE PLAQUE', ['"THE MOUNTAIN TOOK THE LIVES', 'OF MATTHEW AND STACEY"']);
-rock(352.4, 356.6, 'E29 video of that day', {}, () => [H.date(352.9, '8 SEPTEMBER 2025')]);
-card(356.6, 361.0, 'E30 title', 'THE VIDEO', ['"WHEN THE MOUNTAIN CALLS"']);
-rock(361.0, 364.8, 'E31 january', {}, () => [H.date(361.4, 'JANUARY 2026')]);
+clipT(352.4, 356.6, 'E29 video of that day', 3315, {}, () => [H.date(352.9, '8 SEPTEMBER 2025')]);
+card(356.6, 361.0, 'E30 title', 'THE VIDEO', ['"WHEN THE MOUNTAIN CALLS"'], () => 3335);
+clipT(361.0, 364.8, 'E31 january', 3377, {}, () => [H.date(361.4, 'JANUARY 2026')]);
 add(364.8, 370.77, 'E32 coroners', (i) => [...H.card(365.1, H.bgV(i, 'TWR', 304), 'BC CORONERS SERVICE', ['INVESTIGATING', 'NO FINDINGS PUBLISHED']), H.dip(0, 40)]);
 
 // raw 1 blur (source px; keys = source seconds): bystanders + driver at the pump (plates are tiny at this size, covered by the truck boxes)
 const MOS1 = [
-  { keys: [[2101.0, 1750, 340, 160, 400], [2102.5, 1750, 340, 160, 400], [2103.0, 1200, 470, 150, 210], [2105.0, 1150, 530, 150, 200]] },
-  { keys: [[2101.0, 960, 340, 220, 340], [2102.5, 960, 340, 220, 340], [2103.0, 860, 630, 180, 220], [2105.0, 820, 630, 180, 220]] },
+  { keys: [[2101.0, 1780, 270, 140, 480], [2101.8, 1760, 270, 160, 470], [2102.5, 1760, 270, 170, 470], [2102.7, 1700, 290, 180, 420], [2102.85, 1615, 300, 175, 410], [2103.0, 1545, 320, 165, 400], [2103.15, 1460, 340, 160, 360], [2103.3, 1405, 370, 145, 340], [2103.5, 1315, 410, 125, 300], [2103.7, 1255, 430, 115, 270], [2104.0, 1225, 450, 115, 250], [2104.2, 1210, 460, 115, 250], [2104.9, 1190, 455, 115, 250], [2105.0, 1190, 455, 115, 250]] },
+  { keys: [[2101.0, 960, 320, 230, 350], [2101.8, 955, 310, 230, 340], [2102.5, 925, 310, 230, 340], [2102.7, 905, 330, 215, 330], [2102.85, 875, 330, 215, 330], [2103.0, 875, 360, 210, 310], [2103.15, 885, 360, 205, 300], [2103.3, 885, 380, 200, 280], [2103.5, 870, 430, 190, 260], [2103.7, 860, 450, 185, 250], [2104.0, 850, 470, 180, 240], [2104.2, 815, 480, 185, 240], [2104.9, 775, 480, 185, 240], [2105.0, 775, 485, 185, 240]] },
 ];
 const RAW = (a, b, t, o = {}) => ({ tag: 'TWR', a, b, t, mute: true, ...o });
 

@@ -89,3 +89,8 @@ one full render on GitHub (farm). Then cases 2-21 the same way.
 - Builders: one agent per case, brief `docs/ai-state/last-moments_CASE_BUILDER_BRIEF.md`; notes in `productions/last-moments/edit/notes/cNN.md`.
 - Render: `case-work/renders/lm/render_queue.sh` (append part ids to queue.txt; touch queue.done to finish). Then concat all parts +
   master_loudness + phone copy.
+
+### Lead notes 2026-11-23 (RTX + QC)
+- Renders: `case-work/renders/lm/render_queue_gpu.sh` (queue_gpu.txt, --gpu NVENC; Chrome on the RTX via Windows GPU preference). Old CPU queue stopped after lm_case02.
+- QC TODO before the final join: snapshots seek late, so every keyed-blur raw (c03 fan, c19 customers, c20 raw 1, c11, others) must be checked on frames from the RENDERED part mp4.
+- c20 raw 1 blur keys re-measured by lead on true frames (`case-work/lm_scratch/c20/fix_mos1.py`).

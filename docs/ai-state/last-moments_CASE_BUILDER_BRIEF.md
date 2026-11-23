@@ -92,3 +92,8 @@ engine = `root/styleguide/gx-admixdd/hf-engine`. NN = your case number, two digi
 ## No prompts (2026-11-23)
 - Never use heredocs (`<<EOF`) or long inline `python -c`: they trigger a permission prompt the owner must click. Write the script
   to a file under `case-work/lm_scratch/cNN/` with the Write tool, then run `python -I <file>`. Small `python -c` one-liners are fine.
+
+## Blur check on true frames (lead, 2026-11-23)
+- `hyperframes snapshot` can show a video frame up to ~1.5 s late on fast camera moves. Never judge keyed blur boxes from snapshots alone.
+  Check on exact source frames: `python -I case-work/lm_scratch/c20/grid_frames.py <media mp4> <out.jpg> <src s...>` (100 px source grid),
+  and on the rendered part after render (lead QC: frames from the .mp4 inside every keyed-blur raw).
