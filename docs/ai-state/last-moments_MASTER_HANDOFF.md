@@ -94,3 +94,7 @@ one full render on GitHub (farm). Then cases 2-21 the same way.
 - Renders: `case-work/renders/lm/render_queue_gpu.sh` (queue_gpu.txt, --gpu NVENC; Chrome on the RTX via Windows GPU preference). Old CPU queue stopped after lm_case02.
 - QC TODO before the final join: snapshots seek late, so every keyed-blur raw (c03 fan, c19 customers, c20 raw 1, c11, others) must be checked on frames from the RENDERED part mp4.
 - c20 raw 1 blur keys re-measured by lead on true frames (`case-work/lm_scratch/c20/fix_mos1.py`).
+
+### Lead QC 2026-11-23 (c09)
+- c09 raw 1 + S32 freeze started at RAD 1.0: web-player play button, cursor and seek bar visible (source 1-3.6). Now RAD 3.8 (`if (j === 0) o.t = 3.8`). Backup `lm_case09.mjs.bak_lead`. Re-render queued; old render `lm_case09.v1.mp4` (delete after the new one passes).
+- c03, c12, c14 passed QC from rendered parts.
