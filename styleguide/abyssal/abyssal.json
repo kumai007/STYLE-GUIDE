@@ -1,7 +1,7 @@
 {
  "version": 1,
- "rev": 47,
- "saved": "2026-11-14T18:45:42",
+ "rev": 48,
+ "saved": "2026-11-27T15:22:35",
  "categories": [
   {
    "id": "overall-aesthetic",
@@ -2736,7 +2736,7 @@
   {
    "id": "l-3b155a80",
    "date": "2026-11-14",
-   "status": "learning",
+   "status": "open",
    "target": "",
    "update": "audio leaks",
    "note": "abyssal-01 v16 fixes (build_v16.py).",
@@ -2745,7 +2745,7 @@
   {
    "id": "l-6d1a4645",
    "date": "2026-11-14",
-   "status": "learning",
+   "status": "open",
    "target": "",
    "update": "doc page",
    "note": "abyssal-01 v16 fixes (build_v16.py).",
@@ -2754,7 +2754,7 @@
   {
    "id": "l-e0589b2b",
    "date": "2026-11-14",
-   "status": "learning",
+   "status": "open",
    "target": "",
    "update": "arrow",
    "note": "abyssal-01 v16 fixes (build_v16.py).",
@@ -2763,7 +2763,7 @@
   {
    "id": "l-ab422dd7",
    "date": "2026-11-14",
-   "status": "learning",
+   "status": "open",
    "target": "",
    "update": "map zoom",
    "note": "abyssal-01 v16 fixes (build_v16.py).",
@@ -2772,7 +2772,7 @@
   {
    "id": "l-868d5015",
    "date": "2026-11-14",
-   "status": "learning",
+   "status": "open",
    "target": "",
    "update": "ring",
    "note": "abyssal-01 v16 fixes (build_v16.py).",
@@ -2781,7 +2781,7 @@
   {
    "id": "l-66df188f",
    "date": "2026-11-14",
-   "status": "learning",
+   "status": "open",
    "target": "",
    "update": "sound",
    "note": "abyssal-01 full video.",
@@ -2790,7 +2790,7 @@
   {
    "id": "l-3a653a5c",
    "date": "2026-11-14",
-   "status": "learning",
+   "status": "open",
    "target": "",
    "update": "sound",
    "note": "abyssal-01 full video.",
@@ -2799,7 +2799,7 @@
   {
    "id": "l-b5e8465f",
    "date": "2026-11-14",
-   "status": "learning",
+   "status": "open",
    "target": "",
    "update": "workflow",
    "note": "abyssal-01 full video.",
@@ -2813,6 +2813,78 @@
    "target": "b-612b623c",
    "note": "owner chat 2026-11-14: master SOP v2.0 section 2.4 ban wins over this style's look",
    "update": ""
+  },
+  {
+   "id": "l-7b9524b7",
+   "date": "2026-11-27",
+   "text": "Owner: glitch transition ONLY on the warning exit (with glitch SFX). A montage of different clips = clips floating up over a blurred background, smooth, then dip to black; a second list = plain hard cuts.",
+   "status": "open",
+   "target": "",
+   "note": "last-moments (2026-11-19..24), owner-confirmed; see docs/knowledge/LEARN_last_moments.md"
+  },
+  {
+   "id": "l-39850131",
+   "date": "2026-11-27",
+   "text": "Owner: ONE title screen per case: 'CASE N' + title below, typewriter, VCR OSD Mono font. Typewriter only on title screens; all other text fades in with a click SFX.",
+   "status": "open",
+   "target": "",
+   "note": "last-moments (2026-11-19..24), owner-confirmed; see docs/knowledge/LEARN_last_moments.md"
+  },
+  {
+   "id": "l-094042e6",
+   "date": "2026-11-27",
+   "text": "Owner: name labels max 2 per case, plain text, always inside the picture. Places and minor names = centred text.",
+   "status": "open",
+   "target": "",
+   "note": "last-moments (2026-11-19..24), owner-confirmed; see docs/knowledge/LEARN_last_moments.md"
+  },
+  {
+   "id": "l-82fec841",
+   "date": "2026-11-27",
+   "text": "Owner: CCTV stamp highlight = a clean, even red pill/oval hugging the text; never rough, never off the picture.",
+   "status": "open",
+   "target": "",
+   "note": "last-moments (2026-11-19..24), owner-confirmed; see docs/knowledge/LEARN_last_moments.md"
+  },
+  {
+   "id": "l-5d9d3bcd",
+   "date": "2026-11-27",
+   "text": "Owner: when the narration cites a source, show that real article (byline visible, key line marked); articles cover the whole frame.",
+   "status": "open",
+   "target": "",
+   "note": "last-moments (2026-11-19..24), owner-confirmed; see docs/knowledge/LEARN_last_moments.md"
+  },
+  {
+   "id": "l-c6802512",
+   "date": "2026-11-27",
+   "text": "Owner: no photo, clip or article used twice in a video. Stock: free licence only, ILLUSTRATIVE label, graded like the raws (never B&W), as little as possible; prefer motion graphics and real photos (Geograph/Commons CC, Pexels).",
+   "status": "open",
+   "target": "",
+   "note": "last-moments (2026-11-19..24), owner-confirmed; see docs/knowledge/LEARN_last_moments.md"
+  },
+  {
+   "id": "l-687d59d7",
+   "date": "2026-11-27",
+   "text": "Owner: mix narration 100 %, music 75 %, all SFX 60 % (on top of the levelled mix). No abrupt cuts.",
+   "status": "open",
+   "target": "",
+   "note": "last-moments (2026-11-19..24), owner-confirmed; see docs/knowledge/LEARN_last_moments.md"
+  },
+  {
+   "id": "l-b62ac851",
+   "date": "2026-11-27",
+   "text": "Owner: blur faces of victims and private people; police CCTV allowed with a 'FOOTAGE: <agency>' credit. Check every blur on frames of the RENDERED part, not snapshots; a freeze frame of a blurred raw must keep the blur.",
+   "status": "open",
+   "target": "",
+   "note": "last-moments (2026-11-19..24), owner-confirmed; see docs/knowledge/LEARN_last_moments.md"
+  },
+  {
+   "id": "l-9e1827b2",
+   "date": "2026-11-27",
+   "text": "Owner: intro text must match the narration word for word. No zoom onto case 01 in the case list.",
+   "status": "open",
+   "target": "",
+   "note": "last-moments (2026-11-19..24), owner-confirmed; see docs/knowledge/LEARN_last_moments.md"
   }
  ],
  "updates": [

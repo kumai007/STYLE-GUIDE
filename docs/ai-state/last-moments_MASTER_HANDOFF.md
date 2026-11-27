@@ -110,3 +110,11 @@ one full render on GitHub (farm). Then cases 2-21 the same way.
 - 2026-11-24 c11 v2 render (24361 fr, 7395 s, try 3). QC: raws + POV b-roll blurred, BUT S03 freeze (part 16.5-19.7) unblurred: `H.frz` ignores `mos` (lm_lib). Fixed in the render only: ffmpeg pixelate (//24) of y 60-940 + bottom corners on frames 990-1181, NVENC cq16 -> `lm_case11.mp4`; unpatched render kept as `lm_case11.v2_nofrzblur.mp4`. If c11 is ever rebuilt: replace S03 `H.frz` with a still + mos or redo this patch.
 - 2026-11-24 FINAL: case-work/renders/lm/last_moments_FULL.mp4 (9.3 GB, 496025 fr = 2:17:47, 1080p60, -16.4 LUFS, TP -1.5). Teaser last_moments_FULL_teaser.mp4 (20 MiB, 142 s) sent. final_join.py now encodes per part (one-run join crashed at 1:51). Intermediates deleted. Next: owner review; then copy to finals/last-moments/ + FINALS.md.
 - 2026-11-24 owner: full video moved to C:\Users\ayush\Downloads\last_moments_FULL.mp4 (not in finals/).
+
+## 10. FINALIZED (2026-11-27)
+- `finals/last-moments/`: last_moments_FULL.mp4 (hard link of Downloads copy), teaser, last_moments.srt (3443 cues), chapters.txt
+  (23), credits.txt, phone/ (640x360 30p 10-min parts). Extras script: `productions/last-moments/build/make_final_extras.py`.
+- Learnings: `docs/knowledge/LEARN_last_moments.md`; text notes copied to `docs/knowledge/notes/productions/last-moments/`.
+- Abyssal rule book: 8 bad statuses fixed ("learning" -> "open"), 9 owner rules added as open learnings (rev 48).
+- Big media still on disk (owner decides delete): hf-engine/media/last-moments 18G, case-work/renders 15G, productions/last-moments 8.2G,
+  productions/_abyssal-ref 3.9G, case-work/lm_scratch 1.4G.

@@ -1,7 +1,7 @@
 <!-- GENERATED from styleguide/abyssal/abyssal.json by styleguide/model.py. Do not edit by hand: edit at http://localhost:8769 -->
 # Abyssal Detective Style Guide
 
-Iceberg found-footage documentary style, learned from 14 Abyssal Detective videos (4 given, 5 latest, 5 most viewed). Rev 47, saved 2026-11-14T18:45:42.
+Iceberg found-footage documentary style, learned from 14 Abyssal Detective videos (4 given, 5 latest, 5 most viewed). Rev 48, saved 2026-11-27T15:22:35.
 Follow it top to bottom on every Abyssal edit. The rule book comes first and is never skipped. Study notes: productions/_abyssal-ref/ABYSSAL_STYLE_NOTES.md.
 
 Numbers come from ffmpeg on the 14 refs unless marked (est.), which means read from contact sheets or captions. No board clips (ref board is off).
@@ -356,3 +356,20 @@ Find what the narration is doing. Pick the first graphic that fits. "no" = does 
 - 2026-11-13: v2 notes: shot 35 was a black hold (remove black shots), shot 28 face not fully blurred (cover the whole face), grade needs more finish, MG need good easing, mix narration 100 / music 80 / SFX 60.
 - 2026-11-13: Mix 100/80/60 means track sliders: each track keeps its normal level (drone about 14 dB under the voice), then music x0.8 (-1.9 dB) and SFX x0.6 (-4.4 dB). Not a percent of voice loudness.
 - 2026-11-14: Owner said 'use articles graphics and 3d man'. This overrides 'No web or headline graphics' for abyssal-01. Add one real article card per case (3D perspective, highlight wipe) and a 3D man figure for scale beats.
+- 2026-11-14: Owner 2026-11-14: no audio leaks ever. TTS adds filler bits ('Yeah', 'EO') at phrase starts and raw TV clips cut mid-word. Fix: run build/vo_deleak.py on every TTS take (CUTS fillers out, never mutes them into a silent hole -- see the 2026-11-13 narration rule; the lost time is added to the next natural pause so the take keeps its length; still_extra must be empty) and snap raw-clip sound edges to quiet gaps with build/raw_edges.py (sound level, not Whisper).
+- 2026-11-14: Owner 2026-11-14: a document shown on screen must be readable. Never put a solid red band over text. Build a clean page plate (build/doc_plate.py: frame average, 2.4x upscale, paper flatten, ink curve) and show it as an article card with the smooth marker wipe.
+- 2026-11-14: Owner 2026-11-14: arrows must follow the moving subject (per-frame track, drawn after the push) and look real: thin, anti-aliased, soft shadow, no outline, no gloss. Start it only when the subject is small enough to point at.
+- 2026-11-14: Owner 2026-11-14: map shots never stand still; keep a slow linear zoom (about 8%) over the whole shot.
+- 2026-11-14: Owner 2026-11-14: use a red ring only where it is needed; not on every shot.
+- 2026-11-14: Owner 2026-11-14: horror ambient music bed under the whole video, the intro too (K Music 8/9/10, never the same part twice; outro ends on Music 10's own ending).
+- 2026-11-14: TTS leak fix (vo_deleak.py): run it on the GPU (VO_DEVICE=cuda, ~30 s per take). Later fix rounds can re-cut at the join and leave a fake 'The': if so, make one wider cut to the next quiet dip, then check the cut words against the script text.
+- 2026-11-14: Full renders: owner picks the fast split (default 500-machine split, ~1 h) over one case per machine.
+- 2026-11-27: Owner: glitch transition ONLY on the warning exit (with glitch SFX). A montage of different clips = clips floating up over a blurred background, smooth, then dip to black; a second list = plain hard cuts.
+- 2026-11-27: Owner: ONE title screen per case: 'CASE N' + title below, typewriter, VCR OSD Mono font. Typewriter only on title screens; all other text fades in with a click SFX.
+- 2026-11-27: Owner: name labels max 2 per case, plain text, always inside the picture. Places and minor names = centred text.
+- 2026-11-27: Owner: CCTV stamp highlight = a clean, even red pill/oval hugging the text; never rough, never off the picture.
+- 2026-11-27: Owner: when the narration cites a source, show that real article (byline visible, key line marked); articles cover the whole frame.
+- 2026-11-27: Owner: no photo, clip or article used twice in a video. Stock: free licence only, ILLUSTRATIVE label, graded like the raws (never B&W), as little as possible; prefer motion graphics and real photos (Geograph/Commons CC, Pexels).
+- 2026-11-27: Owner: mix narration 100 %, music 75 %, all SFX 60 % (on top of the levelled mix). No abrupt cuts.
+- 2026-11-27: Owner: blur faces of victims and private people; police CCTV allowed with a 'FOOTAGE: <agency>' credit. Check every blur on frames of the RENDERED part, not snapshots; a freeze frame of a blurred raw must keep the blur.
+- 2026-11-27: Owner: intro text must match the narration word for word. No zoom onto case 01 in the case list.
