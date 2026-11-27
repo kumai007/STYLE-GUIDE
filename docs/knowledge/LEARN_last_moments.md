@@ -2,7 +2,7 @@
 
 "Most Disturbing Last Moment Footage Ever Recorded": intro + 21 cases + outro, 2:17:47, 1080p60, Abyssal look, gx/HyperFrames.
 Final: `finals/last-moments/` (FULL = hard link of `Downloads\last_moments_FULL.mp4`, -16.4 LUFS, TP -1.5 dBTP, 496,025 frames).
-Raw notes: `notes/productions/last-moments/` (handoffs, case notes, build scripts). Source: `docs/ai-state/last-moments_MASTER_HANDOFF.md`.
+Media, builds and refs deleted 2026-11-27. Raw notes: `notes/productions/last-moments/` (handoffs, case notes, build scripts). Source: `docs/ai-state/last-moments_MASTER_HANDOFF.md`.
 
 ## Owner rules confirmed on this video (all styles unless the style says otherwise)
 - Glitch transition only on the warning exit (with glitch SFX). Montage = clips floating up over a blurred bg, then dip to black.
@@ -26,11 +26,11 @@ Raw notes: `notes/productions/last-moments/` (handoffs, case notes, build script
 - `H.frz` (freeze) ignores `mos`: a freeze of a blurred raw shows the face. Use a still + mos instead (c11 was patched in ffmpeg).
 - Parts mix High/Main H.264 profiles: join with a re-encode per part (one-run join crashed at 1:51), then master loudness.
 - Age-locked YouTube sources need sign-in: find public copies (news re-uploads) or download on the PC.
-- Final extras: `productions/last-moments/build/make_final_extras.py` makes chapters + .srt from part durations + `<audio>` VO tags
+- Final extras: `docs/knowledge/notes/productions/last-moments/productions/last-moments/build/make_final_extras.py` (copy; inputs were deleted) makes chapters + .srt from part durations + `<audio>` VO tags
   in `parts/<id>/index.html` + VO word jsons (drift vs final: 0.04 s over 2:17). Reuse it for the next gx video.
 - Phone parts: 640x360 30p, 10-min segments, ~350 kb/s (< 30 MiB each), one NVENC pass with `-f segment`.
 
 ## Open at finalize
 - Owner OK for RAD (Kalamazoo County release) and WED (Kent police documentary) clips was never recorded.
 - c21: convicted man visible unblurred in prosecutor footage (allowed: public court material); victim never shown.
-- `styleguide/abyssal/abyssal.json` Learnings update blocked by 8 invalid statuses: rules above still need to go into the rule book.
+- Rules above are in `styleguide/abyssal/abyssal.json` as open learnings (rev 48); promote them to the rule book when next in Abyssal.

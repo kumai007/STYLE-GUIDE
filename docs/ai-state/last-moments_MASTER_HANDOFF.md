@@ -116,5 +116,5 @@ one full render on GitHub (farm). Then cases 2-21 the same way.
   (23), credits.txt, phone/ (640x360 30p 10-min parts). Extras script: `productions/last-moments/build/make_final_extras.py`.
 - Learnings: `docs/knowledge/LEARN_last_moments.md`; text notes copied to `docs/knowledge/notes/productions/last-moments/`.
 - Abyssal rule book: 8 bad statuses fixed ("learning" -> "open"), 9 owner rules added as open learnings (rev 48).
-- Big media still on disk (owner decides delete): hf-engine/media/last-moments 18G, case-work/renders 15G, productions/last-moments 8.2G,
-  productions/_abyssal-ref 3.9G, case-work/lm_scratch 1.4G.
+- 2026-11-27 owner OK: deleted hf-engine/media/last-moments, parts/lm_*, case-work/renders/lm, productions/last-moments,
+  productions/_abyssal-ref, case-work/lm_scratch, case-work/farm-last-moments (C: 38 -> 81 GB free). Kept: finals, notes, cases/lm_*.mjs.
